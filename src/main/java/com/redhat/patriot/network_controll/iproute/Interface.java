@@ -4,6 +4,7 @@ public class Interface {
     String name;
     String ip;
 
+
     public Interface(String name, String ip) {
         this.name = name;
         this.ip = ip;
