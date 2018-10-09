@@ -1,16 +1,18 @@
 package com.redhat.patriot.network_controll;
 
-import com.redhat.patriot.network_controll.iproute.Interface;
-import com.redhat.patriot.network_controll.iproute.Route;
-import com.redhat.patriot.network_controll.iproute.RouteController;
-import com.redhat.patriot.network_controll.iptables.IPTablesController;
-import com.redhat.patriot.network_controll.iptables.chain.Chain;
-import com.redhat.patriot.network_controll.iptables.rules.FilterRule;
-
-import java.util.List;
+import com.redhat.patriot.network_controll.api.iptables.chain.Chain;
+import com.redhat.patriot.network_controll.api.iptables.rules.FilterRule;
 
 
+/**
+ * The type Main.
+ */
 public class Main {
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
 
 /*        IPTablesController controller = new IPTablesController("172.17.0.3", 8080);
@@ -23,16 +25,19 @@ public class Main {
 
         controller.deleleteFilterRule(filterRule);
         controller.deleteChain(chain);
-        controller.saveIpTables();*/
+        controller.saveIpTables();
 
         RouteController routeController = new RouteController("localhost", 5000);
         Route route = new Route("172.17.0.0", 1400, 16,"16", "172.17.0.2");
-        //List<Interface> ifa = routeController.getInterfaces();
+        List<NetworkInterface> ifa = routeController.getNetworkInterfaces();
         Route defaultR = new Route("172.17.0.2");
         routeController.addDefaultGW(defaultR);
         routeController.delDefaultGW(defaultR);
         List<Route> routes = routeController.getRouters();
-        routeController.addRoute(route);
+        routeController.addRoute(route);*/
+
+        FloydWarshallDemo floydWarshallDemo = new FloydWarshallDemo();
+        floydWarshallDemo.deploy();
 
 
     }

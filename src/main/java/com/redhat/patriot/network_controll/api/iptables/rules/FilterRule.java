@@ -1,11 +1,20 @@
-package com.redhat.patriot.network_controll.iptables.rules;
+package com.redhat.patriot.network_controll.api.iptables.rules;
 
 import java.util.LinkedHashMap;
 
 
+/**
+ * The type Filter rule.
+ */
 public class FilterRule implements Rule {
+    /**
+     * The Attributes.
+     */
     public LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
 
+    /**
+     * Instantiates a new Filter rule.
+     */
     public FilterRule() {
 
         attributes.put("action", null);

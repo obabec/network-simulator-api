@@ -226,7 +226,7 @@
         <dependency>
             <groupId>com.github.jgonian</groupId>
             <artifactId>commons-ip-math</artifactId>
-            <version>${version}</version>
+            <version>1.32</version>
         </dependency>
     </dependencies>
 </project>
