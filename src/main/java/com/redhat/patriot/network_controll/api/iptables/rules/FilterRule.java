@@ -7,13 +7,10 @@ import java.util.LinkedHashMap;
  * The type Filter rule.
  */
 public class FilterRule implements Rule {
-    /**
-     * The Attributes.
-     */
-    public LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
 
     /**
-     * Instantiates a new Filter rule.
+     * Instantiates a new Filter rule with default attributes.
      */
     public FilterRule() {
 
@@ -27,22 +24,20 @@ public class FilterRule implements Rule {
     }
 
     @Override
-    public boolean validate() {
-
-        if(attributes.values().contains(null))return false;
-        else return true;
+    public String toPath() {
+        String rules= "/rules/";
+        for (String value : attributes.values()) {
+            rules += value + "/";
+        }
+        return rules;
     }
 
-    @Override
-    public String toPath() {
-        if(validate()) {
-            String rules= "/rules/";
-            for (String value : attributes.values()) {
-                rules += value + "/";
-            }
-            return rules;
-        } else {
-            return null;
-        }
+    /**
+     * Gets attributes.
+     *
+     * @return the attributes
+     */
+    public LinkedHashMap<String, String> getAttributes() {
+        return attributes;
     }
 }

@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * The type Controller.
+ * The type Controller provides Http request execution.
  */
 public abstract class Controller {
     private String ip;

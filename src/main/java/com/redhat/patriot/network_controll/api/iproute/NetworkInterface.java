@@ -1,46 +1,27 @@
 package com.redhat.patriot.network_controll.api.iproute;
 
 /**
- * The type NetworkInterface.
+ * Router' s network interface
  */
 public class NetworkInterface {
     /**
      * The Name.
      */
-    String name;
+    private String name;
     /**
      * The Ip.
      */
-    String ip;
+    private String ip;
     /**
      * The Mask.
      */
-    Integer mask;
-
-
-    /**
-     * Gets mask.
-     *
-     * @return the mask
-     */
-    public Integer getMask() {
-        return mask;
-    }
+    private Integer mask;
 
     /**
-     * Sets mask.
+     * Instantiates a new Network interface.
      *
-     * @param mask the mask
-     */
-    public void setMask(Integer mask) {
-        this.mask = mask;
-    }
-
-    /**
-     * Instantiates a new NetworkInterface.
-     *
-     * @param name the name
-     * @param ip   the ip
+     * @param name the network name
+     * @param ip   the ip address
      * @param mask the mask
      */
     public NetworkInterface(String name, String ip, Integer mask) {
@@ -50,7 +31,7 @@ public class NetworkInterface {
     }
 
     /**
-     * Instantiates a new NetworkInterface.
+     * Instantiates a new Network interface.
      */
     public NetworkInterface() {
     }
@@ -90,4 +71,23 @@ public class NetworkInterface {
     public void setIp(String ip) {
         this.ip = ip;
     }
+
+    /**
+     * Gets mask.
+     *
+     * @return the mask
+     */
+    public Integer getMask() {
+        return mask;
+    }
+
+    /**
+     * Sets mask.
+     *
+     * @param mask the mask
+     */
+    public void setMask(Integer mask) {
+        this.mask = mask;
+    }
+
 }

@@ -15,10 +15,20 @@ public class Route {
     private Integer mtu = 1400;
     private Integer hopLimit = 16;
 
+    /**
+     * Gets dest.
+     *
+     * @return the dest
+     */
     public Network getDest() {
         return dest;
     }
 
+    /**
+     * Sets dest.
+     *
+     * @param dest the dest
+     */
     public void setDest(Network dest) {
         this.dest = dest;
     }
@@ -42,18 +52,18 @@ public class Route {
     }
 
     /**
-     * Gets interface.
+     * Gets network interface.
      *
-     * @return the interface
+     * @return the network interface
      */
     public NetworkInterface getrNetworkInterface() {
         return rNetworkInterface;
     }
 
     /**
-     * Sets interface.
+     * Sets network interface.
      *
-     * @param rNetworkInterface the r interface
+     * @param rNetworkInterface the r network interface
      */
     public void setrNetworkInterface(NetworkInterface rNetworkInterface) {
         this.rNetworkInterface = rNetworkInterface;
@@ -77,7 +87,13 @@ public class Route {
         this.targetRouter = targetRouter;
     }
 
+    /**
+     * To path string.
+     *
+     * @return the string
+     */
     public String toPath() {
-        return dest.getIpAddress() + "/" + dest.getMask() + "/" + rNetworkInterface.getIp() + "/" + mtu + "/" + hopLimit;
+        return dest.getIpAddress() + "/" + dest.getMask()
+                + "/" + rNetworkInterface.getIp() + "/" + mtu + "/" + hopLimit;
     }
 }

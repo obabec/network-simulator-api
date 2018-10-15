@@ -11,9 +11,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * The type Route controller.
+ * Controller for ip tables api.
  */
 public class RouteController  extends Controller {
+
     /**
      * Instantiates a new Route controller.
      *
@@ -31,6 +32,7 @@ public class RouteController  extends Controller {
      * @return the string
      */
     public String addRoute(Route route) {
+        String rt = route.toPath();
         String path = "/iproutes/" + route.toPath();
         return executeHttpRequest(path, "PUT");
     }
@@ -51,7 +53,7 @@ public class RouteController  extends Controller {
      *
      * @return the routers
      */
-    public List<Route> getRouters() {
+    public List<Route> getRoutes() {
         String path = "/iproutes";
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -85,7 +87,7 @@ public class RouteController  extends Controller {
      * @return the string
      */
     public String delDefaultGW(Route defaultGW ) {
-        String path = "/iproutes/default/" + defaultGW.getrNetworkInterface();
+        String path = "/iproutes/default/" + defaultGW.getrNetworkInterface().getIp();
         return executeHttpRequest(path, "DELETE");
     }
 
@@ -97,8 +99,9 @@ public class RouteController  extends Controller {
     public List<NetworkInterface> getInterfaces() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String input = executeHttpRequest("/iproutes/networkInterfaces", "GET");
-            List<NetworkInterface> networkInterfaces = objectMapper.readValue(input, new TypeReference<List<NetworkInterface>>(){});
+            String input = executeHttpRequest("/iproutes/interfaces", "GET");
+            List<NetworkInterface> networkInterfaces =
+                    objectMapper.readValue(input, new TypeReference<List<NetworkInterface>>(){});
             return networkInterfaces;
         } catch (IOException e) {
             e.printStackTrace();

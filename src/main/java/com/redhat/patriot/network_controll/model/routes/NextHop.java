@@ -3,13 +3,40 @@ package com.redhat.patriot.network_controll.model.routes;
 import com.redhat.patriot.network_controll.model.Router;
 
 /**
- * The type Next hop.
+ * Wrapper class for Router and network. Representing next hop in the network topology.
  */
 public class NextHop {
+    private Router router;
+    private Integer network;
+
     /**
-     * The Router.
+     * Instantiates a new Next hop.
+     *
+     * @param router  the router
+     * @param network the network
      */
-    Router router;
+    public NextHop(Router router, Integer network) {
+        this.router = router;
+        this.network = network;
+    }
+
+    /**
+     * Gets router.
+     *
+     * @return the router
+     */
+    public Router getRouter() {
+        return router;
+    }
+
+    /**
+     * Sets router.
+     *
+     * @param router the router
+     */
+    public void setRouter(Router router) {
+        this.router = router;
+    }
 
     /**
      * Gets network.
@@ -29,38 +56,4 @@ public class NextHop {
         this.network = network;
     }
 
-    /**
-     * Instantiates a new Next hop.
-     *
-     * @param router  the router
-     * @param network the network
-     */
-    public NextHop(Router router, Integer network) {
-        this.router = router;
-        this.network = network;
-    }
-
-    /**
-     * The Network.
-     */
-    Integer network;
-
-
-    /**
-     * Gets router.
-     *
-     * @return the router
-     */
-    public Router getRouter() {
-        return router;
-    }
-
-    /**
-     * Sets router.
-     *
-     * @param router the router
-     */
-    public void setRouter(Router router) {
-        this.router = router;
-    }
 }

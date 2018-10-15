@@ -2,29 +2,94 @@ package com.redhat.patriot.network_controll.model;
 
 import com.redhat.patriot.network_controll.api.iproute.NetworkInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Router.
+ * Router class.
  */
 public class Router {
-    String name;
-    List<NetworkInterface> networkInterfaces;
-    String mngIp;
-    Integer mngPort;
+    private String name;
+    private List<NetworkInterface> networkInterfaces;
+    private List<Network> connectedNetworks;
+    private String mngIp;
+    private Integer mngPort;
+    private Boolean defaultGW = false;
 
-
-    public Integer getMngPort() {
-        return mngPort;
+    /**
+     * Instantiates a new Router.
+     *
+     * @param name the name
+     */
+    public Router(String name) {
+        this.name = name;
+        connectedNetworks = new ArrayList<>();
+        mngPort = 5000;
     }
 
     /**
-     * Sets mng port.
+     * Instantiates a new Router.
      *
-     * @param mngPort the mng port
+     * @param name              the name
+     * @param networkInterfaces the network interfaces
      */
-    public void setMngPort(Integer mngPort) {
-        this.mngPort = mngPort;
+    public Router(String name, List<NetworkInterface> networkInterfaces) {
+        this.name = name;
+        this.networkInterfaces = networkInterfaces;
+    }
+
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets network interfaces.
+     *
+     * @return the network interfaces
+     */
+    public List<NetworkInterface> getNetworkInterfaces() {
+        return networkInterfaces;
+    }
+
+    /**
+     * Sets network interfaces.
+     *
+     * @param networkInterfaces the network interfaces
+     */
+    public void setNetworkInterfaces(List<NetworkInterface> networkInterfaces) {
+        this.networkInterfaces = networkInterfaces;
+    }
+
+    /**
+     * Gets connected networks.
+     *
+     * @return the connected networks
+     */
+    public List<Network> getConnectedNetworks() {
+        return connectedNetworks;
+    }
+
+    /**
+     * Sets connected networks.
+     *
+     * @param connectedNetworks the connected networks
+     */
+    public void setConnectedNetworks(List<Network> connectedNetworks) {
+        this.connectedNetworks = connectedNetworks;
     }
 
     /**
@@ -46,52 +111,28 @@ public class Router {
     }
 
     /**
-     * Sets name.
+     * Gets mng port.
      *
-     * @param name the name
+     * @return the mng port
      */
-    public void setName(String name) {
-        this.name = name;
+    public Integer getMngPort() {
+        return mngPort;
     }
 
     /**
-     * Gets networkInterfaces.
+     * Sets mng port.
      *
-     * @return the networkInterfaces
+     * @param mngPort the mng port
      */
-    public List<NetworkInterface> getNetworkInterfaces() {
-        return networkInterfaces;
+    public void setMngPort(Integer mngPort) {
+        this.mngPort = mngPort;
     }
 
-    /**
-     * Sets networkInterfaces.
-     *
-     * @param networkInterfaces the networkInterfaces
-     */
-    public void setNetworkInterfaces(List<NetworkInterface> networkInterfaces) {
-        this.networkInterfaces = networkInterfaces;
+    public Boolean getDefaultGW() {
+        return defaultGW;
     }
 
-    /**
-     * Instantiates a new Router.
-     *
-     * @param name the name
-     */
-    public Router(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    public Router(String name, List<NetworkInterface> networkInterfaces) {
-        this.name = name;
-        this.networkInterfaces = networkInterfaces;
+    public void setDefaultGW(Boolean defaultGW) {
+        this.defaultGW = defaultGW;
     }
 }

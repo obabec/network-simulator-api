@@ -3,7 +3,7 @@ package com.redhat.patriot.network_controll;
 import java.util.ArrayList;
 
 /**
- * The type C route list.
+ * The type Calculated route list with extended add method to avoid inserting Route to non-existing index.
  *
  * @param <CalcRoute> the type parameter
  */

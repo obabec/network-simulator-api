@@ -1,17 +1,11 @@
 package com.redhat.patriot.network_controll.model.routes;
 
 /**
- * The type Calc route.
+ * Calculated route. Including all necessary info describe routes.
  */
 public class CalcRoute {
-    /**
-     * The Next hop.
-     */
-    NextHop nextHop;
-    /**
-     * The Cost.
-     */
-    Integer cost;
+    private NextHop nextHop;
+    private Integer cost;
 
     /**
      * Instantiates a new Calc route.

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <suppress checks="MethodLength"
+              files="src/main/java/com/redhat/patriot/network_controll/gateway/GwDemo.java"
+              lines="1-100"/>
+
+    <suppress checks="MethodLength"
+              files="src/main/java/com/redhat/patriot/network_controll/FloydWarshallDemo.java"
+              lines="0-300"/>
+
+    <suppress checks="Javadoc"
+              files="src/main/java/com/redhat/patriot/network_controll/FloydWarshallDemo.java"
+              lines="0-100"/>
+    <suppress checks="Javadoc"
+              files="src/main/java/com/redhat/patriot/network_controll/Main.java"
+              lines="0-100"/>
+</suppressions>

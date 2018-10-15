@@ -1,18 +1,11 @@
 package com.redhat.patriot.network_controll.api.iptables.rules;
 
 /**
- * The interface Rule.
+ * Ip tables rule.
  */
 public interface Rule {
     /**
-     * Validate boolean.
-     *
-     * @return the boolean
-     */
-    boolean validate();
-
-    /**
-     * To path string.
+     * Create HTML path for ip tables rest request.
      *
      * @return the string
      */

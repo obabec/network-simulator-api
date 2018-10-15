@@ -1,7 +1,7 @@
 package com.redhat.patriot.network_controll.api.iptables.chain;
 
 /**
- * The type Chain.
+ * IpTables chain.
  */
 public class Chain {
     private String name;

@@ -4,38 +4,57 @@ import com.redhat.patriot.network_controll.CalculatedRouteList;
 import com.redhat.patriot.network_controll.model.routes.CalcRoute;
 
 /**
- * The type Network.
+ * Network class.
  */
 public class Network {
-    /**
-     * The Calc route.
-     */
-    CalculatedRouteList<CalcRoute> calcRoute = new CalculatedRouteList();
-    /**
-     * The Ip address.
-     */
-    String ipAddress;
-    /**
-     * The Mask.
-     */
-    Integer mask;
+    private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
+    private String ipAddress;
+    private Integer mask;
+    private String name;
+    private Boolean internet = false;
 
     /**
-     * Gets mask.
-     *
-     * @return the mask
+     * Instantiates a new Network.
      */
-    public Integer getMask() {
-        return mask;
+    public Network() {
     }
 
     /**
-     * Sets mask.
+     * Instantiates a new Network.
      *
-     * @param mask the mask
+     * @param calcRoutes the calc routes
+     * @param name       the name
      */
-    public void setMask(Integer mask) {
-        this.mask = mask;
+    public Network(CalculatedRouteList<CalcRoute> calcRoutes, String name) {
+        this.calcRoutes = calcRoutes;
+        this.name = name;
+    }
+
+    /**
+     * Instantiates a new Network.
+     *
+     * @param calcRoutes the calc routes
+     */
+    public Network(CalculatedRouteList<CalcRoute> calcRoutes) {
+        this.calcRoutes = calcRoutes;
+    }
+
+    /**
+     * Gets calc routes.
+     *
+     * @return the calc routes
+     */
+    public CalculatedRouteList<CalcRoute> getCalcRoutes() {
+        return calcRoutes;
+    }
+
+    /**
+     * Sets calc routes.
+     *
+     * @param calcRoutes the calc routes
+     */
+    public void setCalcRoutes(CalculatedRouteList<CalcRoute> calcRoutes) {
+        this.calcRoutes = calcRoutes;
     }
 
     /**
@@ -57,35 +76,65 @@ public class Network {
     }
 
     /**
-     * Instantiates a new Network.
+     * Gets mask.
      *
-     * @param calcRoute the calc route
+     * @return the mask
      */
-    public Network(CalculatedRouteList<CalcRoute> calcRoute) {
-        this.calcRoute = calcRoute;
+    public Integer getMask() {
+        return mask;
     }
 
     /**
-     * Instantiates a new Network.
+     * Sets mask.
+     *
+     * @param mask the mask
      */
-    public Network() {
+    public void setMask(Integer mask) {
+        this.mask = mask;
     }
 
     /**
-     * Gets calc route.
+     * Gets name.
      *
-     * @return the calc route
+     * @return the name
      */
-    public CalculatedRouteList<CalcRoute> getCalcRoute() {
-        return calcRoute;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets calc route.
+     * Sets name.
      *
-     * @param calcRoute the calc route
+     * @param name the name
      */
-    public void setCalcRoute(CalculatedRouteList<CalcRoute> calcRoute) {
-        this.calcRoute = calcRoute;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets ip with mask.
+     *
+     * @return the ip with mask
+     */
+    public String getIpWithMask() {
+        return ipAddress + "/" + mask;
+    }
+
+    /**
+     * Gets internet.
+     *
+     * @return the internet
+     */
+    public Boolean getInternet() {
+        return internet;
+    }
+
+    /**
+     * Sets internet.
+     *
+     * @param internet the internet
+     */
+    public void setInternet(Boolean internet) {
+        this.internet = internet;
     }
 }

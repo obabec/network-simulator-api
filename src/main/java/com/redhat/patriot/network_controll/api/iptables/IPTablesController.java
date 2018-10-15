@@ -31,12 +31,12 @@ public class IPTablesController extends Controller {
     }
 
     /**
-     * Delelete filter rule string.
+     * Delete filter rule string.
      *
      * @param filterRule the filter rule
      * @return the string
      */
-    public String deleleteFilterRule(FilterRule filterRule) {
+    public String deleteFilterRule(FilterRule filterRule) {
         return executeHttpRequest(filterRule.toPath(), "DELETE");
     }
 
