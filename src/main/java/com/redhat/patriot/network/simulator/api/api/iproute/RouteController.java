@@ -16,9 +16,7 @@
 
 package com.redhat.patriot.network.simulator.api.api.iproute;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.patriot.network.simulator.api.api.Controller;
 import com.redhat.patriot.network.simulator.api.model.routes.Route;
@@ -76,10 +74,6 @@ public class RouteController  extends Controller {
         try {
             String input = executeHttpRequest(path, "GET");
             return objectMapper.readValue(input, new TypeReference<List<Route>>(){});
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

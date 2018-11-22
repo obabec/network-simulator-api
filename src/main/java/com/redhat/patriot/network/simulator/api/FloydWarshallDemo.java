@@ -19,8 +19,8 @@ package com.redhat.patriot.network.simulator.api;
 import com.redhat.patriot.network.simulator.api.manager.NetworkManager;
 import com.redhat.patriot.network.simulator.api.model.Network;
 import com.redhat.patriot.network.simulator.api.model.Router;
-import com.redhat.patriot.network.simulator.api.model.routes.NextHop;
 import com.redhat.patriot.network.simulator.api.model.routes.CalcRoute;
+import com.redhat.patriot.network.simulator.api.model.routes.NextHop;
 
 import java.util.ArrayList;
 import java.util.Arrays;

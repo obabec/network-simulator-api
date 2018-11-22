@@ -44,7 +44,6 @@ import java.util.Map;
  */
 public class NetworkManager {
 
-
     private DockerManager dockerManager;
 
     public NetworkManager() {
@@ -76,7 +75,7 @@ public class NetworkManager {
 
                  routerEntry.getValue().setMngIp(dockerManager.findIpAddress(dockerRouters.get(routerEntry.getKey())));
 
-                routeController = new RouteController(routerEntry.getValue().getMngIp(),
+                 routeController = new RouteController(routerEntry.getValue().getMngIp(),
                         routerEntry.getValue().getMngPort());
 
                 for (Network network : routerEntry.getValue().getConnectedNetworks()) {
@@ -88,7 +87,6 @@ public class NetworkManager {
                 routerEntry.getValue().setNetworkInterfaces(routeController.getInterfaces());
                 dockerManager.delDefaultGateway(dockerRouters.get(routerEntry.getValue().getName()));
             }
-
             initInternetNetworkAddress(topology, dockerRouters.values().iterator().next());
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,17 +100,19 @@ public class NetworkManager {
                 n.setIpAddress(dockerContainer.getGatewayNetworkIp());
                 n.setMask(dockerContainer.getGatewayNetworkMask());
             }
-
         }
     }
 
     private HashMap<String, DockerNetwork> createNetworks(ArrayList<Network> topology) {
         HashMap<String, DockerNetwork> dockerNetworks = new HashMap<>();
         for (Network network : topology){
-            if (network.getInternet()) continue;
-            dockerNetworks.put(network.getName(),
-                    (DockerNetwork) dockerManager.createNetwork(network.getName(),
-                            network.getIpWithMask()));
+            if (network.getInternet()) {
+                continue;
+            }
+            dockerNetworks.put(
+                    network.getName(),
+                    (DockerNetwork) dockerManager.createNetwork(network.getName(), network.getIpWithMask())
+            );
         }
         return dockerNetworks;
     }
@@ -126,14 +126,10 @@ public class NetworkManager {
                 }
                 if (c.getCost() == 1) {
                     String rName = c.getNextHop().getRouter().getName();
-
                     if (!routers.get(rName).getConnectedNetworks().contains(topology.get(i))) {
-
                         routers.get(rName).getConnectedNetworks().add(topology.get(i));
-
                     } else if (!routers.get(rName).getConnectedNetworks()
                             .contains(topology.get(c.getNextHop().getNetwork()))) {
-
                         routers.get(rName).getConnectedNetworks().add(topology.get(c.getNextHop().getNetwork()));
                     }
                 }
@@ -162,9 +158,9 @@ public class NetworkManager {
                     int cost = topology.get(i).getCalcRoutes().get(j).getCost()
                             + topology.get(j).getCalcRoutes().get(k).getCost();
 
-                    if (topology.get(i).getCalcRoutes().get(k).getCost() == (size + 1) ||
-                            topology.get(i).getCalcRoutes().get(k).getCost() > cost) {
+                    int actualCost = topology.get(i).getCalcRoutes().get(k).getCost();
 
+                    if (actualCost == (size + 1) || actualCost > cost) {
                         NextHop nextHop = new NextHop(topology.get(i).getCalcRoutes()
                                 .get(j).getNextHop().getRouter(),
                                 topology.get(i).getCalcRoutes().get(j).getNextHop().getNetwork());
@@ -173,7 +169,6 @@ public class NetworkManager {
                                 + topology.get(j).getCalcRoutes().get(k).getCost());
                         topology.get(i).getCalcRoutes().set(k, c);
                     }
-
                 }
             }
         }
@@ -201,7 +196,6 @@ public class NetworkManager {
                 Integer nextNetwork = calculatedRoutes.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
                 NetworkInterface target = findCorrectInterface(r, calculatedRoutes.get(nextNetwork));
                 route.setrNetworkInterface(target);
-
 
                 if (!routes.containsKey(r.getName())) {
                     routes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
@@ -258,9 +252,7 @@ public class NetworkManager {
                 } else {
                     routeController.addRoute(route);
                 }
-
             }
         }
     }
-
 }

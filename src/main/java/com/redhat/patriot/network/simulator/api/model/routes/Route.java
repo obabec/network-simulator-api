@@ -25,17 +25,21 @@ import com.redhat.patriot.network.simulator.api.model.Router;
  * Used for represent route record in routing tables.
  */
 public class Route {
+
     @JsonIgnore
     private Network source;
-    private Network dest;
-    private NetworkInterface rNetworkInterface;
+
     @JsonIgnore
     private Router targetRouter;
 
     @JsonIgnore
     private Integer mtu = 1400;
+
     @JsonIgnore
     private Integer hopLimit = 16;
+
+    private Network dest;
+    private NetworkInterface rNetworkInterface;
 
     public Route() {
     }
