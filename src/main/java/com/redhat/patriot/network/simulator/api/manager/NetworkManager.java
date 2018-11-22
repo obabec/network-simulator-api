@@ -153,8 +153,9 @@ public class NetworkManager {
             for (int j = 0; j < size; j++) {
                 for (int k = 0; k < size; k++) {
 
-                    if (i == k || i == j || j == k) continue;
-
+                    if (i == k || i == j || j == k) {
+                        continue;
+                    }
                     int cost = topology.get(i).getCalcRoutes().get(j).getCost()
                             + topology.get(j).getCalcRoutes().get(k).getCost();
 
