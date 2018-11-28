@@ -6,20 +6,22 @@
 
 <suppressions>
     <suppress checks="MethodLength"
-              files="src/main/java/com/redhat/patriot/network/simulator/api/gateway/GwDemo.java"
+              files="src/main/java/io/patriot_framework/network/simulator/api/gateway/GwDemo.java"
               lines="1-100"/>
 
     <suppress checks="MethodLength"
-              files="src/main/java/com/redhat/patriot/network/simulator/api/FloydWarshallDemo.java"
+              files="src/main/java/io/patriot_framework/network/simulator/api/FloydWarshallDemo.java"
               lines="0-300"/>
+
     <suppress checks="MethodLength"
-              files="src/main/test/java/com.redhat.patriot.network.simulator.api.FloydWarshallTest.java"
+              files="src/main/test/java/io/patriot_framework/network/simulator/api/FloydWarshallTest.java"
               lines="0-200"/>
 
     <suppress checks="Javadoc"
-              files="src/main/java/com/redhat/patriot/network/simulator/api/FloydWarshallDemo.java"
+              files="src/main/java/io/patriot_framework/network/simulator/api/FloydWarshallDemo.java"
               lines="0-100"/>
+
     <suppress checks="Javadoc"
-              files="src/main/java/com/redhat/patriot/network/simulator/api/Main.java"
+              files="src/main/java/io/patriot_framework/network/simulator/api/Main.java"
               lines="0-100"/>
 </suppressions>

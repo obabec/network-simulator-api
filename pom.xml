@@ -162,7 +162,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>src/main/java/com/redhat/patriot/network/simulator/api/Main.java</mainClass>
+                    <mainClass>src/main/java/io/patriot_framework/network/simulator/api/Main.java</mainClass>
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
@@ -171,7 +171,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>src/main/java/com/redhat/patriot/network/simulator/api/Main.java</mainClass>
+                            <mainClass>src/main/java/io/patriot_framework/network/simulator/api/Main.java</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -226,7 +226,7 @@
             <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.redhat.patriot</groupId>
+            <groupId>io.patriot_framework</groupId>
             <artifactId>network-sample</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
@@ -240,5 +240,25 @@
             <artifactId>commons-ip-math</artifactId>
             <version>${com.github.jgonian.version}</version>
         </dependency>
+       <dependency>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+          <version>2.2.11</version>
+       </dependency>
+       <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-core</artifactId>
+          <version>2.2.11</version>
+       </dependency>
+       <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+          <version>2.2.11</version>
+       </dependency>
+       <dependency>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+          <version>1.1.1</version>
+       </dependency>
     </dependencies>
 </project>
