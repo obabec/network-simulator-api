@@ -20,14 +20,14 @@ import com.redhat.patriot.network_simulator.example.container.config.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The type Gw controller.
  */
 public class GwDemo {
-        public static final ArrayList<String> JAVA_INSTALLATION_COMMANDS = new ArrayList<>(Arrays.asList(
+        public static final List<String> JAVA_INSTALLATION_COMMANDS = Arrays.asList(
                 "apt-get update",
                 "apt-get install -y --no-install-recommends locales",
                 "locale-gen en_US.UTF-8",
@@ -42,25 +42,25 @@ public class GwDemo {
                 "apt-get install -y --no-install-recommends " +
                         "oracle-java8-installer oracle-java8-set-default",
                 "apt-get clean all"
-        ));
+        );
 
-        public final ArrayList<String> GO_INSTALLATION_PACKAGES = new ArrayList<>(Arrays.asList(
+        public static final List<String> GO_INSTALLATION_PACKAGES = Arrays.asList(
                 "curl -O https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz",
                 "tar -xvf go1.9.1.linux-amd64.tar.gz",
                 "mv go /usr/local"
-        ));
+        );
 
-        public final ArrayList<String> IPTABLES_INSTALLATION_PACKAGES = new ArrayList<>(Arrays.asList(
+        public static final List<String> IPTABLES_INSTALLATION_PACKAGES = Arrays.asList(
                 "go get -u github.com/oxalide/go-iptables/iptables",
                 "go get -u github.com/abbot/go-http-auth",
                 "go get -u github.com/gorilla/handlers",
                 "go get -u github.com/gorilla/mux"
-        ));
+        );
 
-        public final ArrayList<String> INITIAL_INSTALLATION_PACKAGES = new ArrayList<>(Arrays.asList(
+        public static final List<String> INITIAL_INSTALLATION_PACKAGES = Arrays.asList(
                 "apt-get -y update", "apt-get -y install git maven " +
                 "iptables vim curl python iproute2 python-pip"
-        ));
+        );
 
         /**
          * Start gateway. Sort of GW demo.
@@ -87,9 +87,8 @@ public class GwDemo {
                     .run("go build -o iptables-api")
                     .workdir("/")
                     .run("git clone " +
-                            "https://github.com/ficap/smart-home-com.redhat.patriot.network_control.gateway.git")
-                    .run(Arrays.asList("cd smart-home-com.redhat.patriot.network_control.gateway",
-                            "git checkout dummy-test", "mvn package"))
+                            "https://github.com/PatrIoT-Framework/virtual-smart-home.git")
+                    .run(Arrays.asList("cd virtual-smart-home", "mvn package"))
                     .entrypoint("tail -f /dev/null")
                     .workdir("/iptables-api");
             appManager.setTag("app_gateway");
@@ -99,7 +98,18 @@ public class GwDemo {
             appManager.executeCommand(appConfig, iptablesCommand);
             String iprouteCommand = "flask run --host=0.0.0.0";
             appManager.executeCommand(appConfig, iprouteCommand);
+            appManager.executeCommand(appConfig, "java -jar /virtual-smart-home/target/smart-home-virtual-1.0-SNAPSHOT.jar");
+
             logger.info("IP is: " + appConfig.getIPAdd());
+
+    }
+    public static void main(String[] args) {
+            GwDemo dm = new GwDemo();
+            try {
+                dm.startGateway();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
     }
 }
