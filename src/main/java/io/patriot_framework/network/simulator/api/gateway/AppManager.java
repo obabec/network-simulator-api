@@ -45,8 +45,6 @@ public class AppManager {
     public AppConfig deploy(String name) {
             buildSimpleImage(name);
             createAndStart(name, tag);
-            dockerManager.runCommand(apps.get(name).getDockerContainer(), apps.get(name)
-                    .getAppConfig().getStartCommand());
             return apps.get(name).getAppConfig();
     }
 
@@ -93,17 +91,6 @@ public class AppManager {
             File res = new File(directory, resource);
             fileUtils.convertToFile(classLoader.getResourceAsStream(resource), res.toString());
         }
-    }
-
-
-    /**
-     * Sets start command.
-     *
-     * @param name    the name
-     * @param command the command
-     */
-    public void setStartCommand(String name, String command) {
-        apps.get(name).getAppConfig().setStartCommand(command);
     }
 
     private void buildSimpleImage(Set<String> tags, Path dockerfile) {

@@ -16,206 +16,115 @@
 
 package io.patriot_framework.network.simulator.api;
 
-import io.patriot_framework.network.simulator.api.builder.NetworkBuilder;
 import io.patriot_framework.network.simulator.api.builder.TopologyBuilder;
 import io.patriot_framework.network.simulator.api.manager.NetworkManager;
-import io.patriot_framework.network.simulator.api.model.Network;
-import io.patriot_framework.network.simulator.api.model.Router;
-import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
-import io.patriot_framework.network.simulator.api.model.routes.NextHop;
+import io.patriot_framework.network.simulator.api.model.Topology;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class FloydWarshallDemo {
 
     public void deploy() {
-        HashMap<String, Router> routers = new HashMap<>();
 
-        routers.put("R1", new Router("R1"));
-
-        routers.put("R2", new Router("R2"));
-
-        routers.put("R3", new Router("R3"));
-
-        routers.put("R5", new Router("R5"));
-
-        Network n1 = new NetworkBuilder("N1")
-                .withIP("192.168.0.0")
-                .withMask(28)
-                .build();
-
-        Network n2 = new NetworkBuilder("N2")
-                .withIP("192.168.16.0")
-                .withMask(28)
-                .build();
-
-        Network n3 = new NetworkBuilder("N3")
-                .withIP("192.168.32.0")
-                .withMask(28)
-                .build();
-
-        Network n4 = new NetworkBuilder("N4")
-                .withIP("192.168.48.0")
-                .withMask(28)
-                .build();
-
-        Network internet = new NetworkBuilder("Internet")
-                .withInternet(true)
-                .build();
         int routeNeedsCalc = 6;
-        ArrayList<Network> topology = new TopologyBuilder(5)
+        Topology topology = new TopologyBuilder(5)
+                .withRouters()
+                    .withName("R1")
+                    .createRouter()
+                    .withName("R2")
+                    .createRouter()
+                    .withName("R3")
+                    .createRouter()
+                    .withName("R5")
+                    .createRouter()
+                    .addRouters()
                 .withNetwork("N1")
                     .withIP("192.168.0.0")
                     .withMask(28)
-                    .withCalcRoute()
-                        .withDestNetwork(0)
-                        .withCost(null)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(1)
-                        .withCost(1)
-                        .viaRouter(routers.get("R1"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(2)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(3)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(4)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
                     .create()
                 .withNetwork("N2")
                     .withIP("192.168.16.0")
                     .withMask(28)
-                    .withCalcRoute()
-                        .withDestNetwork(0)
-                        .withCost(1)
-                        .viaRouter(routers.get("R1"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(1)
-                        .withCost(null)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(2)
-                        .withCost(1)
-                        .viaRouter(routers.get("R2"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(3)
-                        .withCost(1)
-                        .viaRouter(routers.get("R3"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(4)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
                     .create()
                 .withNetwork("N3")
                     .withIP("192.168.32.0")
                     .withMask(28)
-                    .withCalcRoute()
-                        .withDestNetwork(0)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(1)
-                        .withCost(1)
-                        .viaRouter(routers.get("R2"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(2)
-                        .withCost(null)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(3)
-                        .withCost(1)
-                        .viaRouter(routers.get("R5"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(4)
-                        .withCost(1)
-                        .viaRouter(routers.get("R5"))
-                        .build()
                     .create()
                     .withNetwork("N4")
                         .withIP("192.168.48.0")
                         .withMask(28)
-                        .withCalcRoute()
-                            .withDestNetwork(0)
-                            .withCost(routeNeedsCalc)
-                            .viaRouter(null)
-                            .build()
-                        .withCalcRoute()
-                            .withDestNetwork(1)
-                            .withCost(1)
-                            .viaRouter(routers.get("R3"))
-                            .build()
-                        .withCalcRoute()
-                            .withDestNetwork(2)
-                            .withCost(1)
-                            .viaRouter(routers.get("R5"))
-                            .build()
-                        .withCalcRoute()
-                            .withDestNetwork(3)
-                            .withCost(null)
-                            .viaRouter(null)
-                            .build()
-                        .withCalcRoute()
-                            .withDestNetwork(4)
-                            .withCost(1)
-                            .viaRouter(routers.get("R5"))
-                            .build()
                         .create()
                 .withNetwork("internet")
                     .withInternet(true)
-                    .withCalcRoute()
-                        .withDestNetwork(0)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(1)
-                        .withCost(routeNeedsCalc)
-                        .viaRouter(null)
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(2)
-                        .withCost(1)
-                        .viaRouter(routers.get("R5"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(3)
-                        .withCost(1)
-                        .viaRouter(routers.get("R5"))
-                        .build()
-                    .withCalcRoute()
-                        .withDestNetwork(4)
-                        .withCost(null)
-                        .viaRouter(null)
-                        .build()
                     .create()
+                .withRoutes()
+                    .withSourceNetwork("N1")
+
+                        .withDestNetwork("N2")
+                        .withCost(1)
+                        .viaRouter("R1")
+                        .addRoute()
+
+                        .withDestNetwork("N3")
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                        .withDestNetwork("N4")
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                        .withDestNetwork("internet")
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                    .withSourceNetwork("N2")
+
+                        .withDestNetwork("N3")
+                        .withCost(1)
+                        .viaRouter("R2")
+                        .addRoute()
+
+                        .withDestNetwork("N4")
+                        .withCost(1)
+                        .viaRouter("R3")
+                        .addRoute()
+
+                        .withDestNetwork("internet")
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                    .withSourceNetwork("N3")
+
+                        .withDestNetwork("N4")
+                        .withCost(1)
+                        .viaRouter("R5")
+                        .addRoute()
+
+                        .withDestNetwork("internet")
+                        .withCost(1)
+                        .viaRouter("R5")
+                        .addRoute()
+
+                    .withSourceNetwork("N4")
+
+                        .withDestNetwork("internet")
+                        .withCost(1)
+                        .viaRouter("R5")
+                        .addRoute()
+
+                    .buildRoutes()
                 .build();
+
+
         NetworkManager networkManager = new NetworkManager();
 
-        routers = networkManager.connect(topology, routers);
+        topology.setRouters(networkManager.connect(topology));
         networkManager.calcRoutes(topology);
         HashMap hashMap = networkManager.processRoutes(topology);
-        networkManager.setRoutes(hashMap, routers);
+        networkManager.setRoutes(hashMap, topology.getRouters());
     }
 }

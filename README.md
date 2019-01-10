@@ -1,7 +1,7 @@
 # Network control
 
 Main goal of this Java API is provide full network control from scratch i. e create docker
-networks, containers, connect them together as they are in topology,
+networks, containers, connect them together as they are in networkTop,
 calculate shortest paths, set routes to routers (container) routing table, simulate 
 crash on link.
 
@@ -28,13 +28,15 @@ mvn install:install-file -Dfile=target/network-sample-2.0-SNAPSHOT-jar-with-depe
 
 ```
 
-### Installing
+### Router
+Before creating network topology, router image has to be build.
+```
+git clone https://github.com/obabec/PatrIoT_router
+docker build -t YOURTAG PatrIoT_router
+```
+You will use tag of your image when you will create topology and
+especially routers. 
 
-All necessary libraries can be installed by:
-```
-git clone https://github.com/obabec/network-control.git
-mvn install
-```
 
 ### Running tests
 

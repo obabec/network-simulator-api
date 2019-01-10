@@ -87,7 +87,7 @@ public class GwDemo {
                     .run("git clone https://github.com/obabec/iptables-api.git")
                     .run(IPTABLES_INSTALLATION_PACKAGES)
                     .workdir("/iptables-api/")
-                    .run("go build -o iptables-api")
+                    .run("go buildRoutes -o iptables-api")
                     .workdir("/")
                     .run("git clone " +
                             "https://github.com/PatrIoT-Framework/virtual-smart-home.git")
