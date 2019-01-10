@@ -16,16 +16,21 @@
 
 package io.patriot_framework.network.simulator.api.builder;
 
-import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 
 public class CalcRouteBuilder {
     Router router;
+    Integer sourceNetwork;
     Integer cost;
-    Integer targetNetworkIndex;
+    Integer destNetwork;
     NetworkBuilder networkBuilder;
+    TopologyBuilder topologyBuilder;
+
+    public CalcRouteBuilder(TopologyBuilder topologyBuilder) {
+        this.topologyBuilder = topologyBuilder;
+    }
 
     public CalcRouteBuilder(NetworkBuilder networkBuilder) {
         this.networkBuilder = networkBuilder;
@@ -36,20 +41,38 @@ public class CalcRouteBuilder {
         return this;
     }
 
-
     public CalcRouteBuilder withCost(Integer cost) {
         this.cost = cost;
         return this;
     }
 
     public CalcRouteBuilder withDestNetwork(Integer targetNetworkIndex) {
-        this.targetNetworkIndex = targetNetworkIndex;
+        this.destNetwork = targetNetworkIndex;
         return this;
     }
 
-    public NetworkBuilder build() {
-        CalcRoute cR = new CalcRoute(new NextHop(router, targetNetworkIndex), cost);
-        networkBuilder.calcRoutes.add(targetNetworkIndex, cR);
+    public CalcRouteBuilder withSourceNetwork(Integer sourceNetwork) {
+        this.sourceNetwork = sourceNetwork;
+        return this;
+    }
+
+    public CalcRouteBuilder addRoute() {
+        CalcRoute sR = new CalcRoute(new NextHop(router, destNetwork), cost);
+        topologyBuilder.topology.get(sourceNetwork).getCalcRoutes().add(destNetwork, sR);
+
+        if (sourceNetwork != destNetwork) {
+            CalcRoute dR = new CalcRoute(new NextHop(router, sourceNetwork), cost);
+            topologyBuilder.topology.get(destNetwork).getCalcRoutes().add(sourceNetwork, dR);
+        }
+    }
+
+    /*public NetworkBuilder build() {
+        CalcRoute cR = new CalcRoute(new NextHop(router, destNetwork), cost);
+        networkBuilder.calcRoutes.add(destNetwork, cR);
         return networkBuilder;
+    }*/
+
+    public TopologyBuilder build() {
+        return topologyBuilder;
     }
 }

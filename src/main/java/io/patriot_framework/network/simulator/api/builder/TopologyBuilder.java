@@ -17,6 +17,7 @@
 package io.patriot_framework.network.simulator.api.builder;
 
 import io.patriot_framework.network.simulator.api.model.Network;
+import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,9 @@ public class TopologyBuilder {
         return topology;
     }
 
+    public CalcRouteBuilder withRoutes() {
+        return new CalcRouteBuilder(this);
+    }
 
 
 }
