@@ -58,20 +58,21 @@ public class RouteTreatmentTest {
         return route;
     }
 
-/*    @Test
+    @Test
     public void duplicateRouteTreatmentTest() {
         NetworkManager nManager = new NetworkManager();
-        ArrayList<Network> topology = new ArrayList<>();
+        ArrayList<Network> networks = new ArrayList<>();
         HashMap<String, Router> routers = new HashMap<>();
-        routers.put("TestRouter", new Router("TestRouter"))
-        Route route = createSimpleTopology(topology, true, r);
-        createDuplicateNetwork(topology, r);
+        routers.put("TestRouter", new Router("TestRouter"));
+        Topology topology = new Topology(routers, networks);
+        Route route = createSimpleTopology(topology.getNetworkTop(), true, topology.getRouters().get("TestRouter"));
+        createDuplicateNetwork(topology.getNetworkTop() ,topology.getRouters().get("TestRouter"));
 
         HashMap<String, ArrayList<Route>> routes = nManager.processRoutes(topology);
         assertEquals(1, routes.size());
-        assertTrue(routes.get(r.getName()).get(0).toPath().equals(route.toPath()));
+        assertTrue(routes.get(topology.getRouters().get("TestRouter").getName()).get(0).toPath().equals(route.toPath()));
 
-    }*/
+    }
 
     private Route createSimpleTopology(ArrayList<Network> topology, Boolean duplicate, Router r) {
         List<NetworkInterface> routerInterfaces = new ArrayList<>();

@@ -19,6 +19,7 @@ package io.patriot_framework.network.simulator.api;
 import io.patriot_framework.network.simulator.api.manager.NetworkManager;
 import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
+import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import org.junit.jupiter.api.Assertions;
@@ -88,10 +89,10 @@ public class FloydWarshallTest {
         return resultTop;
     }
 
-    /*@Test
+    @Test
     public void FloydWarshallTest() {
 
-        ArrayList<Network> topology = new ArrayList<>(4);
+        ArrayList<Network> networks = new ArrayList<>(4);
         HashMap<String, Router> routers = new HashMap<>();
 
         routers.put("R1", new Router("R1"));
@@ -122,16 +123,18 @@ public class FloydWarshallTest {
         Network internet = new Network();
         internet.setInternet(true);
 
-        topology.addAll(Arrays.asList(n1, n2, n3, n4, internet));
-        initNetworks(topology, routers);
+        networks.addAll(Arrays.asList(n1, n2, n3, n4, internet));
+        Topology topology = new Topology(routers, networks);
+
+        initNetworks(networks, routers);
         NetworkManager networkManager = new NetworkManager();
-        routers = networkManager.connect(topology, routers);
-        ArrayList<Network> resArr = prepareResultTopology(topology);
+        routers = networkManager.connect(topology);
+        ArrayList<Network> resArr = prepareResultTopology(networks);
         networkManager.calcRoutes(topology);
 
         try {
             for (int i = 0; i < 5; i++) {
-                Network targetNetwork = topology.get(i);
+                Network targetNetwork = networks.get(i);
                 Network resultNetwork = resArr.get(i);
                 for (int y = 0; y < 5; y++) {
                     Assertions.assertEquals(targetNetwork.getCalcRoutes().get(y).getCost(),
@@ -143,10 +146,10 @@ public class FloydWarshallTest {
             }
         } finally {
             CleanUtils cleanUtils = new CleanUtils();
-            topology.remove(4);
-            cleanUtils.cleanUp(topology, routers);
+            networks.remove(4);
+            cleanUtils.cleanUp(networks, routers);
         }
-    }*/
+    }
 
 
     private void initNetworks(ArrayList<Network> topology, HashMap<String, Router> routers) {
