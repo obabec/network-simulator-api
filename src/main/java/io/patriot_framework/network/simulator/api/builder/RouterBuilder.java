@@ -16,33 +16,31 @@
 
 package io.patriot_framework.network.simulator.api.builder;
 
-import io.patriot_framework.network.simulator.api.model.Network;
+import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.Topology;
-import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
-import java.util.ArrayList;
+public class RouterBuilder {
 
-public class TopologyBuilder {
-    Topology topology;
+    TopologyBuilder topologyBuilder;
+    String name;
 
-    public NetworkBuilder withNetwork(String name) {
-        return new NetworkBuilder(this, name);
+
+    public RouterBuilder(TopologyBuilder topologyBuilder) {
+        this.topologyBuilder = topologyBuilder;
     }
 
-    public TopologyBuilder(int networkCount) {
-        topology = new Topology(networkCount);
+    public RouterBuilder withName(String name) {
+        this.name = name;
+        return this;
     }
 
-    public Topology build() {
-        return topology;
+    public RouterBuilder createRouter() {
+        topologyBuilder.topology.getRouters().put(name, new Router(name));
+        return this;
     }
 
-    public CalcRouteBuilder withRoutes() {
-        return new CalcRouteBuilder(this);
-    }
-
-    public RouterBuilder withRouters() {
-        return new RouterBuilder(this);
+    public TopologyBuilder addRouters() {
+        return topologyBuilder;
     }
 
 

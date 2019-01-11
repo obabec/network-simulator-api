@@ -18,27 +18,26 @@ package io.patriot_framework.network.simulator.api;
 
 import io.patriot_framework.network.simulator.api.builder.TopologyBuilder;
 import io.patriot_framework.network.simulator.api.manager.NetworkManager;
-import io.patriot_framework.network.simulator.api.model.Network;
-import io.patriot_framework.network.simulator.api.model.Router;
+import io.patriot_framework.network.simulator.api.model.Topology;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FloydWarshallDemo {
 
     public void deploy() {
-        HashMap<String, Router> routers = new HashMap<>();
-
-        routers.put("R1", new Router("R1"));
-
-        routers.put("R2", new Router("R2"));
-
-        routers.put("R3", new Router("R3"));
-
-        routers.put("R5", new Router("R5"));
 
         int routeNeedsCalc = 6;
-        ArrayList<Network> topology = new TopologyBuilder(5)
+        Topology topology = new TopologyBuilder(5)
+                .withRouters()
+                    .withName("R1")
+                    .createRouter()
+                    .withName("R2")
+                    .createRouter()
+                    .withName("R3")
+                    .createRouter()
+                    .withName("R5")
+                    .createRouter()
+                    .addRouters()
                 .withNetwork("N1")
                     .withIP("192.168.0.0")
                     .withMask(28)
@@ -59,74 +58,73 @@ public class FloydWarshallDemo {
                     .withInternet(true)
                     .create()
                 .withRoutes()
-                    .withSourceNetwork(0)
+                    .withSourceNetwork("N1")
 
-                        .withDestNetwork(1)
+                        .withDestNetwork("N2")
                         .withCost(1)
-                        .viaRouter(routers.get("R1"))
+                        .viaRouter("R1")
                         .addRoute()
 
-                        .withDestNetwork(2)
+                        .withDestNetwork("N3")
                         .withCost(routeNeedsCalc)
                         .viaRouter(null)
                         .addRoute()
 
-                        .withDestNetwork(3)
+                        .withDestNetwork("N4")
                         .withCost(routeNeedsCalc)
                         .viaRouter(null)
                         .addRoute()
 
-                        .withDestNetwork(4)
+                        .withDestNetwork("internet")
                         .withCost(routeNeedsCalc)
                         .viaRouter(null)
                         .addRoute()
 
-                    .withSourceNetwork(1)
+                    .withSourceNetwork("N2")
 
-                        .withDestNetwork(2)
+                        .withDestNetwork("N3")
                         .withCost(1)
-                        .viaRouter(routers.get("R2"))
+                        .viaRouter("R2")
                         .addRoute()
 
-                        .withDestNetwork(3)
+                        .withDestNetwork("N4")
                         .withCost(1)
-                        .viaRouter(routers.get("R3"))
+                        .viaRouter("R3")
                         .addRoute()
 
-                        .withDestNetwork(4)
+                        .withDestNetwork("internet")
                         .withCost(routeNeedsCalc)
                         .viaRouter(null)
                         .addRoute()
 
-                    .withSourceNetwork(2)
+                    .withSourceNetwork("N3")
 
-                        .withDestNetwork(3)
+                        .withDestNetwork("N4")
                         .withCost(1)
-                        .viaRouter(routers.get("R5"))
+                        .viaRouter("R5")
                         .addRoute()
 
-                        .withDestNetwork(4)
+                        .withDestNetwork("internet")
                         .withCost(1)
-                        .viaRouter(routers.get("R5"))
+                        .viaRouter("R5")
                         .addRoute()
 
-                    .withSourceNetwork(3)
+                    .withSourceNetwork("N4")
 
-                        .withDestNetwork(4)
+                        .withDestNetwork("internet")
                         .withCost(1)
-                        .viaRouter(routers.get("R5"))
+                        .viaRouter("R5")
                         .addRoute()
 
                 .buildRoutes()
                 .build();
 
 
-
         NetworkManager networkManager = new NetworkManager();
 
-        routers = networkManager.connect(topology, routers);
+        topology.setRouters(networkManager.connect(topology));
         networkManager.calcRoutes(topology);
         HashMap hashMap = networkManager.processRoutes(topology);
-        networkManager.setRoutes(hashMap, routers);
+        networkManager.setRoutes(hashMap, topology.getRouters());
     }
 }

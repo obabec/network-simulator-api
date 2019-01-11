@@ -24,6 +24,7 @@ import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
 import io.patriot_framework.network.simulator.api.api.iproute.RouteController;
 import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
+import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
@@ -56,19 +57,20 @@ public class NetworkManager {
      * connection of devices which are described in topology with cost = 1.
      *
      * @param topology the topology
-     * @param routers  the routers
      * @return the hash map
      */
-    public HashMap<String, Router> connect(ArrayList<Network> topology, HashMap<String, Router> routers) {
-        routers = filterDirected(topology, routers);
+    public HashMap<String, Router> connect(Topology topology) {
+
+
+        topology.setRouters(filterDirected(topology));
         DockerImage dockerImage = new DockerImage(dockerManager);
-        HashMap<String, DockerNetwork> dockerNetworks = createNetworks(topology);
+        HashMap<String, DockerNetwork> dockerNetworks = createNetworks(topology.getNetworkTop());
         HashMap<String, DockerContainer> dockerRouters = new HashMap<>();
         RouteController routeController;
         try {
             dockerImage.buildRouterImage(new HashSet<>(Arrays.asList("router")));
 
-            for (Map.Entry<String, Router> routerEntry : routers.entrySet()) {
+            for (Map.Entry<String, Router> routerEntry : topology.getRouters().entrySet()) {
 
                  dockerRouters.put(routerEntry.getValue().getName(), (DockerContainer) dockerManager
                         .createContainer(routerEntry.getKey(), "router"));
@@ -88,11 +90,11 @@ public class NetworkManager {
                 routerEntry.getValue().setNetworkInterfaces(routeController.getInterfaces());
                 dockerManager.delDefaultGateway(dockerRouters.get(routerEntry.getValue().getName()));
             }
-            initInternetNetworkAddress(topology, dockerRouters.values().iterator().next());
+            initInternetNetworkAddress(topology.getNetworkTop(), dockerRouters.values().iterator().next());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return routers;
+        return topology.getRouters();
     }
 
     private void initInternetNetworkAddress(ArrayList<Network> topology, DockerContainer dockerContainer) {
@@ -118,20 +120,22 @@ public class NetworkManager {
         return dockerNetworks;
     }
 
-    private HashMap<String, Router> filterDirected(ArrayList<Network> topology, HashMap<String, Router> routers) {
-        for (int i = 0; i < topology.size(); i++) {
-            logger.info("Filtering connected networks with " + topology.get(i).getName() + " network.");
-            for (CalcRoute c : topology.get(i).getCalcRoutes()) {
+    private HashMap<String, Router> filterDirected(Topology topology) {
+        ArrayList<Network> networks = topology.getNetworkTop();
+        HashMap<String, Router> routers = topology.getRouters();
+        for (int i = 0; i < networks.size(); i++) {
+            logger.info("Filtering connected networks with " + networks.get(i).getName() + " network.");
+            for (CalcRoute c : networks.get(i).getCalcRoutes()) {
                 if (c.getCost() == null) {
                     continue;
                 }
                 if (c.getCost() == 1) {
                     String rName = c.getNextHop().getRouter().getName();
-                    if (!routers.get(rName).getConnectedNetworks().contains(topology.get(i))) {
-                        routers.get(rName).getConnectedNetworks().add(topology.get(i));
+                    if (!routers.get(rName).getConnectedNetworks().contains(networks.get(i))) {
+                        routers.get(rName).getConnectedNetworks().add(networks.get(i));
                     } else if (!routers.get(rName).getConnectedNetworks()
-                            .contains(topology.get(c.getNextHop().getNetwork()))) {
-                        routers.get(rName).getConnectedNetworks().add(topology.get(c.getNextHop().getNetwork()));
+                            .contains(networks.get(c.getNextHop().getNetwork()))) {
+                        routers.get(rName).getConnectedNetworks().add(networks.get(c.getNextHop().getNetwork()));
                     }
                 }
             }
@@ -144,11 +148,12 @@ public class NetworkManager {
      * described in topology with n + 1 cost.
      *
      * n = number of networks
-     * @param topology the topology
+     * @param topology network topology
      */
-    public void calcRoutes(ArrayList<Network> topology) {
+    public void calcRoutes(Topology topology) {
+        ArrayList<Network> networks = topology.getNetworkTop();
         logger.info("Calculating network routes.");
-        int size = topology.size();
+        int size = networks.size();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -157,19 +162,19 @@ public class NetworkManager {
                     if (i == k || i == j || j == k) {
                         continue;
                     }
-                    int cost = topology.get(i).getCalcRoutes().get(j).getCost()
-                            + topology.get(j).getCalcRoutes().get(k).getCost();
+                    int cost = networks.get(i).getCalcRoutes().get(j).getCost()
+                            + networks.get(j).getCalcRoutes().get(k).getCost();
 
-                    int actualCost = topology.get(i).getCalcRoutes().get(k).getCost();
+                    int actualCost = networks.get(i).getCalcRoutes().get(k).getCost();
 
                     if (actualCost == (size + 1) || actualCost > cost) {
-                        NextHop nextHop = new NextHop(topology.get(i).getCalcRoutes()
+                        NextHop nextHop = new NextHop(networks.get(i).getCalcRoutes()
                                 .get(j).getNextHop().getRouter(),
-                                topology.get(i).getCalcRoutes().get(j).getNextHop().getNetwork());
+                                networks.get(i).getCalcRoutes().get(j).getNextHop().getNetwork());
 
-                        CalcRoute c = new CalcRoute(nextHop, topology.get(i).getCalcRoutes().get(j).getCost()
-                                + topology.get(j).getCalcRoutes().get(k).getCost());
-                        topology.get(i).getCalcRoutes().set(k, c);
+                        CalcRoute c = new CalcRoute(nextHop, networks.get(i).getCalcRoutes().get(j).getCost()
+                                + networks.get(j).getCalcRoutes().get(k).getCost());
+                        networks.get(i).getCalcRoutes().set(k, c);
                     }
                 }
             }
@@ -179,25 +184,26 @@ public class NetworkManager {
     /**
      * Convert calculated routes to Router' s routing table format.
      *
-     * @param calculatedRoutes the calculated routes
+     * @param topology Calculated network topology
      * @return Hash map of routers and routes which have to be set in router' s routing tables.
      */
-    public HashMap<String, ArrayList<Route>> processRoutes(ArrayList<Network> calculatedRoutes) {
+    public HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
         logger.info("Processing routes to ipRoute2 format.");
-        int size = calculatedRoutes.size();
+        ArrayList<Network> calculatedTop = topology.getNetworkTop();
+        int size = calculatedTop.size();
         HashMap<String, ArrayList<Route>> routes = new HashMap<>();
         for (int i = 0; i < size; i++){
-            for (int j = 0; j < calculatedRoutes.get(i).getCalcRoutes().size(); j++) {
-                if (i == j || calculatedRoutes.get(i).getCalcRoutes().get(j) == null) continue;
+            for (int j = 0; j < calculatedTop.get(i).getCalcRoutes().size(); j++) {
+                if (i == j || calculatedTop.get(i).getCalcRoutes().get(j) == null) continue;
                 Route route = new Route();
-                Router r = calculatedRoutes.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
+                Router r = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
                 route.setTargetRouter(r);
 
-                route.setSource(calculatedRoutes.get(i));
-                route.setDest(calculatedRoutes.get(j));
+                route.setSource(calculatedTop.get(i));
+                route.setDest(calculatedTop.get(j));
 
-                Integer nextNetwork = calculatedRoutes.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
-                NetworkInterface target = findCorrectInterface(r, calculatedRoutes.get(nextNetwork));
+                Integer nextNetwork = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
+                NetworkInterface target = findCorrectInterface(r, calculatedTop.get(nextNetwork));
                 route.setrNetworkInterface(target);
 
                 if (!routes.containsKey(r.getName())) {

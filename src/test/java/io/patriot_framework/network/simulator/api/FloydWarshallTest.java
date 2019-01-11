@@ -88,7 +88,7 @@ public class FloydWarshallTest {
         return resultTop;
     }
 
-    @Test
+    /*@Test
     public void FloydWarshallTest() {
 
         ArrayList<Network> topology = new ArrayList<>(4);
@@ -146,7 +146,7 @@ public class FloydWarshallTest {
             topology.remove(4);
             cleanUtils.cleanUp(topology, routers);
         }
-    }
+    }*/
 
 
     private void initNetworks(ArrayList<Network> topology, HashMap<String, Router> routers) {

@@ -16,9 +16,12 @@
 
 package io.patriot_framework.network.simulator.api.builder;
 
+import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
+
+import java.util.ArrayList;
 
 public class CalcRouteBuilder {
     Router router;
@@ -36,8 +39,8 @@ public class CalcRouteBuilder {
         this.networkBuilder = networkBuilder;
     }
 
-    public CalcRouteBuilder viaRouter(Router router) {
-        this.router = router;
+    public CalcRouteBuilder viaRouter(String routerName) {
+        this.router = topologyBuilder.topology.getRouters().get(routerName);
         return this;
     }
 
@@ -46,9 +49,29 @@ public class CalcRouteBuilder {
         return this;
     }
 
+    public CalcRouteBuilder withDestNetwork(String targetNetworkName) {
+        this.destNetwork = findNetworkByName(targetNetworkName);
+        return this;
+    }
+
     public CalcRouteBuilder withDestNetwork(Integer targetNetworkIndex) {
         this.destNetwork = targetNetworkIndex;
         return this;
+    }
+
+    public CalcRouteBuilder withSourceNetwork(String sourceNetworkName) {
+        this.sourceNetwork = findNetworkByName(sourceNetworkName);
+        return this;
+    }
+
+    private Integer findNetworkByName(String name) {
+        ArrayList<Network> networks = topologyBuilder.topology.getNetworkTop();
+        for (int i = 0; i < networks.size(); i++) {
+            if (networks.get(i).getName() == name) {
+                return i;
+            }
+        }
+        return null;
     }
 
     public CalcRouteBuilder withSourceNetwork(Integer sourceNetwork) {
@@ -58,26 +81,20 @@ public class CalcRouteBuilder {
 
     public CalcRouteBuilder addRoute() {
         CalcRoute sR = new CalcRoute(new NextHop(router, destNetwork), cost);
-        topologyBuilder.topology.get(sourceNetwork).getCalcRoutes().add(destNetwork, sR);
+        topologyBuilder.topology.getNetworkTop().get(sourceNetwork).getCalcRoutes().add(destNetwork, sR);
 
         if (sourceNetwork != destNetwork) {
             CalcRoute dR = new CalcRoute(new NextHop(router, sourceNetwork), cost);
-            topologyBuilder.topology.get(destNetwork).getCalcRoutes().add(sourceNetwork, dR);
+            topologyBuilder.topology.getNetworkTop().get(destNetwork).getCalcRoutes().add(sourceNetwork, dR);
         }
         return this;
     }
 
-    /*public NetworkBuilder buildRoutes() {
-        CalcRoute cR = new CalcRoute(new NextHop(router, destNetwork), cost);
-        networkBuilder.calcRoutes.add(destNetwork, cR);
-        return networkBuilder;
-    }*/
-
     public TopologyBuilder buildRoutes() {
 
-        for (int i = 0; i < topologyBuilder.topology.size(); i++) {
+        for (int i = 0; i < topologyBuilder.topology.getNetworkTop().size(); i++) {
             CalcRoute cR = new CalcRoute(new NextHop(null, i), null);
-            topologyBuilder.topology.get(i).getCalcRoutes().add(i, cR);
+            topologyBuilder.topology.getNetworkTop().get(i).getCalcRoutes().add(i, cR);
         }
 
         return topologyBuilder;

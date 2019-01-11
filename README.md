@@ -1,7 +1,7 @@
 # Network control
 
 Main goal of this Java API is provide full network control from scratch i. e create docker
-networks, containers, connect them together as they are in topology,
+networks, containers, connect them together as they are in networkTop,
 calculate shortest paths, set routes to routers (container) routing table, simulate 
 crash on link.
 
