@@ -16,16 +16,12 @@
 
 package io.patriot_framework.network.simulator.api;
 
-import io.patriot_framework.network.simulator.api.builder.NetworkBuilder;
 import io.patriot_framework.network.simulator.api.builder.TopologyBuilder;
 import io.patriot_framework.network.simulator.api.manager.NetworkManager;
 import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
-import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
-import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class FloydWarshallDemo {
@@ -64,14 +60,64 @@ public class FloydWarshallDemo {
                     .create()
                 .withRoutes()
                     .withSourceNetwork(0)
-                    .withDestNetwork(0)
-                    .withCost(null)
-                    .viaRouter(null)
-                    .addRoute()
-                    .withDestNetwork(1)
-                    .withCost(1)
-                    .viaRouter(routers.get("R1"))
-                    .addRoute()
+
+                        .withDestNetwork(1)
+                        .withCost(1)
+                        .viaRouter(routers.get("R1"))
+                        .addRoute()
+
+                        .withDestNetwork(2)
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                        .withDestNetwork(3)
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                        .withDestNetwork(4)
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                    .withSourceNetwork(1)
+
+                        .withDestNetwork(2)
+                        .withCost(1)
+                        .viaRouter(routers.get("R2"))
+                        .addRoute()
+
+                        .withDestNetwork(3)
+                        .withCost(1)
+                        .viaRouter(routers.get("R3"))
+                        .addRoute()
+
+                        .withDestNetwork(4)
+                        .withCost(routeNeedsCalc)
+                        .viaRouter(null)
+                        .addRoute()
+
+                    .withSourceNetwork(2)
+
+                        .withDestNetwork(3)
+                        .withCost(1)
+                        .viaRouter(routers.get("R5"))
+                        .addRoute()
+
+                        .withDestNetwork(4)
+                        .withCost(1)
+                        .viaRouter(routers.get("R5"))
+                        .addRoute()
+
+                    .withSourceNetwork(3)
+
+                        .withDestNetwork(4)
+                        .withCost(1)
+                        .viaRouter(routers.get("R5"))
+                        .addRoute()
+
+                .buildRoutes()
                 .build();
 
 

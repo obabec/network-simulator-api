@@ -64,15 +64,22 @@ public class CalcRouteBuilder {
             CalcRoute dR = new CalcRoute(new NextHop(router, sourceNetwork), cost);
             topologyBuilder.topology.get(destNetwork).getCalcRoutes().add(sourceNetwork, dR);
         }
+        return this;
     }
 
-    /*public NetworkBuilder build() {
+    /*public NetworkBuilder buildRoutes() {
         CalcRoute cR = new CalcRoute(new NextHop(router, destNetwork), cost);
         networkBuilder.calcRoutes.add(destNetwork, cR);
         return networkBuilder;
     }*/
 
-    public TopologyBuilder build() {
+    public TopologyBuilder buildRoutes() {
+
+        for (int i = 0; i < topologyBuilder.topology.size(); i++) {
+            CalcRoute cR = new CalcRoute(new NextHop(null, i), null);
+            topologyBuilder.topology.get(i).getCalcRoutes().add(i, cR);
+        }
+
         return topologyBuilder;
     }
 }
