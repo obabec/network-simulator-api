@@ -64,7 +64,7 @@ public class NetworkManager {
 
         topology.setRouters(filterDirected(topology));
         DockerImage dockerImage = new DockerImage(dockerManager);
-        HashMap<String, DockerNetwork> dockerNetworks = createNetworks(topology.getNetworkTop());
+        HashMap<String, DockerNetwork> dockerNetworks = createNetworks(topology.getNetworks());
         HashMap<String, DockerContainer> dockerRouters = new HashMap<>();
         RouteController routeController;
         try {
@@ -90,7 +90,7 @@ public class NetworkManager {
                 routerEntry.getValue().setNetworkInterfaces(routeController.getInterfaces());
                 dockerManager.delDefaultGateway(dockerRouters.get(routerEntry.getValue().getName()));
             }
-            initInternetNetworkAddress(topology.getNetworkTop(), dockerRouters.values().iterator().next());
+            initInternetNetworkAddress(topology.getNetworks(), dockerRouters.values().iterator().next());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,7 +121,7 @@ public class NetworkManager {
     }
 
     private HashMap<String, Router> filterDirected(Topology topology) {
-        ArrayList<Network> networks = topology.getNetworkTop();
+        ArrayList<Network> networks = topology.getNetworks();
         HashMap<String, Router> routers = topology.getRouters();
         for (int i = 0; i < networks.size(); i++) {
             logger.info("Filtering connected networks with " + networks.get(i).getName() + " network.");
@@ -151,7 +151,7 @@ public class NetworkManager {
      * @param topology network topology
      */
     public void calcRoutes(Topology topology) {
-        ArrayList<Network> networks = topology.getNetworkTop();
+        ArrayList<Network> networks = topology.getNetworks();
         logger.info("Calculating network routes.");
         int size = networks.size();
 
@@ -189,7 +189,7 @@ public class NetworkManager {
      */
     public HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
         logger.info("Processing routes to ipRoute2 format.");
-        ArrayList<Network> calculatedTop = topology.getNetworkTop();
+        ArrayList<Network> calculatedTop = topology.getNetworks();
         int size = calculatedTop.size();
         HashMap<String, ArrayList<Route>> routes = new HashMap<>();
         for (int i = 0; i < size; i++){

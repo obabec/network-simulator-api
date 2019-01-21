@@ -65,8 +65,8 @@ public class RouteTreatmentTest {
         HashMap<String, Router> routers = new HashMap<>();
         routers.put("TestRouter", new Router("TestRouter"));
         Topology topology = new Topology(routers, networks);
-        Route route = createSimpleTopology(topology.getNetworkTop(), true, topology.getRouters().get("TestRouter"));
-        createDuplicateNetwork(topology.getNetworkTop() ,topology.getRouters().get("TestRouter"));
+        Route route = createSimpleTopology(topology.getNetworks(), true, topology.getRouters().get("TestRouter"));
+        createDuplicateNetwork(topology.getNetworks() ,topology.getRouters().get("TestRouter"));
 
         HashMap<String, ArrayList<Route>> routes = nManager.processRoutes(topology);
         assertEquals(1, routes.size());
@@ -138,7 +138,7 @@ public class RouteTreatmentTest {
             }
         }
         CleanUtils cleanUtils = new CleanUtils();
-        cleanUtils.cleanUp(topology.getNetworkTop(), routers);
+        cleanUtils.cleanUp(topology.getNetworks(), routers);
     }
 
     private Boolean containsRoute(List<Route> routes, Route route) {

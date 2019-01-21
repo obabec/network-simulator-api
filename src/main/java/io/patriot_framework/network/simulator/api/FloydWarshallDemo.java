@@ -116,7 +116,7 @@ public class FloydWarshallDemo {
                         .viaRouter("R5")
                         .addRoute()
 
-                .buildRoutes()
+                    .buildRoutes()
                 .build();
 
 

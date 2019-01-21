@@ -19,36 +19,82 @@ package io.patriot_framework.network.simulator.api.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+/**
+ * Wrapper representing full network topology.
+ */
 public class Topology {
+    /**
+     * Routers located in topology.
+     */
     HashMap<String, Router> routers = new HashMap<>();
-    ArrayList<Network> networkTop;
+    /**
+     * Networks in topology.
+     */
+    ArrayList<Network> networks;
 
-    public Topology(HashMap<String, Router> routers, ArrayList<Network> networkTop) {
+    /**
+     * Instantiates a new Topology.
+     *
+     * @param routers    the routers
+     * @param networks the network top
+     */
+    public Topology(HashMap<String, Router> routers, ArrayList<Network> networks) {
         this.routers = routers;
-        this.networkTop = networkTop;
+        this.networks = networks;
     }
 
-    public Topology(ArrayList<Network> networkTop) {
-        this.networkTop = networkTop;
+    /**
+     * Instantiates a new Topology.
+     *
+     * @param networks the network top
+     */
+    public Topology(ArrayList<Network> networks) {
+        this.networks = networks;
     }
 
+    /**
+     * Instantiates a new Topology.
+     *
+     * @param networkCount the network count
+     */
     public Topology(Integer networkCount) {
-        this.networkTop = new ArrayList<>(networkCount);
+        this.networks = new ArrayList<>(networkCount);
     }
 
+    /**
+     * Gets routers.
+     *
+     * @return the routers
+     */
     public HashMap<String, Router> getRouters() {
         return routers;
     }
 
+    /**
+     * Sets routers.
+     *
+     * @param routers the routers
+     */
     public void setRouters(HashMap<String, Router> routers) {
         this.routers = routers;
     }
 
-    public ArrayList<Network> getNetworkTop() {
-        return networkTop;
+    /**
+     * Gets network top.
+     *
+     * @return the network top
+     */
+    public ArrayList<Network> getNetworks() {
+        return networks;
     }
 
-    public void setNetworkTop(ArrayList<Network> networkTop) {
-        this.networkTop = networkTop;
+    /**
+     * Sets network top.
+     *
+     * @param networks the network top
+     */
+    public void setNetworks(ArrayList<Network> networks) {
+        this.networks = networks;
     }
 }

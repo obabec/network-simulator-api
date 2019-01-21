@@ -70,7 +70,7 @@ public class NetworkBuilder {
         return n;
     }
     public TopologyBuilder create() {
-        t.topology.getNetworkTop().add(build());
+        t.topology.getNetworks().add(build());
         return t;
     }
 

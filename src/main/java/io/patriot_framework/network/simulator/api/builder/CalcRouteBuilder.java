@@ -65,7 +65,7 @@ public class CalcRouteBuilder {
     }
 
     private Integer findNetworkByName(String name) {
-        ArrayList<Network> networks = topologyBuilder.topology.getNetworkTop();
+        ArrayList<Network> networks = topologyBuilder.topology.getNetworks();
         for (int i = 0; i < networks.size(); i++) {
             if (networks.get(i).getName() == name) {
                 return i;
@@ -81,20 +81,20 @@ public class CalcRouteBuilder {
 
     public CalcRouteBuilder addRoute() {
         CalcRoute sR = new CalcRoute(new NextHop(router, destNetwork), cost);
-        topologyBuilder.topology.getNetworkTop().get(sourceNetwork).getCalcRoutes().add(destNetwork, sR);
+        topologyBuilder.topology.getNetworks().get(sourceNetwork).getCalcRoutes().add(destNetwork, sR);
 
         if (sourceNetwork != destNetwork) {
             CalcRoute dR = new CalcRoute(new NextHop(router, sourceNetwork), cost);
-            topologyBuilder.topology.getNetworkTop().get(destNetwork).getCalcRoutes().add(sourceNetwork, dR);
+            topologyBuilder.topology.getNetworks().get(destNetwork).getCalcRoutes().add(sourceNetwork, dR);
         }
         return this;
     }
 
     public TopologyBuilder buildRoutes() {
 
-        for (int i = 0; i < topologyBuilder.topology.getNetworkTop().size(); i++) {
+        for (int i = 0; i < topologyBuilder.topology.getNetworks().size(); i++) {
             CalcRoute cR = new CalcRoute(new NextHop(null, i), null);
-            topologyBuilder.topology.getNetworkTop().get(i).getCalcRoutes().add(i, cR);
+            topologyBuilder.topology.getNetworks().get(i).getCalcRoutes().add(i, cR);
         }
 
         return topologyBuilder;
