@@ -28,13 +28,15 @@ mvn install:install-file -Dfile=target/network-sample-2.0-SNAPSHOT-jar-with-depe
 
 ```
 
-### Installing
+### Router
+Before creating network topology, router image has to be build.
+```
+git clone https://github.com/obabec/PatrIoT_router
+docker build -t YOURTAG PatrIoT_router
+```
+You will use tag of your image when you will create topology and
+especially routers. 
 
-All necessary libraries can be installed by:
-```
-git clone https://github.com/obabec/network-control.git
-mvn install
-```
 
 ### Running tests
 

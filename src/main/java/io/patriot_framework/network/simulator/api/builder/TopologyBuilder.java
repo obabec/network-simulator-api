@@ -22,25 +22,57 @@ import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
 import java.util.ArrayList;
 
+/**
+ * The type Topology builder.
+ */
 public class TopologyBuilder {
+    /**
+     * The Topology.
+     */
     Topology topology;
 
+    /**
+     * Instantiates new NetworkBuilder.
+     *
+     * @param name the network name
+     * @return the network builder
+     */
     public NetworkBuilder withNetwork(String name) {
         return new NetworkBuilder(this, name);
     }
 
+    /**
+     * Instantiates a new Topology builder.
+     *
+     * @param networkCount the network count
+     */
     public TopologyBuilder(int networkCount) {
         topology = new Topology(networkCount);
     }
 
+    /**
+     * Builds topology.
+     *
+     * @return the topology
+     */
     public Topology build() {
         return topology;
     }
 
+    /**
+     * Instantiates new CalcRouteBuilder.
+     *
+     * @return the calc route builder
+     */
     public CalcRouteBuilder withRoutes() {
         return new CalcRouteBuilder(this);
     }
 
+    /**
+     * Instantiates new CalcRouteBuilder.
+     *
+     * @return the router builder
+     */
     public RouterBuilder withRouters() {
         return new RouterBuilder(this);
     }

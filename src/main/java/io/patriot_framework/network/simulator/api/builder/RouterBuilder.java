@@ -19,26 +19,56 @@ package io.patriot_framework.network.simulator.api.builder;
 import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.Topology;
 
+/**
+ * The type Router builder.
+ */
 public class RouterBuilder {
 
+    /**
+     * The Topology builder.
+     */
     TopologyBuilder topologyBuilder;
+    /**
+     * Name of router.
+     */
     String name;
 
 
+    /**
+     * Instantiates a new Router builder.
+     *
+     * @param topologyBuilder the topology builder
+     */
     public RouterBuilder(TopologyBuilder topologyBuilder) {
         this.topologyBuilder = topologyBuilder;
     }
 
+    /**
+     * Adds name to router.
+     *
+     * @param name the name
+     * @return the router builder
+     */
     public RouterBuilder withName(String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Create new router object and add it into topology routers.
+     *
+     * @return the router builder
+     */
     public RouterBuilder createRouter() {
         topologyBuilder.topology.getRouters().put(name, new Router(name));
         return this;
     }
 
+    /**
+     * Returns TopologyBuilder with created routers.
+     *
+     * @return the topology builder
+     */
     public TopologyBuilder addRouters() {
         return topologyBuilder;
     }
