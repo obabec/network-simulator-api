@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Patriot project
+ * Copyright 2019 Patriot project
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
-import io.patriot_framework.network_simulator.example.container.DockerContainer;
-import io.patriot_framework.network_simulator.example.image.docker.DockerImage;
-import io.patriot_framework.network_simulator.example.manager.DockerManager;
-import io.patriot_framework.network_simulator.example.network.DockerNetwork;
+import io.patriot_framework.network_simulator.docker.container.DockerContainer;
+import io.patriot_framework.network_simulator.docker.image.docker.DockerImage;
+import io.patriot_framework.network_simulator.docker.manager.DockerManager;
+import io.patriot_framework.network_simulator.docker.network.DockerNetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

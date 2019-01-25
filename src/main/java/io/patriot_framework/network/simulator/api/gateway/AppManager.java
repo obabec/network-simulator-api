@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Patriot project
+ * Copyright 2019 Patriot project
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package io.patriot_framework.network.simulator.api.gateway;
 
 import com.google.common.io.Files;
-import io.patriot_framework.network_simulator.example.container.DockerContainer;
-import io.patriot_framework.network_simulator.example.container.config.AppConfig;
-import io.patriot_framework.network_simulator.example.files.FileUtils;
-import io.patriot_framework.network_simulator.example.image.docker.DockerImage;
-import io.patriot_framework.network_simulator.example.image.docker.builder.DockerFileBuilder;
-import io.patriot_framework.network_simulator.example.manager.DockerManager;
+import io.patriot_framework.network_simulator.docker.container.DockerContainer;
+import io.patriot_framework.network_simulator.docker.container.config.AppConfig;
+import io.patriot_framework.network_simulator.docker.files.FileUtils;
+import io.patriot_framework.network_simulator.docker.image.docker.DockerImage;
+import io.patriot_framework.network_simulator.docker.image.docker.builder.DockerFileBuilder;
+import io.patriot_framework.network_simulator.docker.manager.DockerManager;
 
 import java.io.File;
 import java.nio.file.Path;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Patriot project
+ * Copyright 2019 Patriot project
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package io.patriot_framework.network.simulator.api;
 
 import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
-import io.patriot_framework.network_simulator.example.cleanup.Cleaner;
+import io.patriot_framework.network_simulator.docker.cleanup.Cleaner;
 
 import java.util.ArrayList;
 import java.util.HashMap;

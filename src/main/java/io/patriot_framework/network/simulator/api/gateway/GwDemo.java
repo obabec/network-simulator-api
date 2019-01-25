@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Patriot project
+ * Copyright 2019 Patriot project
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package io.patriot_framework.network.simulator.api.gateway;
 
-import io.patriot_framework.network_simulator.example.container.config.AppConfig;
+import io.patriot_framework.network_simulator.docker.container.config.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
