@@ -22,12 +22,14 @@ import com.github.jgonian.ipmath.Ipv4Range;
 
 import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
 import io.patriot_framework.network.simulator.api.api.iproute.RouteController;
+import io.patriot_framework.network.simulator.api.api.monitoring.MonitoringController;
 import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
+import io.patriot_framework.network_simulator.docker.cleanup.Cleaner;
 import io.patriot_framework.network_simulator.docker.container.DockerContainer;
 import io.patriot_framework.network_simulator.docker.image.docker.DockerImage;
 import io.patriot_framework.network_simulator.docker.manager.DockerManager;
@@ -36,7 +38,6 @@ import io.patriot_framework.network_simulator.docker.network.DockerNetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -47,10 +48,19 @@ public class NetworkManager {
 
     private DockerManager dockerManager;
     private Logger logger;
+    private String routerTag;
+    private String monitoringAddr;
+    private List<String> routers = new ArrayList<>();
+    private List<String> newtworks = new ArrayList<>();
 
-    public NetworkManager() {
+    public NetworkManager(String routerTag) {
         this.dockerManager = new DockerManager();
         this.logger = LoggerFactory.getLogger(NetworkManager.class);
+        this.routerTag = routerTag;
+    }
+
+    public void setMonitoringAddr(String monitoringAddr) {
+        this.monitoringAddr = monitoringAddr;
     }
 
     /**
@@ -66,21 +76,26 @@ public class NetworkManager {
         topology.setRouters(filterDirected(topology));
         DockerImage dockerImage = new DockerImage(dockerManager);
         HashMap<String, DockerNetwork> dockerNetworks = createNetworks(topology.getNetworks());
-        HashMap<String, DockerContainer> dockerRouters = new HashMap<>();
-        RouteController routeController;
-        try {
-            dockerImage.buildRouterImage(new HashSet<>(Arrays.asList("router")));
+        newtworks.addAll(dockerNetworks.keySet());
 
-            for (Map.Entry<String, Router> routerEntry : topology.getRouters().entrySet()) {
+        HashMap<String, DockerContainer> dockerRouters = new HashMap<>();
+        MonitoringController monitoringController;
+        RouteController routeController;
+        for (Map.Entry<String, Router> routerEntry : topology.getRouters().entrySet()) {
 
                  dockerRouters.put(routerEntry.getValue().getName(), (DockerContainer) dockerManager
-                        .createContainer(routerEntry.getKey(), "router"));
+                        .createContainer(routerEntry.getKey(), routerTag));
                  dockerManager.startContainer(dockerRouters.get(routerEntry.getValue().getName()));
 
                  routerEntry.getValue().setMngIp(dockerManager.findIpAddress(dockerRouters.get(routerEntry.getKey())));
 
                  routeController = new RouteController(routerEntry.getValue().getMngIp(),
                         routerEntry.getValue().getMngPort());
+                 if (monitoringAddr != null) {
+                     monitoringController = new MonitoringController(routerEntry.getValue().getMngIp(),
+                             routerEntry.getValue().getMngPort());
+                     monitoringController.setMonitoringAddress(monitoringAddr);
+                 }
 
                 for (Network network : routerEntry.getValue().getConnectedNetworks()) {
                     if (!network.getInternet()) {
@@ -90,11 +105,9 @@ public class NetworkManager {
                 }
                 routerEntry.getValue().setNetworkInterfaces(routeController.getInterfaces());
                 dockerManager.delDefaultGateway(dockerRouters.get(routerEntry.getValue().getName()));
+                routers.addAll(dockerRouters.keySet());
             }
             initInternetNetworkAddress(topology.getNetworks(), dockerRouters.values().iterator().next());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return topology.getRouters();
     }
 
@@ -268,5 +281,14 @@ public class NetworkManager {
                 }
             }
         }
+    }
+
+    /**
+     * Method to clean the environment after test execution
+     */
+    public void cleanUp() {
+        Cleaner cleaner = new Cleaner();
+        cleaner.cleanUp(newtworks, routers);
+
     }
 }

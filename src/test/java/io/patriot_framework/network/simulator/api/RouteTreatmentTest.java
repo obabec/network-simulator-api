@@ -25,6 +25,7 @@ import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -35,11 +36,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 public class RouteTreatmentTest {
 
     @Test
     public void testRouteTreatmentTest() {
-        NetworkManager nManager = new NetworkManager();
+        NetworkManager nManager = new NetworkManager("patriotRouter");
         ArrayList<Network> networks = new ArrayList<>();
         Topology topology = new Topology(networks);
         Router r = new Router("TestRouter");
@@ -60,7 +62,7 @@ public class RouteTreatmentTest {
 
     @Test
     public void duplicateRouteTreatmentTest() {
-        NetworkManager nManager = new NetworkManager();
+        NetworkManager nManager = new NetworkManager("patriotRouter");
         ArrayList<Network> networks = new ArrayList<>();
         HashMap<String, Router> routers = new HashMap<>();
         routers.put("TestRouter", new Router("TestRouter"));
@@ -124,7 +126,7 @@ public class RouteTreatmentTest {
 
         ArrayList<Network> networks = prepareComplicatedTopology(routers);
         Topology topology = new Topology(routers, networks);
-        NetworkManager networkManager = new NetworkManager();
+        NetworkManager networkManager = new NetworkManager("patriotRouter");
         routers = networkManager.connect(topology);
         networkManager.calcRoutes(topology);
         HashMap<String, ArrayList<Route>> hashMap = networkManager.processRoutes(topology);

@@ -56,8 +56,8 @@ public class CalcRouteBuilder {
      * Instantiates a new Calc route builder.
      * This CalcRouteBuilder is used to describe all routes in
      * network topology with just one calcRoutes build.
-     * Provides auto completing of routes (route ws -> internet will be
-     * auto completed with route internet -> ws) which saves a lot of time.
+     * Provides auto completing of routes (route ws -&gt; internet will be
+     * auto completed with route internet -&gt; ws) which saves a lot of time.
      *
      * @param topologyBuilder the topology builder
      */
@@ -181,7 +181,7 @@ public class CalcRouteBuilder {
     }
 
     /**
-     * Complete routes by route which point to themselves (N1 -> N1) and
+     * Complete routes by route which point to themselves (N1 -&gt; N1) and
      * returns topology builder updated by added routes.
      *
      * @return the topology builder

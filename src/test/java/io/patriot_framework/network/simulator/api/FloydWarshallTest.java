@@ -23,12 +23,14 @@ import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+@Disabled
 public class FloydWarshallTest {
 
     private ArrayList<Network> copyTopology(ArrayList<Network> topology) {
@@ -127,7 +129,7 @@ public class FloydWarshallTest {
         Topology topology = new Topology(routers, networks);
 
         initNetworks(networks, routers);
-        NetworkManager networkManager = new NetworkManager();
+        NetworkManager networkManager = new NetworkManager("patriotRouter");
         routers = networkManager.connect(topology);
         ArrayList<Network> resArr = prepareResultTopology(networks);
         networkManager.calcRoutes(topology);

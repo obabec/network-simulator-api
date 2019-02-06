@@ -120,7 +120,7 @@ public class FloydWarshallDemo {
                 .build();
 
 
-        NetworkManager networkManager = new NetworkManager();
+        NetworkManager networkManager = new NetworkManager("patriotRouter");
 
         topology.setRouters(networkManager.connect(topology));
         networkManager.calcRoutes(topology);
