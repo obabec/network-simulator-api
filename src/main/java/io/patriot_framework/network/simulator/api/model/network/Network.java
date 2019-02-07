@@ -20,4 +20,6 @@ public interface Network {
     String getName();
     String getIPAddress();
     Integer getMask();
+    void createNetwork();
+    void destroyNetwork();
 }

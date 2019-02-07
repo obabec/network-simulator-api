@@ -16,11 +16,7 @@
 
 package io.patriot_framework.network.simulator.api.builder;
 
-import io.patriot_framework.network.simulator.api.model.Network;
 import io.patriot_framework.network.simulator.api.model.Topology;
-import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
-
-import java.util.ArrayList;
 
 /**
  * The type Topology builder.

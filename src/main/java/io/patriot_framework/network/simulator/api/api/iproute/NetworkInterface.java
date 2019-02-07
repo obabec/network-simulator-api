@@ -17,7 +17,7 @@
 package io.patriot_framework.network.simulator.api.api.iproute;
 
 /**
- * Router' s network interface.
+ * RouterImpl' s network interface.
  *
  * Is used for representation of physical interface of router (Container / VM).
  * Contains only most necessary informations about physical interface.
@@ -42,7 +42,7 @@ public class NetworkInterface {
     }
 
     /**
-     * Instantiates a new Network interface.
+     * Instantiates a new NetworkImpl interface.
      *
      * @param name the network name
      * @param ip   the ip address
@@ -55,7 +55,7 @@ public class NetworkInterface {
     }
 
     /**
-     * Instantiates a new Network interface.
+     * Instantiates a new NetworkImpl interface.
      */
     public NetworkInterface() {
     }

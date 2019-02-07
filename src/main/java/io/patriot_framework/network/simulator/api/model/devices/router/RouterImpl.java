@@ -17,6 +17,7 @@
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
 import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
+import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * RouterImpl class represents docker container built as router with network-control apis.
  */
-public class RouterImpl {
+public class RouterImpl implements Router {
     private String name;
     private List<NetworkInterface> networkInterfaces;
     private List<NetworkImpl> connectedNetworkImpls;
@@ -65,6 +66,47 @@ public class RouterImpl {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<NetworkInterface> getInterfaces() {
+        return null;
+    }
+
+
+    @Override
+    public String getIPAddress() {
+        return null;
+    }
+
+    @Override
+    public List<Network> getConnectedNetworks() {
+        return null;
+    }
+
+    @Override
+    public void connectToNetwork(Network network) {
+
+    }
+
+    @Override
+    public void disconnectFromNetwork(Network network) {
+
+    }
+
+    @Override
+    public void deploy() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void destroy() {
+
     }
 
     /**

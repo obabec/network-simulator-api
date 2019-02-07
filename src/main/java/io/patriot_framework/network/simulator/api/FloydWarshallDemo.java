@@ -122,7 +122,7 @@ public class FloydWarshallDemo {
 
         NetworkManager networkManager = new NetworkManager("patriotRouter");
 
-        topology.setRouters(networkManager.connect(topology));
+        /*topology.setRouters(networkManager.connect(topology));*/
         networkManager.calcRoutes(topology);
         HashMap hashMap = networkManager.processRoutes(topology);
         networkManager.setRoutes(hashMap, topology.getRouters());

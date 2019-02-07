@@ -14,13 +14,19 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.network.simulator.api.model.devices.application;
+package io.patriot_framework.network.simulator.api.model.devices;
 
-import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.network.Network;
 
 import java.util.List;
 
-public interface Application extends Device {
-    String executeCommand(String[] commandWithArgs);
+public interface Device {
+    String getName();
+    String getIPAddress();
+    List<Network> getConnectedNetworks();
+    void connectToNetwork(Network network);
+    void disconnectFromNetwork(Network network);
+    void deploy();
+    void stop();
+    void destroy();
 }
