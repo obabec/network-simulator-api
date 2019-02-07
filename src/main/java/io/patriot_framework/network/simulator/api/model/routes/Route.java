@@ -18,8 +18,8 @@ package io.patriot_framework.network.simulator.api.model.routes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
-import io.patriot_framework.network.simulator.api.model.Network;
-import io.patriot_framework.network.simulator.api.model.Router;
+import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
+import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 
 /**
  * Used for represent route record in routing tables.
@@ -27,7 +27,7 @@ import io.patriot_framework.network.simulator.api.model.Router;
 public class Route {
 
     @JsonIgnore
-    private Network source;
+    private NetworkImpl source;
 
     @JsonIgnore
     private Router targetRouter;
@@ -38,7 +38,7 @@ public class Route {
     @JsonIgnore
     private Integer hopLimit = 16;
 
-    private Network dest;
+    private NetworkImpl dest;
     private NetworkInterface rNetworkInterface;
 
     public Route() {
@@ -49,7 +49,7 @@ public class Route {
      *
      * @return the dest
      */
-    public Network getDest() {
+    public NetworkImpl getDest() {
         return dest;
     }
 
@@ -58,7 +58,7 @@ public class Route {
      *
      * @param dest the dest
      */
-    public void setDest(Network dest) {
+    public void setDest(NetworkImpl dest) {
         this.dest = dest;
     }
 
@@ -67,7 +67,7 @@ public class Route {
      *
      * @return the source
      */
-    public Network getSource() {
+    public NetworkImpl getSource() {
         return source;
     }
 
@@ -76,7 +76,7 @@ public class Route {
      *
      * @param source the source
      */
-    public void setSource(Network source) {
+    public void setSource(NetworkImpl source) {
         this.source = source;
     }
 

@@ -14,20 +14,21 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.network.simulator.api.model;
+package io.patriot_framework.network.simulator.api.model.devices.router;
 
 import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
+import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Router class represents docker container built as router with network-control apis.
+ * RouterImpl class represents docker container built as router with network-control apis.
  */
-public class Router {
+public class RouterImpl {
     private String name;
     private List<NetworkInterface> networkInterfaces;
-    private List<Network> connectedNetworks;
+    private List<NetworkImpl> connectedNetworkImpls;
     private String mngIp;
     private Integer mngPort;
     private Boolean defaultGW = false;
@@ -36,23 +37,23 @@ public class Router {
     public static final int DEFAULT_PORT = 5000;
 
     /**
-     * Instantiates a new Router.
+     * Instantiates a new RouterImpl.
      *
      * @param name the name
      */
-    public Router(String name) {
+    public RouterImpl(String name) {
         this.name = name;
-        connectedNetworks = new ArrayList<>();
+        connectedNetworkImpls = new ArrayList<>();
         mngPort = DEFAULT_PORT;
     }
 
     /**
-     * Instantiates a new Router.
+     * Instantiates a new RouterImpl.
      *
      * @param name              the name
      * @param networkInterfaces the network interfaces
      */
-    public Router(String name, List<NetworkInterface> networkInterfaces) {
+    public RouterImpl(String name, List<NetworkInterface> networkInterfaces) {
         this.name = name;
         this.networkInterfaces = networkInterfaces;
     }
@@ -98,17 +99,17 @@ public class Router {
      *
      * @return the connected networks
      */
-    public List<Network> getConnectedNetworks() {
-        return connectedNetworks;
+    public List<NetworkImpl> getConnectedNetworkImpls() {
+        return connectedNetworkImpls;
     }
 
     /**
      * Sets connected networks.
      *
-     * @param connectedNetworks the connected networks
+     * @param connectedNetworkImpls the connected networks
      */
-    public void setConnectedNetworks(List<Network> connectedNetworks) {
-        this.connectedNetworks = connectedNetworks;
+    public void setConnectedNetworkImpls(List<NetworkImpl> connectedNetworkImpls) {
+        this.connectedNetworkImpls = connectedNetworkImpls;
     }
 
     /**

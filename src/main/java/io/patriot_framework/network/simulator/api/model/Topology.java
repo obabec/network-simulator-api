@@ -16,6 +16,9 @@
 
 package io.patriot_framework.network.simulator.api.model;
 
+import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
+import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,26 +34,26 @@ public class Topology {
     /**
      * Networks in topology.
      */
-    ArrayList<Network> networks;
+    ArrayList<NetworkImpl> networkImpls;
 
     /**
      * Instantiates a new Topology.
      *
      * @param routers    the routers
-     * @param networks the network top
+     * @param networkImpls the network top
      */
-    public Topology(HashMap<String, Router> routers, ArrayList<Network> networks) {
+    public Topology(HashMap<String, Router> routers, ArrayList<NetworkImpl> networkImpls) {
         this.routers = routers;
-        this.networks = networks;
+        this.networkImpls = networkImpls;
     }
 
     /**
      * Instantiates a new Topology.
      *
-     * @param networks the network top
+     * @param networkImpls the network top
      */
-    public Topology(ArrayList<Network> networks) {
-        this.networks = networks;
+    public Topology(ArrayList<NetworkImpl> networkImpls) {
+        this.networkImpls = networkImpls;
     }
 
     /**
@@ -59,7 +62,7 @@ public class Topology {
      * @param networkCount the network count
      */
     public Topology(Integer networkCount) {
-        this.networks = new ArrayList<>(networkCount);
+        this.networkImpls = new ArrayList<>(networkCount);
     }
 
     /**
@@ -85,16 +88,16 @@ public class Topology {
      *
      * @return the network top
      */
-    public ArrayList<Network> getNetworks() {
-        return networks;
+    public ArrayList<NetworkImpl> getNetworkImpls() {
+        return networkImpls;
     }
 
     /**
      * Sets network top.
      *
-     * @param networks the network top
+     * @param networkImpls the network top
      */
-    public void setNetworks(ArrayList<Network> networks) {
-        this.networks = networks;
+    public void setNetworkImpls(ArrayList<NetworkImpl> networkImpls) {
+        this.networkImpls = networkImpls;
     }
 }

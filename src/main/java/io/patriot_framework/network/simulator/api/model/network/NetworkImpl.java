@@ -14,17 +14,17 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.network.simulator.api.model;
+package io.patriot_framework.network.simulator.api.model.network;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.patriot_framework.network.simulator.api.CalculatedRouteList;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
 /**
- * Network class representing docker network with additional informations
+ * NetworkImpl class representing docker network with additional informations
  * like calculated routes to other networks.
  */
-public class Network {
+public class NetworkImpl {
     @JsonIgnore
     private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
     private String ipAddress;
@@ -35,41 +35,41 @@ public class Network {
     private Boolean internet = false;
 
     /**
-     * Instantiates a new Network.
+     * Instantiates a new NetworkImpl.
      */
 
 
-    public Network() {
+    public NetworkImpl() {
     }
 
-    public Network(String ipAddress, Integer mask) {
+    public NetworkImpl(String ipAddress, Integer mask) {
         this.ipAddress = ipAddress;
         this.mask = mask;
     }
 
-    public Network(String name, String ipAddress, Integer mask) {
+    public NetworkImpl(String name, String ipAddress, Integer mask) {
         this.ipAddress = ipAddress;
         this.mask = mask;
         this.name = name;
     }
 
     /**
-     * Instantiates a new Network.
+     * Instantiates a new NetworkImpl.
      *
      * @param calcRoutes the calc routes
      * @param name       the name
      */
-    public Network(CalculatedRouteList<CalcRoute> calcRoutes, String name) {
+    public NetworkImpl(CalculatedRouteList<CalcRoute> calcRoutes, String name) {
         this.calcRoutes = calcRoutes;
         this.name = name;
     }
 
     /**
-     * Instantiates a new Network.
+     * Instantiates a new NetworkImpl.
      *
      * @param calcRoutes the calc routes
      */
-    public Network(CalculatedRouteList<CalcRoute> calcRoutes) {
+    public NetworkImpl(CalculatedRouteList<CalcRoute> calcRoutes) {
         this.calcRoutes = calcRoutes;
     }
 

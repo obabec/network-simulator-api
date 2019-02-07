@@ -16,10 +16,10 @@
 
 package io.patriot_framework.network.simulator.api.model.routes;
 
-import io.patriot_framework.network.simulator.api.model.Router;
+import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 
 /**
- * Wrapper class for Router and network. Representing next hop in the network topology.
+ * Wrapper class for RouterImpl and network. Representing next hop in the network topology.
  */
 public class NextHop {
     private Router router;
