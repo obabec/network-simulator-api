@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.network.simulator.api.api.iproute;
+package io.patriot_framework.network.simulator.api.model.devices.router;
 
 /**
- * RouterImpl' s network interface.
+ * Router' s network interface.
  *
  * Is used for representation of physical interface of router (Container / VM).
  * Contains only most necessary informations about physical interface.
@@ -42,7 +42,7 @@ public class NetworkInterface {
     }
 
     /**
-     * Instantiates a new NetworkImpl interface.
+     * Instantiates a new TopologyNetwork interface.
      *
      * @param name the network name
      * @param ip   the ip address
@@ -55,7 +55,7 @@ public class NetworkInterface {
     }
 
     /**
-     * Instantiates a new NetworkImpl interface.
+     * Instantiates a new TopologyNetwork interface.
      */
     public NetworkInterface() {
     }

@@ -16,15 +16,14 @@
 
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
-import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.Device;
-import io.patriot_framework.network.simulator.api.model.network.Network;
 
 import java.util.List;
 
 public interface Router extends Device {
 
     List<NetworkInterface> getInterfaces();
-
+    void setNetworkInterfaces(List<NetworkInterface> networkInterfaces);
+    Integer getMngPort();
 
 }

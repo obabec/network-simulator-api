@@ -64,7 +64,7 @@ public class RouterBuilder {
      * @return the router builder
      */
     public RouterBuilder createRouter() {
-        topologyBuilder.topology.getRouters().put(name, new RouterImpl(name));
+        topologyBuilder.topology.getRouters().add(new RouterImpl(name));
         return this;
     }
 

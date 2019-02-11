@@ -23,10 +23,12 @@ import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
 
 import java.io.File;
+import java.util.List;
 
 
 public interface Controller {
     void connectDeviceToNetwork(Device device, Network network);
+    void connectDeviceToNetwork(Device device, List<Network> networks);
     void stopDevice(Device router);
     void disconnectDevice(Network network);
     void deployApplication(Application device);

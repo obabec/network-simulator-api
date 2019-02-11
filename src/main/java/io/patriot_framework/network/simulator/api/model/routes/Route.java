@@ -17,8 +17,8 @@
 package io.patriot_framework.network.simulator.api.model.routes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
-import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
+import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 
 /**
@@ -27,7 +27,7 @@ import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 public class Route {
 
     @JsonIgnore
-    private NetworkImpl source;
+    private TopologyNetwork source;
 
     @JsonIgnore
     private Router targetRouter;
@@ -38,18 +38,20 @@ public class Route {
     @JsonIgnore
     private Integer hopLimit = 16;
 
-    private NetworkImpl dest;
+    private TopologyNetwork dest;
     private NetworkInterface rNetworkInterface;
 
     public Route() {
     }
+
+
 
     /**
      * Gets dest.U
      *
      * @return the dest
      */
-    public NetworkImpl getDest() {
+    public TopologyNetwork getDest() {
         return dest;
     }
 
@@ -58,7 +60,7 @@ public class Route {
      *
      * @param dest the dest
      */
-    public void setDest(NetworkImpl dest) {
+    public void setDest(TopologyNetwork dest) {
         this.dest = dest;
     }
 
@@ -67,7 +69,7 @@ public class Route {
      *
      * @return the source
      */
-    public NetworkImpl getSource() {
+    public TopologyNetwork getSource() {
         return source;
     }
 
@@ -76,7 +78,7 @@ public class Route {
      *
      * @param source the source
      */
-    public void setSource(NetworkImpl source) {
+    public void setSource(TopologyNetwork source) {
         this.source = source;
     }
 
@@ -122,7 +124,7 @@ public class Route {
      * @return the string
      */
     public String toPath() {
-        return dest.getIpAddress() + "/" + dest.getMask()
+        return dest.getIPAddress() + "/" + dest.getMask()
                 + "/" + rNetworkInterface.getIp() + "/" + mtu + "/" + hopLimit;
     }
 }

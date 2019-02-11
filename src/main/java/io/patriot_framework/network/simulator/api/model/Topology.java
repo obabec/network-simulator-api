@@ -16,15 +16,10 @@
 
 package io.patriot_framework.network.simulator.api.model;
 
-import io.patriot_framework.network.simulator.api.model.network.NImpl;
-import io.patriot_framework.network.simulator.api.model.network.Network;
-import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
-import io.patriot_framework.network.simulator.api.model.routes.Route;
-import sun.nio.ch.Net;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -39,26 +34,26 @@ public class Topology {
     /**
      * Networks in topology.
      */
-    ArrayList<NImpl> networkImpls;
+    ArrayList<TopologyNetwork> networks;
 
     /**
      * Instantiates a new Topology.
      *
      * @param routers    the routers
-     * @param networkImpls the network top
+     * @param networks the network top
      */
-    public Topology(List<Router> routers, ArrayList<NImpl> networkImpls) {
+    public Topology(List<Router> routers, ArrayList<TopologyNetwork> networks) {
         this.routers = routers;
-        this.networkImpls = networkImpls;
+        this.networks = networks;
     }
 
     /**
      * Instantiates a new Topology.
      *
-     * @param networkImpls the network top
+     * @param networks the network top
      */
-    public Topology(ArrayList<NImpl> networkImpls) {
-        this.networkImpls = networkImpls;
+    public Topology(ArrayList<TopologyNetwork> networks) {
+        this.networks = networks;
     }
 
     /**
@@ -67,7 +62,7 @@ public class Topology {
      * @param networkCount the network count
      */
     public Topology(Integer networkCount) {
-        this.networkImpls = new ArrayList<>(networkCount);
+        this.networks = new ArrayList<>(networkCount);
     }
 
     /**
@@ -93,16 +88,30 @@ public class Topology {
      *
      * @return the network top
      */
-    public ArrayList<NImpl> getNetworks() {
-        return networkImpls;
+    public ArrayList<TopologyNetwork> getNetworks() {
+        return networks;
     }
 
     /**
      * Sets network top.
      *
-     * @param networkImpls the network top
+     * @param networks the network top
      */
-    public void setNetworks(ArrayList<NImpl> networkImpls) {
-        this.networkImpls = networkImpls;
+    public void setNetworks(ArrayList<TopologyNetwork> networks) {
+        this.networks = this.networks;
+    }
+
+    /**
+     * Finds router in list by name.
+     * @param name
+     * @return
+     */
+    public Router findRouterByName(String name) {
+        for (Router r : routers) {
+            if (r.getName().equals(name)) {
+                return r;
+            }
+        }
+        return null;
     }
 }

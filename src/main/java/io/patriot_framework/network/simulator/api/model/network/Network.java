@@ -23,6 +23,4 @@ public interface Network extends EnvironmentPart {
     String getName();
     String getIPAddress();
     Integer getMask();
-    void createNetwork();
-    void destroyNetwork();
 }

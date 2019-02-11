@@ -16,14 +16,22 @@
 
 package io.patriot_framework.network.simulator.api.manager;
 
+import com.github.jgonian.ipmath.Ipv4;
+import com.github.jgonian.ipmath.Ipv4Range;
+import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
+import io.patriot_framework.network.simulator.api.model.devices.Device;
+import io.patriot_framework.network.simulator.api.model.devices.application.JavaApplication;
+import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.control.Controller;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.Topology;
-import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
-import io.patriot_framework.network.simulator.api.model.network.NImpl;
 import io.patriot_framework.network.simulator.api.model.network.Network;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
+import io.patriot_framework.network.simulator.api.model.routes.NextHop;
+import io.patriot_framework.network.simulator.api.model.routes.Route;
+import io.patriot_framework.network_simulator.docker.cleanup.Cleaner;
 import io.patriot_framework.network_simulator.docker.control.DockerController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,26 +42,170 @@ import java.util.*;
  * Manager is used for managing topology (deploying, destroying).
  */
 public class Manager {
-
-    //Controller controller;
-
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Deploy all topology. Creates all virtual devices (routers), networks. Connect them as topology describes.
+     * Calculate routes and set them to routes.
+     * @param topology
+     */
     public void deployTopology(Topology topology) {
-
+        createNetworks(topology.getNetworks());
+        createRouters(topology.getRouters());
+        connectNetworks(topology);
+        updateRouters(topology);
+        calcRoutes(topology);
+        setRoutes(processRoutes(topology), topology);
     }
 
     /**
-     * Method deploys (create, start) routers.
-     * @param routers
+     * Calculates routers via Floyd-Warshall algo.
+     * @param topology
      */
-    private void deployRouters(List<Router> routers) {
-        Controller controller;
-        for (Router router : routers) {
-            controller = findController(router);
-            controller.deployRouter(router);
+    private void calcRoutes(Topology topology) {
+        ArrayList<TopologyNetwork> topologyNetworks = topology.getNetworks();
+        LOGGER.info("Calculating network routes.");
+        int size = topologyNetworks.size();
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                for (int k = 0; k < size; k++) {
+                    if (i == k || i == j || j == k) {
+                        continue;
+                    }
+                    int cost = topologyNetworks.get(i).getCalcRoutes().get(j).getCost()
+                            + topologyNetworks.get(j).getCalcRoutes().get(k).getCost();
+                    int actualCost = topologyNetworks.get(i).getCalcRoutes().get(k).getCost();
+
+                    if (actualCost == (size + 1) || actualCost > cost) {
+                        swapCalcRoutes(topologyNetworks, i, j, k);
+                    }
+                }
+            }
         }
     }
+
+    private void swapCalcRoutes(ArrayList<TopologyNetwork> topologyNetworks, int i, int j, int k) {
+        NextHop nextHop = new NextHop(topologyNetworks.get(i).getCalcRoutes()
+                .get(j).getNextHop().getRouter(),
+                topologyNetworks.get(i).getCalcRoutes().get(j).getNextHop().getNetwork());
+
+        CalcRoute c = new CalcRoute(nextHop, topologyNetworks.get(i).getCalcRoutes().get(j).getCost()
+                + topologyNetworks.get(j).getCalcRoutes().get(k).getCost());
+        topologyNetworks.get(i).getCalcRoutes().set(k, c);
+    }
+
+
+    /**
+     * Parses calculated routes to actual route objects.
+     * @param topology
+     * @return HashMap with routers name as key and routes which has to be set to routers routing table.
+     */
+    private HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
+        LOGGER.info("Processing routes to ipRoute2 format.");
+        ArrayList<TopologyNetwork> calculatedTop = topology.getNetworks();
+        int size = calculatedTop.size();
+        HashMap<String, ArrayList<Route>> routes = new HashMap<>();
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < calculatedTop.get(i).getCalcRoutes().size(); j++) {
+                if (i == j || calculatedTop.get(i).getCalcRoutes().get(j) == null) continue;
+                Router r = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
+                Route route = completeRoute(calculatedTop, r, i, j);
+
+                if (!routes.containsKey(r.getName())) {
+                    routes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
+                } else {
+                    if (isProcessedRoute(routes.get(r.getName()), route)) {
+                        continue;
+                    }
+                    routes.get(r.getName()).add(route);
+                }
+            }
+        }
+        return routes;
+    }
+
+    /**
+     * Completes route object.
+     * @param topologyNetworks networks
+     * @param r router
+     * @param i source network index
+     * @param j destination network index
+     * @return complete route object with all attributes
+     */
+    private Route completeRoute(ArrayList<TopologyNetwork> topologyNetworks, Router r, int i, int j) {
+        Route route = new Route();
+
+        route.setTargetRouter(r);
+
+        route.setSource(topologyNetworks.get(i));
+        route.setDest(topologyNetworks.get(j));
+
+        Integer nextNetwork = topologyNetworks.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
+        NetworkInterface target = findCorrectInterface(r, topologyNetworks.get(nextNetwork));
+        route.setrNetworkInterface(target);
+        return route;
+    }
+
+
+    /**
+     * Finds correct network interface on router for target network.
+     * @param source
+     * @param topologyNetwork
+     * @return network interface which is in target network
+     */
+    private NetworkInterface findCorrectInterface(Router source, TopologyNetwork topologyNetwork) {
+        LOGGER.info("Finding correct interface for " + topologyNetwork.getName() + " on " + source.getName());
+        Ipv4Range range = Ipv4Range.parse(topologyNetwork.getIPAddress() + "/" + topologyNetwork.getMask());
+
+        for (int i = 0; i < source.getInterfaces().size(); i++) {
+            if (range.contains(Ipv4.of(source.getInterfaces().get(i).getIp()))) {
+                LOGGER.debug("Found correct interface: " + source.getInterfaces().get(i));
+                return source.getInterfaces().get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks if route is already present in list.
+     * @param routes
+     * @param route
+     * @return true if route is present
+     */
+    private boolean isProcessedRoute(ArrayList<Route> routes, Route route) {
+        for (Route r : routes) {
+            if (r.getDest() == route.getDest() && r.getrNetworkInterface() == route.getrNetworkInterface()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Sets routes to routing table via REST API on targeted routers.
+     * @param processedRoutes
+     * @param topology
+     */
+    public void setRoutes(HashMap<String, ArrayList<Route>> processedRoutes, Topology topology) {
+
+        RouteRestController routeController = new RouteRestController();
+        for (Map.Entry<String, ArrayList<Route>> entry: processedRoutes.entrySet()) {
+            Router r = topology.findRouterByName(entry.getKey());
+            LOGGER.info("Setting routes to routing table on " + r.getName());
+
+            for (Route route : entry.getValue()) {
+                if (route.getDest().getInternet()){
+                    LOGGER.debug("Setting default route");
+                    routeController.addDefaultGW(route, r.getIPAddress(), r.getMngPort());
+                } else {
+                    routeController.addRoute(route, r.getIPAddress(), r.getMngPort());
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Method updates interfaces of routers. Usually have to be called after
@@ -62,7 +214,11 @@ public class Manager {
      */
     //TODO: Needs to complete rest controllers first!
     private void updateRouters(Topology topology) {
-        Controller controller;
+        RouteRestController restController = new RouteRestController();
+        LOGGER.info("Requesting information about routers interfaces.");
+        for (Router r : topology.getRouters()) {
+            r.setNetworkInterfaces(restController.getInterfaces(r.getIPAddress(), r.getMngPort()));
+        }
     }
 
     /**
@@ -71,30 +227,19 @@ public class Manager {
      */
     //TODO: What will happen if network is created by different creator than router?
     private void connectNetworks(Topology topology) {
-        HashMap<String, List<Network>> directConnections = filterConnected(topology);
-        for (Map.Entry<String, List<Network>> entry : directConnections.entrySet()) {
-            Router r = findRouterByName(entry.getKey(), topology.getRouters());
+        LOGGER.info("Connecting networks.");
+        HashMap<String, List<TopologyNetwork>> directConnections = filterConnected(topology);
+        for (Map.Entry<String, List<TopologyNetwork>> entry : directConnections.entrySet()) {
+            Router r = topology.findRouterByName(entry.getKey());
             Controller controller = findController(r);
-            for (Network network : entry.getValue()) {
+            for (TopologyNetwork network : entry.getValue()) {
+                LOGGER.debug("Connecting router " + r.getName() + "with " + network.getName());
                 controller.connectDeviceToNetwork(r, network);
             }
         }
     }
 
-    /**
-     * Finds router in list by name.
-     * @param name
-     * @param routers
-     * @return
-     */
-    private Router findRouterByName(String name, List<Router> routers) {
-        for (Router r : routers) {
-            if (r.getName().equals(name)) {
-                return r;
-            }
-        }
-        return null;
-    }
+
 
     /**
      * Method provides filtering of networks which have to be physically connected
@@ -102,19 +247,20 @@ public class Manager {
      * @param topology
      * @return Hash map with router`s name as key and networks with which router has to be connected
      */
-    private HashMap<String, List<Network>> filterConnected(Topology topology) {
-        HashMap<String, List<Network>> connections = new HashMap<>();
+    private HashMap<String, List<TopologyNetwork>> filterConnected(Topology topology) {
+        LOGGER.info("Filtering direct connections.");
+        HashMap<String, List<TopologyNetwork>> connections = new HashMap<>();
 
         int topologySize = topology.getNetworks().size();
-        ArrayList<NImpl> networks = topology.getNetworks();
+        ArrayList<TopologyNetwork> networks = topology.getNetworks();
 
         for (int i = 0; i < topologySize; i++) {
-            NImpl network = networks.get(i);
+            TopologyNetwork network = networks.get(i);
             for (int y = 0; y < topologySize; y++) {
                 CalcRoute calcRoute = network.getCalcRoutes().get(y);
                 if (calcRoute.getCost() == 1) {
                     String rName = calcRoute.getNextHop().getRouter().getName();
-                    Network dNetwork = networks.get(calcRoute.getNextHop().getNetwork());
+                    TopologyNetwork dNetwork = networks.get(calcRoute.getNextHop().getNetwork());
                     connectionExists(rName, Arrays.asList(network, dNetwork), connections);
                 }
             }
@@ -130,7 +276,8 @@ public class Manager {
      * @param networks
      * @param connections
      */
-    private void connectionExists(String rName, List<Network> networks, HashMap<String, List<Network>> connections) {
+    private void connectionExists(String rName, List<TopologyNetwork> networks, HashMap<String, List<TopologyNetwork>> connections) {
+        LOGGER.debug("Controlling if direct connection is already stored.");
         if (connections.keySet().contains(rName)) {
             for (int i = 0; i < 2; i++) {
                 if (!connections.get(rName).contains(networks.get(i))) {
@@ -142,14 +289,24 @@ public class Manager {
         }
     }
 
-    private void createNetworks(List<Network> networkList) {
-        for (Network network : networkList) {
+    /**
+     * Creates networks.
+     * @param networkList
+     */
+    private void createNetworks(ArrayList<TopologyNetwork> networkList) {
+        for (TopologyNetwork network : networkList) {
+            LOGGER.debug("Creating network: " + network.getName());
             findController(network).createNetwork(network);
         }
     }
 
+    /**
+     * Creates routers and updates mng IP.
+     * @param routers
+     */
     private void createRouters(List<Router> routers) {
         for (Router router : routers) {
+            LOGGER.debug("Creating router: " + router.getName());
             findController(router).deployRouter(router);
         }
     }
@@ -168,6 +325,21 @@ public class Manager {
             LOGGER.error("Cannot find matching creator!");
             return null;
         }
+    }
+
+    public void cleanUp(Topology topology) {
+        Cleaner cleaner = new Cleaner();
+        cleaner.cleanUp(topology.getNetworks(), topology.getRouters());
+
+    }
+
+    //TODO: This is not 100% legit, application should maybe be just one class not an interface.
+    public Device deployApplicationFromImage(String name, String tag, List<Network> connectedNetworks) {
+        JavaApplication javaApplication = new JavaApplication();
+        Controller controller = findController(javaApplication);
+        controller.deployDevice(javaApplication, tag);
+        controller.connectDeviceToNetwork(javaApplication, connectedNetworks);
+        return javaApplication;
     }
 
 }

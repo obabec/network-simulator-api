@@ -16,9 +16,8 @@
 
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
-import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.network.Network;
-import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +28,12 @@ import java.util.List;
 public class RouterImpl implements Router {
     private String name;
     private List<NetworkInterface> networkInterfaces;
-    private List<NetworkImpl> connectedNetworkImpls;
+    private List<TopologyNetwork> connectedTopologyNetworks;
     private String mngIp;
     private Integer mngPort;
     private Boolean defaultGW = false;
+    private String creator;
+
 
     // Default http py-route rest api
     public static final int DEFAULT_PORT = 5000;
@@ -44,7 +45,7 @@ public class RouterImpl implements Router {
      */
     public RouterImpl(String name) {
         this.name = name;
-        connectedNetworkImpls = new ArrayList<>();
+        connectedTopologyNetworks = new ArrayList<>();
         mngPort = DEFAULT_PORT;
     }
 
@@ -84,31 +85,6 @@ public class RouterImpl implements Router {
         return null;
     }
 
-    @Override
-    public void connectToNetwork(Network network) {
-
-    }
-
-    @Override
-    public void disconnectFromNetwork(Network network) {
-
-    }
-
-    @Override
-    public void deploy() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-
     /**
      * Sets name.
      *
@@ -141,17 +117,17 @@ public class RouterImpl implements Router {
      *
      * @return the connected networks
      */
-    public List<NetworkImpl> getConnectedNetworkImpls() {
-        return connectedNetworkImpls;
+    public List<TopologyNetwork> getConnectedTopologyNetworks() {
+        return connectedTopologyNetworks;
     }
 
     /**
      * Sets connected networks.
      *
-     * @param connectedNetworkImpls the connected networks
+     * @param connectedTopologyNetworks the connected networks
      */
-    public void setConnectedNetworkImpls(List<NetworkImpl> connectedNetworkImpls) {
-        this.connectedNetworkImpls = connectedNetworkImpls;
+    public void setConnectedTopologyNetworks(List<TopologyNetwork> connectedTopologyNetworks) {
+        this.connectedTopologyNetworks = connectedTopologyNetworks;
     }
 
     /**
@@ -196,5 +172,14 @@ public class RouterImpl implements Router {
 
     public void setDefaultGW(Boolean defaultGW) {
         this.defaultGW = defaultGW;
+    }
+
+    @Override
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }

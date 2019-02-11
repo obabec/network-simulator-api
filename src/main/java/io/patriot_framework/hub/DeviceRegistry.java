@@ -16,7 +16,7 @@
 
 package io.patriot_framework.hub;
 
-import io.patriot_framework.generator.device.Unit;
+import com.redhat.patriot.generator.device.Unit;
 
 import java.util.*;
 import java.util.stream.Collectors;

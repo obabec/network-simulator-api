@@ -17,12 +17,12 @@
 package io.patriot_framework.network.simulator.api.builder;
 
 import io.patriot_framework.network.simulator.api.CalculatedRouteList;
-import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
 /**
- * NetworkImpl Builder provides functions for building network and adding it into topology.
- * NetworkImpl Builder have to cooperate with CalcRouteBuilder and Topology builder.
+ * TopologyNetwork Builder provides functions for building network and adding it into topology.
+ * TopologyNetwork Builder have to cooperate with CalcRouteBuilder and Topology builder.
  */
 public class NetworkBuilder {
 
@@ -46,7 +46,7 @@ public class NetworkBuilder {
     TopologyBuilder t;
 
     /**
-     * Instantiates a new NetworkImpl builder.
+     * Instantiates a new TopologyNetwork builder.
      *
      * @param t    the topologyBuilder
      * @param name the network name.
@@ -57,7 +57,7 @@ public class NetworkBuilder {
     }
 
     /**
-     * Instantiates a new NetworkImpl builder.
+     * Instantiates a new TopologyNetwork builder.
      *
      * @param name the network name.
      */
@@ -136,9 +136,9 @@ public class NetworkBuilder {
      *
      * @return the network
      */
-    public NetworkImpl build() {
+    public TopologyNetwork build() {
 
-        NetworkImpl n = new NetworkImpl();
+        TopologyNetwork n = new TopologyNetwork();
         n.setCalcRoutes(calcRoutes);
         n.setInternet(internet);
         n.setIpAddress(ipAddress);
@@ -153,7 +153,7 @@ public class NetworkBuilder {
      * @return the topology builder
      */
     public TopologyBuilder create() {
-        t.topology.getNetworkImpls().add(build());
+        t.topology.getNetworks().add(build());
         return t;
     }
 

@@ -21,10 +21,10 @@ import io.patriot_framework.network.simulator.api.CalculatedRouteList;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
 /**
- * NetworkImpl class representing docker network with additional informations
+ * TopologyNetwork class representing docker network with additional informations
  * like calculated routes to other networks.
  */
-public class NetworkImpl {
+public class TopologyNetwork implements Network {
     @JsonIgnore
     private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
     private String ipAddress;
@@ -33,43 +33,45 @@ public class NetworkImpl {
     private String name;
     @JsonIgnore
     private Boolean internet = false;
+    private String id;
+    private String creator;
 
     /**
-     * Instantiates a new NetworkImpl.
+     * Instantiates a new TopologyNetwork.
      */
 
 
-    public NetworkImpl() {
+    public TopologyNetwork() {
     }
 
-    public NetworkImpl(String ipAddress, Integer mask) {
+    public TopologyNetwork(String ipAddress, Integer mask) {
         this.ipAddress = ipAddress;
         this.mask = mask;
     }
 
-    public NetworkImpl(String name, String ipAddress, Integer mask) {
+    public TopologyNetwork(String name, String ipAddress, Integer mask) {
         this.ipAddress = ipAddress;
         this.mask = mask;
         this.name = name;
     }
 
     /**
-     * Instantiates a new NetworkImpl.
+     * Instantiates a new TopologyNetwork.
      *
      * @param calcRoutes the calc routes
      * @param name       the name
      */
-    public NetworkImpl(CalculatedRouteList<CalcRoute> calcRoutes, String name) {
+    public TopologyNetwork(CalculatedRouteList<CalcRoute> calcRoutes, String name) {
         this.calcRoutes = calcRoutes;
         this.name = name;
     }
 
     /**
-     * Instantiates a new NetworkImpl.
+     * Instantiates a new TopologyNetwork.
      *
      * @param calcRoutes the calc routes
      */
-    public NetworkImpl(CalculatedRouteList<CalcRoute> calcRoutes) {
+    public TopologyNetwork(CalculatedRouteList<CalcRoute> calcRoutes) {
         this.calcRoutes = calcRoutes;
     }
 
@@ -91,84 +93,57 @@ public class NetworkImpl {
         this.calcRoutes = calcRoutes;
     }
 
-    /**
-     * Gets ip address.
-     *
-     * @return the ip address
-     */
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    /**
-     * Sets ip address.
-     *
-     * @param ipAddress the ip address
-     */
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
 
-    /**
-     * Gets mask.
-     *
-     * @return the mask
-     */
-    public Integer getMask() {
-        return mask;
-    }
-
-    /**
-     * Sets mask.
-     *
-     * @param mask the mask
-     */
     public void setMask(Integer mask) {
         this.mask = mask;
     }
 
-    /**
-     * Gets name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets name.
-     *
-     * @param name the name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Gets ip with mask.
-     *
-     * @return the ip with mask
-     */
-    public String getIpWithMask() {
-        return ipAddress + "/" + mask;
-    }
-
-    /**
-     * Gets internet.
-     *
-     * @return the internet
-     */
     public Boolean getInternet() {
         return internet;
     }
 
-    /**
-     * Sets internet.
-     *
-     * @param internet the internet
-     */
     public void setInternet(Boolean internet) {
         this.internet = internet;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getIPAddress() {
+        return ipAddress;
+    }
+
+    @Override
+    public Integer getMask() {
+        return mask;
+    }
+
+    @Override
+    public String getCreator() {
+        return creator;
+    }
+
 }
