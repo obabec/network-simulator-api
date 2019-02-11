@@ -26,6 +26,10 @@ import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
  */
 public class NetworkBuilder {
 
+    /**
+     * Creator of network (docker, VM, ...)
+     */
+    private String creator;
     private String ipAddress;
     private String name;
     private Integer mask;
@@ -116,6 +120,16 @@ public class NetworkBuilder {
         return new CalcRouteBuilder(this);
     }
 
+
+    /**
+     * Sets docker as network creator.
+     *
+     * @return the network builder
+     */
+    public NetworkBuilder docker() {
+        this.creator = "Docker";
+        return this;
+    }
 
     /**
      * Builds network object.

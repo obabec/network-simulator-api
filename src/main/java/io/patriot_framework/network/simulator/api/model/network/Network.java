@@ -16,7 +16,10 @@
 
 package io.patriot_framework.network.simulator.api.model.network;
 
-public interface Network {
+import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
+
+public interface Network extends EnvironmentPart {
+    String getId();
     String getName();
     String getIPAddress();
     Integer getMask();

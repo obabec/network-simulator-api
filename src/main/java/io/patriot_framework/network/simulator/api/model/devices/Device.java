@@ -16,17 +16,13 @@
 
 package io.patriot_framework.network.simulator.api.model.devices;
 
+import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.network.Network;
 
 import java.util.List;
 
-public interface Device {
+public interface Device extends EnvironmentPart {
     String getName();
     String getIPAddress();
     List<Network> getConnectedNetworks();
-    void connectToNetwork(Network network);
-    void disconnectFromNetwork(Network network);
-    void deploy();
-    void stop();
-    void destroy();
 }

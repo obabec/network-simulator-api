@@ -51,7 +51,7 @@ public class NetworkManager {
     private String routerTag;
     private String monitoringAddr;
     private List<String> routers = new ArrayList<>();
-    private List<String> newtworks = new ArrayList<>();
+    private List<String> networks = new ArrayList<>();
 
     public NetworkManager(String routerTag) {
         this.dockerManager = new DockerManager();

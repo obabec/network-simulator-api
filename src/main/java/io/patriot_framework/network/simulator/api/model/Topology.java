@@ -16,11 +16,16 @@
 
 package io.patriot_framework.network.simulator.api.model;
 
+import io.patriot_framework.network.simulator.api.model.network.NImpl;
+import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.NetworkImpl;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.routes.Route;
+import sun.nio.ch.Net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -30,11 +35,11 @@ public class Topology {
     /**
      * Routers located in topology.
      */
-    HashMap<String, Router> routers = new HashMap<>();
+    List<Router> routers = new ArrayList<>();
     /**
      * Networks in topology.
      */
-    ArrayList<NetworkImpl> networkImpls;
+    ArrayList<NImpl> networkImpls;
 
     /**
      * Instantiates a new Topology.
@@ -42,7 +47,7 @@ public class Topology {
      * @param routers    the routers
      * @param networkImpls the network top
      */
-    public Topology(HashMap<String, Router> routers, ArrayList<NetworkImpl> networkImpls) {
+    public Topology(List<Router> routers, ArrayList<NImpl> networkImpls) {
         this.routers = routers;
         this.networkImpls = networkImpls;
     }
@@ -52,7 +57,7 @@ public class Topology {
      *
      * @param networkImpls the network top
      */
-    public Topology(ArrayList<NetworkImpl> networkImpls) {
+    public Topology(ArrayList<NImpl> networkImpls) {
         this.networkImpls = networkImpls;
     }
 
@@ -70,7 +75,7 @@ public class Topology {
      *
      * @return the routers
      */
-    public HashMap<String, Router> getRouters() {
+    public List<Router> getRouters() {
         return routers;
     }
 
@@ -79,7 +84,7 @@ public class Topology {
      *
      * @param routers the routers
      */
-    public void setRouters(HashMap<String, Router> routers) {
+    public void setRouters(List<Router> routers) {
         this.routers = routers;
     }
 
@@ -88,7 +93,7 @@ public class Topology {
      *
      * @return the network top
      */
-    public ArrayList<NetworkImpl> getNetworkImpls() {
+    public ArrayList<NImpl> getNetworks() {
         return networkImpls;
     }
 
@@ -97,7 +102,7 @@ public class Topology {
      *
      * @param networkImpls the network top
      */
-    public void setNetworkImpls(ArrayList<NetworkImpl> networkImpls) {
+    public void setNetworks(ArrayList<NImpl> networkImpls) {
         this.networkImpls = networkImpls;
     }
 }

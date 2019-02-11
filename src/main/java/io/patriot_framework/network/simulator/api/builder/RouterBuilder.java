@@ -33,6 +33,10 @@ public class RouterBuilder {
      */
     String name;
 
+    /**
+     * Creator of object (docker, VM, ...)
+     */
+    String creator;
 
     /**
      * Instantiates a new RouterImpl builder.
