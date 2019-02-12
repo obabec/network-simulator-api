@@ -125,6 +125,5 @@ public class FloydWarshallDemo {
         /*topology.setRouters(networkManager.connect(topology));*/
         networkManager.calcRoutes(topology);
         HashMap hashMap = networkManager.processRoutes(topology);
-        networkManager.setRoutes(hashMap, topology.getRouters());
     }
 }

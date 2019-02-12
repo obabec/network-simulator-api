@@ -74,4 +74,15 @@ public class TopologyBuilder {
     }
 
 
+    /**
+     * With routers tag topology builder.
+     *
+     * @param tag the tag
+     * @return the topology builder
+     */
+    public TopologyBuilder withRoutersTag(String tag) {
+        topology.setRoutersTag(tag);
+        return this;
+    }
+
 }

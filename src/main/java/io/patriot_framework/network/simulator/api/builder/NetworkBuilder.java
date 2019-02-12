@@ -141,7 +141,7 @@ public class NetworkBuilder {
         TopologyNetwork n = new TopologyNetwork();
         n.setCalcRoutes(calcRoutes);
         n.setInternet(internet);
-        n.setIpAddress(ipAddress);
+        n.setIPAddress(ipAddress);
         n.setMask(mask);
         n.setName(name);
         return n;

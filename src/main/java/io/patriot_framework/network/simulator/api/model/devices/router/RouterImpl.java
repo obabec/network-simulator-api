@@ -16,7 +16,6 @@
 
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
-import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
@@ -71,18 +70,23 @@ public class RouterImpl implements Router {
 
     @Override
     public List<NetworkInterface> getInterfaces() {
-        return null;
+        return networkInterfaces;
     }
 
 
     @Override
     public String getIPAddress() {
-        return null;
+        return mngIp;
     }
 
     @Override
-    public List<Network> getConnectedNetworks() {
-        return null;
+    public void setIPAddress(String ipAddress) {
+        this.mngIp = ipAddress;
+    }
+
+    @Override
+    public List<TopologyNetwork> getConnectedNetworks() {
+        return connectedTopologyNetworks;
     }
 
     /**

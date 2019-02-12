@@ -18,9 +18,36 @@ package io.patriot_framework.network.simulator.api.model.network;
 
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 
-public interface Network extends EnvironmentPart {
-    String getId();
-    String getName();
-    String getIPAddress();
-    Integer getMask();
+public abstract class Network implements EnvironmentPart {
+
+    private String name;
+    private String id;
+    private String ipAddress;
+    private int mask;
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getIPAddress() {
+        return ipAddress;
+    }
+    public void setIPAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+    public Integer getMask() {
+        return mask;
+    }
+
+    public void setMask(int mask) {
+        this.mask = mask;
+    }
 }

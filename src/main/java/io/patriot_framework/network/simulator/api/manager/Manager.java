@@ -31,12 +31,16 @@ import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
-import io.patriot_framework.network_simulator.docker.cleanup.Cleaner;
 import io.patriot_framework.network_simulator.docker.control.DockerController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Manager is used for managing topology (deploying, destroying).
@@ -51,7 +55,7 @@ public class Manager {
      */
     public void deployTopology(Topology topology) {
         createNetworks(topology.getNetworks());
-        createRouters(topology.getRouters());
+        createRouters(topology);
         connectNetworks(topology);
         updateRouters(topology);
         calcRoutes(topology);
@@ -302,12 +306,12 @@ public class Manager {
 
     /**
      * Creates routers and updates mng IP.
-     * @param routers
+     * @param topology
      */
-    private void createRouters(List<Router> routers) {
-        for (Router router : routers) {
+    private void createRouters(Topology topology) {
+        for (Router router : topology.getRouters()) {
             LOGGER.debug("Creating router: " + router.getName());
-            findController(router).deployRouter(router);
+            findController(router).deployDevice(router, topology.getRoutersTag());
         }
     }
 
@@ -327,10 +331,21 @@ public class Manager {
         }
     }
 
+    /**
+     * Clean all routers, networks in topology (stop and delete).
+     * @param topology
+     */
     public void cleanUp(Topology topology) {
-        Cleaner cleaner = new Cleaner();
-        cleaner.cleanUp(topology.getNetworks(), topology.getRouters());
 
+        Controller controller;
+        for (Router r : topology.getRouters()) {
+            controller = findController(r);
+            controller.destroyDevice(r);
+        }
+        for (Network n : topology.getNetworks()) {
+            controller = findController(n);
+            controller.destroyNetwork(n);
+        }
     }
 
     //TODO: This is not 100% legit, application should maybe be just one class not an interface.

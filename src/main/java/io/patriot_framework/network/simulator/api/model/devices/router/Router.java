@@ -25,5 +25,6 @@ public interface Router extends Device {
     List<NetworkInterface> getInterfaces();
     void setNetworkInterfaces(List<NetworkInterface> networkInterfaces);
     Integer getMngPort();
+    void setMngPort(Integer mngPort);
 
 }

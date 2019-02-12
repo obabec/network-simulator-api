@@ -17,25 +17,92 @@
 package io.patriot_framework.network.simulator.api.control;
 
 import io.patriot_framework.network.simulator.api.model.devices.Device;
-import io.patriot_framework.network.simulator.api.model.devices.application.Application;
-import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 import io.patriot_framework.network.simulator.api.model.network.Network;
-import io.patriot_framework.network.simulator.api.model.routes.Route;
 
 import java.io.File;
 import java.util.List;
 
 
+/**
+ * The Controller should be used to communicate with actual creator
+ * of environment.
+ */
 public interface Controller {
+
+    /**
+     * Connects device to network.
+     *
+     * @param device  the device
+     * @param network the network
+     */
     void connectDeviceToNetwork(Device device, Network network);
+
+    /**
+     * Connects device to each network in network array.
+     *
+     * @param device   the device
+     * @param networks the networks
+     */
     void connectDeviceToNetwork(Device device, List<Network> networks);
+
+    /**
+     * Stops device.
+     *
+     * @param router the router
+     */
     void stopDevice(Device router);
-    void disconnectDevice(Network network);
-    void deployApplication(Application device);
-    void deployRouter(Router router);
+
+    /**
+     * Disconnects device from network.
+     *
+     * @param device  the device
+     * @param network the network
+     */
+    void disconnectDevice(Device device, Network network);
+
+    /**
+     * Destroys device means first stops device container and
+     * then remove container.
+     *
+     * @param device the device
+     */
     void destroyDevice(Device device);
+
+    /**
+     * Creates network.
+     *
+     * @param network the network
+     */
     void createNetwork(Network network);
+
+    /**
+     * Destroys network.
+     *
+     * @param network the network
+     */
     void destroyNetwork(Network network);
-    String deployDevice(Device device, String tag);
-    String buildImage(File image);
+
+    /**
+     * Deploys device from built image.
+     *
+     * @param device the device
+     * @param tag    the tag
+     */
+    void deployDevice(Device device, String tag);
+
+    /**
+     * Builds image from file and then create container from built image.
+     *
+     * @param device the device
+     * @param file   the file
+     */
+    void deployDevice(Device device, File file);
+
+    /**
+     * Builds image from file.
+     *
+     * @param image the image
+     * @param tag   the tag
+     */
+    void buildImage(File image, String tag);
 }

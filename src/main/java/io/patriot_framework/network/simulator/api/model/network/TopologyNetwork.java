@@ -24,7 +24,8 @@ import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
  * TopologyNetwork class representing docker network with additional informations
  * like calculated routes to other networks.
  */
-public class TopologyNetwork implements Network {
+public class TopologyNetwork extends Network {
+
     @JsonIgnore
     private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
     private String ipAddress;
@@ -93,18 +94,6 @@ public class TopologyNetwork implements Network {
         this.calcRoutes = calcRoutes;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public void setMask(Integer mask) {
-        this.mask = mask;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Boolean getInternet() {
         return internet;
     }
@@ -113,32 +102,9 @@ public class TopologyNetwork implements Network {
         this.internet = internet;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setCreator(String creator) {
         this.creator = creator;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getIPAddress() {
-        return ipAddress;
-    }
-
-    @Override
-    public Integer getMask() {
-        return mask;
     }
 
     @Override

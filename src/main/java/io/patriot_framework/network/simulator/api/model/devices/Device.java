@@ -17,12 +17,13 @@
 package io.patriot_framework.network.simulator.api.model.devices;
 
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
-import io.patriot_framework.network.simulator.api.model.network.Network;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.List;
 
 public interface Device extends EnvironmentPart {
     String getName();
     String getIPAddress();
-    List<Network> getConnectedNetworks();
+    void setIPAddress(String ipAddress);
+    List<TopologyNetwork> getConnectedNetworks();
 }

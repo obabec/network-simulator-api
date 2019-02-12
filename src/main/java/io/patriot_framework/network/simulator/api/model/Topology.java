@@ -30,11 +30,17 @@ public class Topology {
     /**
      * Routers located in topology.
      */
-    List<Router> routers = new ArrayList<>();
+    private List<Router> routers = new ArrayList<>();
+
     /**
      * Networks in topology.
      */
-    ArrayList<TopologyNetwork> networks;
+    private ArrayList<TopologyNetwork> networks;
+
+    /**
+     * Tag from which are routers created.
+     */
+    private String routersTag;
 
     /**
      * Instantiates a new Topology.
@@ -99,6 +105,14 @@ public class Topology {
      */
     public void setNetworks(ArrayList<TopologyNetwork> networks) {
         this.networks = this.networks;
+    }
+
+    public String getRoutersTag() {
+        return routersTag;
+    }
+
+    public void setRoutersTag(String routersTag) {
+        this.routersTag = routersTag;
     }
 
     /**
