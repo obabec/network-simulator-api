@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 /**
  * The type Filter rule.
  */
-public class FilterRule implements Rule {
+public class FilterRule {
     private LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
 
     /**
@@ -39,8 +39,7 @@ public class FilterRule implements Rule {
         attributes.put("destination", null);
     }
 
-    @Override
-    public String toPath() {
+    public String toAPIFormat() {
         String rules= "/rules/";
         for (String value : attributes.values()) {
             rules += value + "/";

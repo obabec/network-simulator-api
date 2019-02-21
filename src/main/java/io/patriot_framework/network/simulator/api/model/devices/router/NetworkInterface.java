@@ -16,6 +16,8 @@
 
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Router' s network interface.
  *
@@ -27,15 +29,22 @@ public class NetworkInterface {
     /**
      * The Name.
      */
+    @JsonProperty("Name")
     private String name;
     /**
      * The Ip.
      */
+    @JsonProperty("IPAddress")
     private String ip;
     /**
      * The Mask.
      */
     private Integer mask;
+
+    public NetworkInterface(String name, String ip) {
+        this.name = name;
+        this.ip = ip;
+    }
 
     public NetworkInterface(String ip) {
         this.ip = ip;

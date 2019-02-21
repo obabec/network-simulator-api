@@ -16,7 +16,6 @@
 
 package io.patriot_framework.network.simulator.api.gateway;
 
-import io.patriot_framework.network_simulator.docker.container.config.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import java.util.List;
  * The type Gw controller.
  */
 public class GwDemo {
-        public static final List<String> JAVA_INSTALLATION_COMMANDS = Arrays.asList(
+     /*   public static final List<String> JAVA_INSTALLATION_COMMANDS = Arrays.asList(
                 "apt-get update",
                 "apt-get install -y --no-install-recommends locales",
                 "locale-gen en_US.UTF-8",
@@ -64,11 +63,11 @@ public class GwDemo {
                 "iptables vim curl python iproute2 python-pip"
         );
 
-        /**
+        *//**
          * Start gateway. Sort of GW demo.
          *
          * @throws InterruptedException the interrupted exception
-         */
+         *//*
         public void startGateway() throws InterruptedException {
 
             final Logger logger = LoggerFactory.getLogger(GwDemo.class);
@@ -113,5 +112,5 @@ public class GwDemo {
                 e.printStackTrace();
             }
 
-    }
+    }*/
 }

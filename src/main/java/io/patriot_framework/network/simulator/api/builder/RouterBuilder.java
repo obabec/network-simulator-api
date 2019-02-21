@@ -16,7 +16,6 @@
 
 package io.patriot_framework.network.simulator.api.builder;
 
-import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 import io.patriot_framework.network.simulator.api.model.devices.router.RouterImpl;
 
 /**
@@ -58,13 +57,18 @@ public class RouterBuilder {
         return this;
     }
 
+    public RouterBuilder withCreator(String creator) {
+        this.creator = creator;
+        return this;
+    }
+
     /**
      * Create new router object and add it into topology routers.
      *
      * @return the router builder
      */
     public RouterBuilder createRouter() {
-        topologyBuilder.topology.getRouters().add(new RouterImpl(name));
+        topologyBuilder.topology.getRouters().add(new RouterImpl(name, creator));
         return this;
     }
 

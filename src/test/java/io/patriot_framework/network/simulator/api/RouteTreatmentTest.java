@@ -16,12 +16,12 @@
 
 package io.patriot_framework.network.simulator.api;
 
-import io.patriot_framework.network.simulator.api.api.iproute.NetworkInterface;
-import io.patriot_framework.network.simulator.api.api.iproute.RouteController;
+import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
 import io.patriot_framework.network.simulator.api.manager.NetworkManager;
-import io.patriot_framework.network.simulator.api.model.Network;
-import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.Topology;
+import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
+import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
@@ -39,19 +39,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Disabled
 public class RouteTreatmentTest {
 
-    @Test
+ /*   @Test
     public void testRouteTreatmentTest() {
         NetworkManager nManager = new NetworkManager("patriotRouter");
-        ArrayList<Network> networks = new ArrayList<>();
-        Topology topology = new Topology(networks);
+        ArrayList<TopologyNetwork> topologyNetworks = new ArrayList<>();
+        Topology topology = new Topology(topologyNetworks);
         Router r = new Router("TestRouter");
-        Route route = createSimpleTopology(networks, false, r);
+        Route route = createSimpleTopology(topologyNetworks, false, r);
         HashMap<String, ArrayList<Route>> routes = nManager.processRoutes(topology);
-        assertTrue(routes.get(r.getName()).get(0).toPath().equals(route.toPath()));
+        assertTrue(routes.get(r.getName()).get(0).toAPIFormat().equals(route.toAPIFormat()));
 
     }
 
-    private Route parseRoute(Network source, Network dest, Router targetRouter, NetworkInterface targetInterface) {
+    private Route parseRoute(TopologyNetwork source, TopologyNetwork dest, Router targetRouter, NetworkInterface targetInterface) {
         Route route = new Route();
         route.setrNetworkInterface(targetInterface);
         route.setSource(source);
@@ -63,30 +63,30 @@ public class RouteTreatmentTest {
     @Test
     public void duplicateRouteTreatmentTest() {
         NetworkManager nManager = new NetworkManager("patriotRouter");
-        ArrayList<Network> networks = new ArrayList<>();
+        ArrayList<TopologyNetwork> topologyNetworks = new ArrayList<>();
         HashMap<String, Router> routers = new HashMap<>();
         routers.put("TestRouter", new Router("TestRouter"));
-        Topology topology = new Topology(routers, networks);
-        Route route = createSimpleTopology(topology.getNetworks(), true, topology.getRouters().get("TestRouter"));
-        createDuplicateNetwork(topology.getNetworks() ,topology.getRouters().get("TestRouter"));
+        Topology topology = new Topology(routers, topologyNetworks);
+        Route route = createSimpleTopology(topology.getNetworkImpls(), true, topology.getRouters().get("TestRouter"));
+        createDuplicateNetwork(topology.getNetworkImpls() ,topology.getRouters().get("TestRouter"));
 
         HashMap<String, ArrayList<Route>> routes = nManager.processRoutes(topology);
         assertEquals(1, routes.size());
-        assertTrue(routes.get(topology.getRouters().get("TestRouter").getName()).get(0).toPath().equals(route.toPath()));
+        assertTrue(routes.get(topology.getRouters().get("TestRouter").getName()).get(0).toAPIFormat().equals(route.toAPIFormat()));
 
     }
 
-    private Route createSimpleTopology(ArrayList<Network> topology, Boolean duplicate, Router r) {
+    private Route createSimpleTopology(ArrayList<TopologyNetwork> topology, Boolean duplicate, Router r) {
         List<NetworkInterface> routerInterfaces = new ArrayList<>();
         routerInterfaces.add(new NetworkInterface("eth0", "192.168.0.2", 24));
         r.setNetworkInterfaces(routerInterfaces);
 
-        Network n1 = new Network();
+        TopologyNetwork n1 = new TopologyNetwork();
         n1.setName("TestNetwork1");
         n1.setIpAddress("172.16.0.0");
         n1.setMask(16);
 
-        Network n2 = new Network();
+        TopologyNetwork n2 = new TopologyNetwork();
         n2.setName("TestNetwork2");
         n2.setIpAddress("192.168.0.0");
         n2.setMask(24);
@@ -106,8 +106,8 @@ public class RouteTreatmentTest {
         return calculatedRouteList;
     }
 
-    private void createDuplicateNetwork(ArrayList<Network> topology, Router r) {
-        Network n3 = new Network();
+    private void createDuplicateNetwork(ArrayList<TopologyNetwork> topology, Router r) {
+        TopologyNetwork n3 = new TopologyNetwork();
         n3.setName("TestNetwork3");
         n3.setIpAddress("172.16.0.0");
         n3.setMask(16);
@@ -124,8 +124,8 @@ public class RouteTreatmentTest {
         routers.put("R1", new Router("R1"));
         routers.put("R2", new Router("R2"));
 
-        ArrayList<Network> networks = prepareComplicatedTopology(routers);
-        Topology topology = new Topology(routers, networks);
+        ArrayList<TopologyNetwork> topologyNetworks = prepareComplicatedTopology(routers);
+        Topology topology = new Topology(routers, topologyNetworks);
         NetworkManager networkManager = new NetworkManager("patriotRouter");
         routers = networkManager.connect(topology);
         networkManager.calcRoutes(topology);
@@ -133,14 +133,14 @@ public class RouteTreatmentTest {
         networkManager.setRoutes(hashMap, routers);
 
         for (Router router : routers.values()) {
-            RouteController routeController = new RouteController(router.getMngIp(), router.getMngPort());
+            RouteRestController routeController = new RouteRestController(router.getMngIp(), router.getMngPort());
             List<Route> routes = routeController.getRoutes();
             for (Route r : hashMap.get(router.getName())) {
                 assertTrue(containsRoute(routes, r));
             }
         }
         CleanUtils cleanUtils = new CleanUtils();
-        cleanUtils.cleanUp(topology.getNetworks(), routers);
+        cleanUtils.cleanUp(topology.getNetworkImpls(), routers);
     }
 
     private Boolean containsRoute(List<Route> routes, Route route) {
@@ -153,20 +153,20 @@ public class RouteTreatmentTest {
         return false;
     }
 
-    private ArrayList<Network> prepareComplicatedTopology(HashMap<String, Router> routers) {
-        ArrayList<Network> topology = new ArrayList<>();
+    private ArrayList<TopologyNetwork> prepareComplicatedTopology(HashMap<String, Router> routers) {
+        ArrayList<TopologyNetwork> topology = new ArrayList<>();
 
-        Network n1 = new Network();
+        TopologyNetwork n1 = new TopologyNetwork();
         n1.setName("TestNetwork1");
         n1.setIpAddress("192.168.1.0");
         n1.setMask(28);
 
-        Network n2 = new Network();
+        TopologyNetwork n2 = new TopologyNetwork();
         n2.setName("TestNetwork2");
         n2.setIpAddress("192.168.1.16");
         n2.setMask(28);
 
-        Network n3 = new Network();
+        TopologyNetwork n3 = new TopologyNetwork();
         n3.setName("TestNetwork3");
         n3.setIpAddress("192.168.1.32");
         n3.setMask(28);
@@ -176,11 +176,11 @@ public class RouteTreatmentTest {
         return topology;
     }
 
-    private void prepareOnStartTopology(ArrayList<Network> topology, HashMap<String, Router> routers) {
+    private void prepareOnStartTopology(ArrayList<TopologyNetwork> topology, HashMap<String, Router> routers) {
         Integer routNeedCalc = topology.size() + 1;
-        Network n1 = topology.get(0);
-        Network n2 = topology.get(1);
-        Network n3 = topology.get(2);
+        TopologyNetwork n1 = topology.get(0);
+        TopologyNetwork n2 = topology.get(1);
+        TopologyNetwork n3 = topology.get(2);
 
         n1.getCalcRoutes().add(new CalcRoute(new NextHop(null, 0), null));
         n1.getCalcRoutes().add(new CalcRoute(new NextHop(routers.get("R1"), 1), 1));
@@ -197,6 +197,6 @@ public class RouteTreatmentTest {
         n3.getCalcRoutes().add(new CalcRoute(new NextHop(null, 2), null));
 
     }
-
+*/
 
 }

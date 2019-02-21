@@ -17,10 +17,12 @@
 package io.patriot_framework.network.simulator.api;
 
 import io.patriot_framework.network.simulator.api.builder.TopologyBuilder;
-import io.patriot_framework.network.simulator.api.manager.NetworkManager;
+import io.patriot_framework.network.simulator.api.manager.Manager;
 import io.patriot_framework.network.simulator.api.model.Topology;
+import io.patriot_framework.network_simulator.docker.control.DockerController;
 
-import java.util.HashMap;
+import java.util.Arrays;
+
 
 public class FloydWarshallDemo {
 
@@ -29,33 +31,42 @@ public class FloydWarshallDemo {
         int routeNeedsCalc = 6;
         Topology topology = new TopologyBuilder(5)
                 .withRouters()
-                    .withName("R1")
+                        .withName("R1")
+                        .withCreator("Docker")
                     .createRouter()
-                    .withName("R2")
+                        .withName("R2")
+                        .withCreator("Docker")
                     .createRouter()
-                    .withName("R3")
+                        .withName("R3")
+                        .withCreator("Docker")
                     .createRouter()
-                    .withName("R5")
+                        .withName("R5")
+                        .withCreator("Docker")
                     .createRouter()
                     .addRouters()
                 .withNetwork("N1")
                     .withIP("192.168.0.0")
                     .withMask(28)
+                    .withCreator("Docker")
                     .create()
                 .withNetwork("N2")
                     .withIP("192.168.16.0")
                     .withMask(28)
+                    .withCreator("Docker")
                     .create()
                 .withNetwork("N3")
                     .withIP("192.168.32.0")
                     .withMask(28)
+                    .withCreator("Docker")
                     .create()
-                    .withNetwork("N4")
-                        .withIP("192.168.48.0")
-                        .withMask(28)
-                        .create()
+                .withNetwork("N4")
+                    .withIP("192.168.48.0")
+                    .withMask(28)
+                    .withCreator("Docker")
+                    .create()
                 .withNetwork("internet")
                     .withInternet(true)
+                    .withCreator("Docker")
                     .create()
                 .withRoutes()
                     .withSourceNetwork("N1")
@@ -117,13 +128,10 @@ public class FloydWarshallDemo {
                         .addRoute()
 
                     .buildRoutes()
+                .withRoutersTag("patriot")
                 .build();
+        Manager networkManager = new Manager(Arrays.asList(new DockerController()));
+        networkManager.deployTopology(topology);
 
-
-        NetworkManager networkManager = new NetworkManager("patriotRouter");
-
-        /*topology.setRouters(networkManager.connect(topology));*/
-        networkManager.calcRoutes(topology);
-        HashMap hashMap = networkManager.processRoutes(topology);
     }
 }

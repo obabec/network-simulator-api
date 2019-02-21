@@ -24,9 +24,9 @@
    <artifactId>patriot-api</artifactId>
    <version>1.0-SNAPSHOT</version>
 
-   <name>Patriot network simulator api</name>
+   <name>Patriot topologyNetwork simulator api</name>
    <description>
-      This project is control api for network simulator project. Provides creating, connecting docker devices, networks,
+      This project is control api for topologyNetwork simulator project. Provides creating, connecting docker devices, networks,
       calculating shortest paths and updating routers routing table.
    </description>
    <licenses>
@@ -162,7 +162,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>src/main/java/io/patriot_framework/network/simulator/api/Main.java</mainClass>
+                    <mainClass>src/main/java/io/patriot_framework/topologyNetwork/simulator/api/Main.java</mainClass>
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
@@ -171,7 +171,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>src/main/java/io/patriot_framework/network/simulator/api/Main.java</mainClass>
+                            <mainClass>src/main/java/io/patriot_framework/topologyNetwork/simulator/api/Main.java</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -203,8 +203,8 @@
         </dependency>
         <dependency>
             <groupId>io.patriot_framework</groupId>
-            <artifactId>patriot-network</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>patriot-network-simulator</artifactId>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
        <dependency>
           <groupId>io.patriot_framework</groupId>

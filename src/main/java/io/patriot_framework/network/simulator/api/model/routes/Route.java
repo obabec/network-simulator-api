@@ -18,8 +18,8 @@ package io.patriot_framework.network.simulator.api.model.routes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
-import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 /**
  * Used for represent route record in routing tables.
@@ -43,9 +43,7 @@ public class Route {
 
     public Route() {
     }
-
-
-
+    
     /**
      * Gets dest.U
      *
@@ -123,8 +121,7 @@ public class Route {
      *
      * @return the string
      */
-    public String toPath() {
-        return dest.getIPAddress() + "/" + dest.getMask()
-                + "/" + rNetworkInterface.getIp() + "/" + mtu + "/" + hopLimit;
+    public String toAPIFormat() {
+        return "destination=" + getDest().getIPAddress() + "&mask=" + getDest().getMask() + "&interface=" + rNetworkInterface.getIp();
     }
 }

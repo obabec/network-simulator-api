@@ -18,9 +18,44 @@ package io.patriot_framework.network.simulator.api.model.devices.application;
 
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.network.Network;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.List;
 
-public interface Application extends Device {
-    String executeCommand(String[] commandWithArgs);
+
+class Application implements Device {
+
+    private String name;
+    private String ipAddress;
+    private List<Network> connectedNetworks;
+    private String creator;
+
+    public String executeCommand(String[] commandWithArgs) {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getIPAddress() {
+        return ipAddress;
+    }
+
+    @Override
+    public void setIPAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    @Override
+    public List<Network> getConnectedNetworks() {
+        return connectedNetworks;
+    }
+
+    @Override
+    public String getCreator() {
+        return creator;
+    }
 }

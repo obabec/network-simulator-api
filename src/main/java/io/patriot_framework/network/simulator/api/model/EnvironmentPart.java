@@ -14,16 +14,8 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.network.simulator.api.api.iptables.rules;
+package io.patriot_framework.network.simulator.api.model;
 
-/**
- * Ip tables rule.
- */
-public interface Rule {
-    /**
-     * Create HTML path for ip tables rest request.
-     *
-     * @return the string
-     */
-    String toPath();
+public interface EnvironmentPart {
+    String getCreator();
 }

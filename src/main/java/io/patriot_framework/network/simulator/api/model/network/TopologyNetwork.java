@@ -28,14 +28,10 @@ public class TopologyNetwork extends Network {
 
     @JsonIgnore
     private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
-    private String ipAddress;
-    private Integer mask;
-    @JsonIgnore
-    private String name;
     @JsonIgnore
     private Boolean internet = false;
-    private String id;
     private String creator;
+    private String internetInterfaceIP = null;
 
     /**
      * Instantiates a new TopologyNetwork.
@@ -43,17 +39,6 @@ public class TopologyNetwork extends Network {
 
 
     public TopologyNetwork() {
-    }
-
-    public TopologyNetwork(String ipAddress, Integer mask) {
-        this.ipAddress = ipAddress;
-        this.mask = mask;
-    }
-
-    public TopologyNetwork(String name, String ipAddress, Integer mask) {
-        this.ipAddress = ipAddress;
-        this.mask = mask;
-        this.name = name;
     }
 
     /**
@@ -64,7 +49,7 @@ public class TopologyNetwork extends Network {
      */
     public TopologyNetwork(CalculatedRouteList<CalcRoute> calcRoutes, String name) {
         this.calcRoutes = calcRoutes;
-        this.name = name;
+        super.setName(name);
     }
 
     /**
@@ -112,4 +97,11 @@ public class TopologyNetwork extends Network {
         return creator;
     }
 
+    public String getInternetInterfaceIP() {
+        return internetInterfaceIP;
+    }
+
+    public void setInternetInterfaceIP(String internetInterfaceIP) {
+        this.internetInterfaceIP = internetInterfaceIP;
+    }
 }

@@ -17,8 +17,8 @@
 package io.patriot_framework.network.simulator.api;
 
 
-import io.patriot_framework.network.simulator.api.model.Network;
-import io.patriot_framework.network.simulator.api.model.Router;
+import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network_simulator.docker.cleanup.Cleaner;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CleanUtils {
-    public void cleanUp(ArrayList<Network> topology, HashMap<String, Router> routers) {
+    public void cleanUp(ArrayList<TopologyNetwork> topology, HashMap<String, Router> routers) {
         Cleaner cleaner = new Cleaner();
         List<String> networks = new ArrayList<>();
         List<String> rts = new ArrayList<>(routers.keySet());

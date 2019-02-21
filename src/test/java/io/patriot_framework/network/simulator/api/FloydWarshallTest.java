@@ -17,9 +17,9 @@
 package io.patriot_framework.network.simulator.api;
 
 import io.patriot_framework.network.simulator.api.manager.NetworkManager;
-import io.patriot_framework.network.simulator.api.model.Network;
-import io.patriot_framework.network.simulator.api.model.Router;
 import io.patriot_framework.network.simulator.api.model.Topology;
+import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import org.junit.jupiter.api.Assertions;
@@ -33,10 +33,10 @@ import java.util.HashMap;
 @Disabled
 public class FloydWarshallTest {
 
-    private ArrayList<Network> copyTopology(ArrayList<Network> topology) {
-         ArrayList<Network> resultTop = new ArrayList<>();
+/*    private ArrayList<TopologyNetwork> copyTopology(ArrayList<TopologyNetwork> topology) {
+         ArrayList<TopologyNetwork> resultTop = new ArrayList<>();
          for (int i = 0; i < topology.size(); i++) {
-             Network n = new Network();
+             TopologyNetwork n = new TopologyNetwork();
              n.setInternet(topology.get(i).getInternet());
              n.setName(topology.get(i).getName());
              n.setMask(topology.get(i).getMask());
@@ -46,8 +46,8 @@ public class FloydWarshallTest {
          return resultTop;
     }
 
-    private ArrayList<Network> prepareResultTopology(ArrayList<Network> topology) {
-        ArrayList<Network> resultTop = copyTopology(topology);
+    private ArrayList<TopologyNetwork> prepareResultTopology(ArrayList<TopologyNetwork> topology) {
+        ArrayList<TopologyNetwork> resultTop = copyTopology(topology);
         CalculatedRouteList n1Routes = new CalculatedRouteList();
         n1Routes.add(new CalcRoute(new NextHop(null, 0), null));
         n1Routes.add(new CalcRoute(new NextHop(null, 1), 1));
@@ -94,7 +94,7 @@ public class FloydWarshallTest {
     @Test
     public void FloydWarshallTest() {
 
-        ArrayList<Network> networks = new ArrayList<>(4);
+        ArrayList<TopologyNetwork> topologyNetworks = new ArrayList<>(4);
         HashMap<String, Router> routers = new HashMap<>();
 
         routers.put("R1", new Router("R1"));
@@ -102,66 +102,66 @@ public class FloydWarshallTest {
         routers.put("R3", new Router("R3"));
         routers.put("R5", new Router("R5"));
 
-        Network n1 = new Network();
+        TopologyNetwork n1 = new TopologyNetwork();
         n1.setIpAddress("192.168.0.0");
         n1.setName("TN1");
         n1.setMask(28);
 
-        Network n2 = new Network();
+        TopologyNetwork n2 = new TopologyNetwork();
         n2.setMask(28);
         n2.setIpAddress("192.168.16.0");
         n2.setName("TN2");
 
-        Network n3 = new Network();
+        TopologyNetwork n3 = new TopologyNetwork();
         n3.setName("TN3");
         n3.setMask(28);
         n3.setIpAddress("192.168.32.0");
 
-        Network n4 = new Network();
+        TopologyNetwork n4 = new TopologyNetwork();
         n4.setMask(28);
         n4.setIpAddress("192.168.48.0");
         n4.setName("TN4");
 
-        Network internet = new Network();
+        TopologyNetwork internet = new TopologyNetwork();
         internet.setInternet(true);
 
-        networks.addAll(Arrays.asList(n1, n2, n3, n4, internet));
-        Topology topology = new Topology(routers, networks);
+        topologyNetworks.addAll(Arrays.asList(n1, n2, n3, n4, internet));
+        Topology topology = new Topology(routers, topologyNetworks);
 
-        initNetworks(networks, routers);
+        initNetworks(topologyNetworks, routers);
         NetworkManager networkManager = new NetworkManager("patriotRouter");
         routers = networkManager.connect(topology);
-        ArrayList<Network> resArr = prepareResultTopology(networks);
+        ArrayList<TopologyNetwork> resArr = prepareResultTopology(topologyNetworks);
         networkManager.calcRoutes(topology);
 
         try {
             for (int i = 0; i < 5; i++) {
-                Network targetNetwork = networks.get(i);
-                Network resultNetwork = resArr.get(i);
+                TopologyNetwork targetTopologyNetwork = topologyNetworks.get(i);
+                TopologyNetwork resultTopologyNetwork = resArr.get(i);
                 for (int y = 0; y < 5; y++) {
-                    Assertions.assertEquals(targetNetwork.getCalcRoutes().get(y).getCost(),
-                            resultNetwork.getCalcRoutes().get(y).getCost());
+                    Assertions.assertEquals(targetTopologyNetwork.getCalcRoutes().get(y).getCost(),
+                            resultTopologyNetwork.getCalcRoutes().get(y).getCost());
 
-                    Assertions.assertEquals(targetNetwork.getCalcRoutes().get(y).getNextHop().getNetwork(),
-                            resultNetwork.getCalcRoutes().get(y).getNextHop().getNetwork());
+                    Assertions.assertEquals(targetTopologyNetwork.getCalcRoutes().get(y).getNextHop().getNetwork(),
+                            resultTopologyNetwork.getCalcRoutes().get(y).getNextHop().getNetwork());
                 }
             }
         } finally {
             CleanUtils cleanUtils = new CleanUtils();
-            networks.remove(4);
-            cleanUtils.cleanUp(networks, routers);
+            topologyNetworks.remove(4);
+            cleanUtils.cleanUp(topologyNetworks, routers);
         }
     }
 
 
-    private void initNetworks(ArrayList<Network> topology, HashMap<String, Router> routers) {
+    private void initNetworks(ArrayList<TopologyNetwork> topology, HashMap<String, Router> routers) {
 
         Integer routNeedCalc = topology.size() + 1;
-        Network tN1 = topology.get(0);
-        Network tN2 = topology.get(1);
-        Network tN3 = topology.get(2);
-        Network tN4 = topology.get(3);
-        Network internet = topology.get(4);
+        TopologyNetwork tN1 = topology.get(0);
+        TopologyNetwork tN2 = topology.get(1);
+        TopologyNetwork tN3 = topology.get(2);
+        TopologyNetwork tN4 = topology.get(3);
+        TopologyNetwork internet = topology.get(4);
 
         tN1.getCalcRoutes().add(new CalcRoute(new NextHop(null, 0), null));
         tN1.getCalcRoutes().add(new CalcRoute(new NextHop(routers.get("R1"), 1), 1));
@@ -192,5 +192,5 @@ public class FloydWarshallTest {
         internet.getCalcRoutes().add(new CalcRoute(new NextHop(routers.get("R5"), 2), 1));
         internet.getCalcRoutes().add(new CalcRoute(new NextHop(routers.get("R5"), 3), 1));
         internet.getCalcRoutes().add(new CalcRoute(new NextHop(null, 4), null));
-    }
+    }*/
 }

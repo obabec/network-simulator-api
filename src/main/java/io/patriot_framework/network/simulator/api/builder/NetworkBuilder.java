@@ -19,6 +19,7 @@ package io.patriot_framework.network.simulator.api.builder;
 import io.patriot_framework.network.simulator.api.CalculatedRouteList;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
+import sun.nio.ch.Net;
 
 /**
  * TopologyNetwork Builder provides functions for building network and adding it into topology.
@@ -32,7 +33,7 @@ public class NetworkBuilder {
     private String creator;
     private String ipAddress;
     private String name;
-    private Integer mask;
+    private Integer mask = 0;
     private Boolean internet = false;
 
     /**
@@ -100,6 +101,11 @@ public class NetworkBuilder {
         return this;
     }
 
+    public NetworkBuilder withCreator(String creator) {
+        this.creator = creator;
+        return this;
+    }
+
     /**
      * Add calcRoutes attribute to network.
      *
@@ -144,6 +150,7 @@ public class NetworkBuilder {
         n.setIPAddress(ipAddress);
         n.setMask(mask);
         n.setName(name);
+        n.setCreator(creator);
         return n;
     }
 

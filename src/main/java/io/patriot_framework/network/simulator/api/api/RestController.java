@@ -23,41 +23,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * The type Controller provides Http request execution.
+ * The type RestController provides Http request execution.
  */
-public abstract class Controller {
-    private String ip;
-    private Integer port;
-
-    /**
-     * Gets ip.
-     *
-     * @return the ip
-     */
-    public String getIp() {
-        return ip;
-    }
-
-    /**
-     * Gets port.
-     *
-     * @return the port
-     */
-    public Integer getPort() {
-        return port;
-    }
-
-    /**
-     * Instantiates a new Controller.
-     *
-     * @param ip   the ip
-     * @param port the port
-     */
-    public Controller(String ip, Integer port) {
-        this.ip = ip;
-        this.port = port;
-    }
-
+public abstract class RestController {
     /**
      * Execute http request string.
      *
@@ -65,13 +33,13 @@ public abstract class Controller {
      * @param method the method
      * @return the string
      */
-    public String executeHttpRequest(String path, String method) {
+    public String executeHttpRequest(String path, String method, String ip, Integer port) {
 
         try {
             URL chainUrl = new URL("http", ip, port, path);
             HttpURLConnection connection = (HttpURLConnection) chainUrl.openConnection();
             try {
-                if (isAccessible()) {
+                if (isAccessible(ip, port)) {
                     connection.setRequestMethod(method);
                     connection.connect();
                     StringBuilder sb = new StringBuilder();
@@ -94,25 +62,24 @@ public abstract class Controller {
             return String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
-    private boolean isAccessible() {
+    private boolean isAccessible(String ip, Integer port) {
 
-        while (true) {
+        while (true) try {
+            URL url = new URL("http", ip, port, "/");
+            HttpURLConnection connection = null;
             try {
-                URL url = new URL("http", ip, port, "/");
-                HttpURLConnection connection = null;
-                try {
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.connect();
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        return true;
-                    } else {
-                        Thread.sleep(200);
-                    }
-                } finally {
-                    connection.disconnect();
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    return true;
+                } else {
+                    Thread.sleep(200);
                 }
-            } catch (Exception e) {
+            } finally {
+                connection.disconnect();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

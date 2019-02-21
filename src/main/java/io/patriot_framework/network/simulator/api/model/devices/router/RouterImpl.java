@@ -16,6 +16,7 @@
 
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
+import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.List;
 public class RouterImpl implements Router {
     private String name;
     private List<NetworkInterface> networkInterfaces;
-    private List<TopologyNetwork> connectedTopologyNetworks;
+    private List<Network> connectedTopologyNetworks;
     private String mngIp;
     private Integer mngPort;
     private Boolean defaultGW = false;
@@ -35,7 +36,7 @@ public class RouterImpl implements Router {
 
 
     // Default http py-route rest api
-    public static final int DEFAULT_PORT = 5000;
+    public static final int DEFAULT_PORT = 8081;
 
     /**
      * Instantiates a new RouterImpl.
@@ -45,7 +46,11 @@ public class RouterImpl implements Router {
     public RouterImpl(String name) {
         this.name = name;
         connectedTopologyNetworks = new ArrayList<>();
-        mngPort = DEFAULT_PORT;
+    }
+
+    public RouterImpl(String name, String creator) {
+        this.creator = creator;
+        this.name = name;
     }
 
     /**
@@ -85,7 +90,7 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public List<TopologyNetwork> getConnectedNetworks() {
+    public List<Network> getConnectedNetworks() {
         return connectedTopologyNetworks;
     }
 
@@ -121,7 +126,7 @@ public class RouterImpl implements Router {
      *
      * @return the connected networks
      */
-    public List<TopologyNetwork> getConnectedTopologyNetworks() {
+    public List<Network> getConnectedTopologyNetworks() {
         return connectedTopologyNetworks;
     }
 
@@ -130,7 +135,7 @@ public class RouterImpl implements Router {
      *
      * @param connectedTopologyNetworks the connected networks
      */
-    public void setConnectedTopologyNetworks(List<TopologyNetwork> connectedTopologyNetworks) {
+    public void setConnectedTopologyNetworks(List<Network> connectedTopologyNetworks) {
         this.connectedTopologyNetworks = connectedTopologyNetworks;
     }
 
@@ -158,6 +163,9 @@ public class RouterImpl implements Router {
      * @return the mng port
      */
     public Integer getMngPort() {
+        if (mngPort == null) {
+            return DEFAULT_PORT;
+        }
         return mngPort;
     }
 

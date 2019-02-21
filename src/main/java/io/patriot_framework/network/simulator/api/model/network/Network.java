@@ -25,6 +25,11 @@ public abstract class Network implements EnvironmentPart {
     private String ipAddress;
     private int mask;
 
+    public Network(String name, String id) {
+        this.name = name;
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
@@ -49,5 +54,19 @@ public abstract class Network implements EnvironmentPart {
 
     public void setMask(int mask) {
         this.mask = mask;
+    }
+
+    public Network(String ipAddress, int mask) {
+        this.ipAddress = ipAddress;
+        this.mask = mask;
+    }
+
+    public Network(String name, String ipAddress, int mask) {
+        this.name = name;
+        this.ipAddress = ipAddress;
+        this.mask = mask;
+    }
+
+    public Network() {
     }
 }

@@ -16,10 +16,12 @@
 
 package io.patriot_framework.hub;
 
-import io.patriot_framework.network.simulator.api.gateway.AppManager;
-import io.patriot_framework.network.simulator.api.manager.NetworkManager;
 
-import java.io.*;
+import io.patriot_framework.network.simulator.api.manager.Manager;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -36,8 +38,7 @@ public class PatriotHub {
 
     private static PatriotHub singleton = null;
 
-    private NetworkManager manager;
-    private AppManager appManager;
+    private Manager manager;
     private DeviceRegistry registry;
     private Properties properties;
 
@@ -71,13 +72,13 @@ public class PatriotHub {
             }
         }
 
-        manager = new NetworkManager(properties.getProperty("io.patriot_framework.router"));
+        /*manager = new NetworkManager(properties.getProperty("io.patriot_framework.router"));
         if (properties.containsKey("io.patriot_framework.monitoring.addr")) {
             manager.setMonitoringAddr(properties.getProperty("io.patriot_framework.monitoring.addr"));
         }
 
         appManager = new AppManager();
-        registry = new DeviceRegistry();
+        registry = new DeviceRegistry();*/
     }
 
     /**
@@ -97,7 +98,7 @@ public class PatriotHub {
      * network
      * @return current NetworkManager
      */
-    public NetworkManager getManager()
+    public Manager getManager()
     {
         return manager;
     }

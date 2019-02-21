@@ -21,10 +21,10 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
+
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 
 public class ConditionalDisableExtension implements ExecutionCondition

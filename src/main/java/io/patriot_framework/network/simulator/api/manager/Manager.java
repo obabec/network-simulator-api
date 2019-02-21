@@ -19,19 +19,16 @@ package io.patriot_framework.network.simulator.api.manager;
 import com.github.jgonian.ipmath.Ipv4;
 import com.github.jgonian.ipmath.Ipv4Range;
 import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
-import io.patriot_framework.network.simulator.api.model.devices.Device;
-import io.patriot_framework.network.simulator.api.model.devices.application.JavaApplication;
-import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.control.Controller;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.Topology;
+import io.patriot_framework.network.simulator.api.model.devices.Device;
+import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
-import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
-import io.patriot_framework.network_simulator.docker.control.DockerController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +44,11 @@ import java.util.Map;
  */
 public class Manager {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    List<Controller> controllers;
+
+    public Manager(List<Controller> controllers) {
+        this.controllers = controllers;
+    }
 
     /**
      * Deploy all topology. Creates all virtual devices (routers), networks. Connect them as topology describes.
@@ -105,6 +107,7 @@ public class Manager {
      * @param topology
      * @return HashMap with routers name as key and routes which has to be set to routers routing table.
      */
+    // This func has to be refactored!
     private HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
         LOGGER.info("Processing routes to ipRoute2 format.");
         ArrayList<TopologyNetwork> calculatedTop = topology.getNetworks();
@@ -112,9 +115,19 @@ public class Manager {
         HashMap<String, ArrayList<Route>> routes = new HashMap<>();
         for (int i = 0; i < size; i++){
             for (int j = 0; j < calculatedTop.get(i).getCalcRoutes().size(); j++) {
-                if (i == j || calculatedTop.get(i).getCalcRoutes().get(j) == null) continue;
+                if (i == j) continue;
                 Router r = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
-                Route route = completeRoute(calculatedTop, r, i, j);
+                Router iRouter;
+                if (calculatedTop.get(i).getCalcRoutes().get(j).getCost() == 1 && calculatedTop.get(j).getInternet() ) {
+                    iRouter = null;
+                } else if ((calculatedTop.get(i).getCalcRoutes().get(j).getCost() - 1) != 0) {
+                    Integer nextHopNetwork = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
+                    iRouter = calculatedTop.get(nextHopNetwork).getCalcRoutes().get(j).getNextHop().getRouter();
+                } else {
+                    iRouter = r;
+                }
+
+                Route route = completeRoute(calculatedTop, r, iRouter, i, j);
 
                 if (!routes.containsKey(r.getName())) {
                     routes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
@@ -137,7 +150,7 @@ public class Manager {
      * @param j destination network index
      * @return complete route object with all attributes
      */
-    private Route completeRoute(ArrayList<TopologyNetwork> topologyNetworks, Router r, int i, int j) {
+    private Route completeRoute(ArrayList<TopologyNetwork> topologyNetworks, Router r, Router nextHopRouter, int i, int j) {
         Route route = new Route();
 
         route.setTargetRouter(r);
@@ -146,7 +159,12 @@ public class Manager {
         route.setDest(topologyNetworks.get(j));
 
         Integer nextNetwork = topologyNetworks.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
-        NetworkInterface target = findCorrectInterface(r, topologyNetworks.get(nextNetwork));
+        NetworkInterface target;
+        if (nextHopRouter == null) {
+            target = new NetworkInterface(topologyNetworks.get(j).getInternetInterfaceIP());
+        } else {
+            target = findCorrectInterface(nextHopRouter, topologyNetworks.get(nextNetwork));
+        }
         route.setrNetworkInterface(target);
         return route;
     }
@@ -200,7 +218,8 @@ public class Manager {
 
             for (Route route : entry.getValue()) {
                 if (route.getDest().getInternet()){
-                    LOGGER.debug("Setting default route");
+                    LOGGER.info("Setting default route");
+                    routeController.delDefaultGw(r.getIPAddress(), r.getMngPort());
                     routeController.addDefaultGW(route, r.getIPAddress(), r.getMngPort());
                 } else {
                     routeController.addRoute(route, r.getIPAddress(), r.getMngPort());
@@ -216,7 +235,6 @@ public class Manager {
      * routers are connected to networks.
      * @param topology
      */
-    //TODO: Needs to complete rest controllers first!
     private void updateRouters(Topology topology) {
         RouteRestController restController = new RouteRestController();
         LOGGER.info("Requesting information about routers interfaces.");
@@ -229,21 +247,43 @@ public class Manager {
      * Connects networks as topology describes.
      * @param topology
      */
-    //TODO: What will happen if network is created by different creator than router?
     private void connectNetworks(Topology topology) {
+        LOGGER.info("Initializing corner network address");
+        initializeCornerNetworkIP(topology);
         LOGGER.info("Connecting networks.");
         HashMap<String, List<TopologyNetwork>> directConnections = filterConnected(topology);
         for (Map.Entry<String, List<TopologyNetwork>> entry : directConnections.entrySet()) {
             Router r = topology.findRouterByName(entry.getKey());
             Controller controller = findController(r);
             for (TopologyNetwork network : entry.getValue()) {
-                LOGGER.debug("Connecting router " + r.getName() + "with " + network.getName());
-                controller.connectDeviceToNetwork(r, network);
+                LOGGER.info("Connecting router " + r.getName() + "with " + network.getName());
+                if (!network.getInternet()) {
+                    controller.connectDeviceToNetwork(r, network);
+                }
             }
         }
     }
 
+    private void initializeCornerNetworkIP(Topology topology) {
+        for (TopologyNetwork n : topology.getNetworks()) {
+            if (n.getInternet()) {
+                Device device = findDeviceWithCreator(topology, n.getCreator());
+                Controller controller = findController(device);
+                n.setInternetInterfaceIP(controller.findGWIPAddress(device));
+                n.setIPAddress(controller.findGWNetworkIPAddress(device));
+                n.setMask(controller.findGWMask(device));
+            }
+        }
+    }
 
+    private Device findDeviceWithCreator(Topology topology, String creator) {
+        for (Device device : topology.getRouters()) {
+            if (device.getCreator().equals(creator)) {
+                return device;
+            }
+        }
+        return null;
+    }
 
     /**
      * Method provides filtering of networks which have to be physically connected
@@ -261,11 +301,12 @@ public class Manager {
         for (int i = 0; i < topologySize; i++) {
             TopologyNetwork network = networks.get(i);
             for (int y = 0; y < topologySize; y++) {
+                if (i == y) continue;
                 CalcRoute calcRoute = network.getCalcRoutes().get(y);
                 if (calcRoute.getCost() == 1) {
                     String rName = calcRoute.getNextHop().getRouter().getName();
                     TopologyNetwork dNetwork = networks.get(calcRoute.getNextHop().getNetwork());
-                    connectionExists(rName, Arrays.asList(network, dNetwork), connections);
+                    connectionExists(rName, new ArrayList<>(Arrays.asList(network, dNetwork)), connections);
                 }
             }
         }
@@ -298,9 +339,12 @@ public class Manager {
      * @param networkList
      */
     private void createNetworks(ArrayList<TopologyNetwork> networkList) {
-        for (TopologyNetwork network : networkList) {
-            LOGGER.debug("Creating network: " + network.getName());
-            findController(network).createNetwork(network);
+        for (int i = 0; i < networkList.size(); i++) {
+            TopologyNetwork network = networkList.get(i);
+            if (!network.getInternet()) {
+                LOGGER.debug("Creating network: " + network.getName());
+               findController(network).createNetwork(network);
+            }
         }
     }
 
@@ -321,14 +365,15 @@ public class Manager {
      * @param environmentPart part of creating environment like network, router, ...
      * @return
      */
-    //TODO: Maybe controller would be good as singleton...?
     private Controller findController(EnvironmentPart environmentPart) {
-        if (environmentPart.getCreator() == "Docker") {
-            return new DockerController();
-        } else {
-            LOGGER.error("Cannot find matching creator!");
-            return null;
+        for (Controller controller : controllers) {
+            if (environmentPart.getCreator().equals(controller.getIdentifier())) {
+                LOGGER.debug("Found right controller for: " + environmentPart.getCreator());
+                return controller;
+            }
         }
+        LOGGER.error("Cannot find matching creator!");
+        return null;
     }
 
     /**
@@ -340,21 +385,20 @@ public class Manager {
         Controller controller;
         for (Router r : topology.getRouters()) {
             controller = findController(r);
+            LOGGER.info("Destroying router " + r.getName());
             controller.destroyDevice(r);
         }
-        for (Network n : topology.getNetworks()) {
-            controller = findController(n);
-            controller.destroyNetwork(n);
+        for (TopologyNetwork n : topology.getNetworks()) {
+            if (!n.getInternet()) {
+                controller = findController(n);
+                LOGGER.info("Destroying network " + n.getName());
+                controller.destroyNetwork(n);
+            }
         }
     }
 
-    //TODO: This is not 100% legit, application should maybe be just one class not an interface.
-    public Device deployApplicationFromImage(String name, String tag, List<Network> connectedNetworks) {
-        JavaApplication javaApplication = new JavaApplication();
-        Controller controller = findController(javaApplication);
-        controller.deployDevice(javaApplication, tag);
-        controller.connectDeviceToNetwork(javaApplication, connectedNetworks);
-        return javaApplication;
+    public void deployDevice(Device device, String tag) {
+        findController(device).deployDevice(device, tag);
     }
 
 }

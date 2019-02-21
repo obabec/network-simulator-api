@@ -18,38 +18,28 @@ package io.patriot_framework.network.simulator.api.api.iproute;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.patriot_framework.network.simulator.api.api.Controller;
+import io.patriot_framework.network.simulator.api.api.RestController;
+import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Controller for ip tables api.
- * Implementing Controller. Is used for work with http ip-route rest api running in container.
+ * RestController for ip tables api.
+ * Implementing RestController. Is used for work with http ip-route rest api running in container.
  *
  */
-public class RouteController  extends Controller {
-
-    /**
-     * Instantiates a new Route controller.
-     *
-     * @param ip   the ip
-     * @param port the port
-     */
-    public RouteController(String ip, Integer port) {
-        super(ip, port);
-    }
-
+public class RouteRestController extends RestController {
     /**
      * Add route string.
      *
      * @param route the route
      * @return the string
      */
-    public String addRoute(Route route) {
-        String path = "/iproutes/" + route.toPath();
-        return executeHttpRequest(path, "PUT");
+    public String addRoute(Route route, String ip, Integer port) {
+        String path = "/iproutes/mod?" + route.toAPIFormat();
+        return executeHttpRequest(path, "PUT", ip, port);
     }
 
     /**
@@ -58,9 +48,9 @@ public class RouteController  extends Controller {
      * @param route the route
      * @return the string
      */
-    public String deleteRoute(Route route) {
-        String path = "/iproutes/" + route.toPath();
-        return executeHttpRequest(path, "DELETE");
+    public String deleteRoute(Route route, String ip, Integer port) {
+        String path = "/iproutes/mod?" + route.toAPIFormat();
+        return executeHttpRequest(path, "DELETE", ip, port);
     }
 
     /**
@@ -68,11 +58,11 @@ public class RouteController  extends Controller {
      *
      * @return the routers
      */
-    public List<Route> getRoutes() {
+    public List<Route> getRoutes(String ip, Integer port) {
         String path = "/iproutes";
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String input = executeHttpRequest(path, "GET");
+            String input = executeHttpRequest(path, "GET", ip, port);
             return objectMapper.readValue(input, new TypeReference<List<Route>>(){});
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,9 +76,9 @@ public class RouteController  extends Controller {
      * @param defaultGW the default gw
      * @return the string
      */
-    public String addDefaultGW(Route defaultGW) {
-        String path = "/iproutes/default/" + defaultGW.getrNetworkInterface().getIp();
-        return executeHttpRequest(path, "PUT");
+    public String addDefaultGW(Route defaultGW, String ip, Integer port) {
+        String path = "/iproutes/default?interface=" + defaultGW.getrNetworkInterface().getIp();
+        return executeHttpRequest(path, "PUT", ip, port);
     }
 
     /**
@@ -97,20 +87,27 @@ public class RouteController  extends Controller {
      * @param defaultGW the default gw
      * @return the string
      */
-    public String delDefaultGW(Route defaultGW ) {
-        String path = "/iproutes/default/" + defaultGW.getrNetworkInterface().getIp();
-        return executeHttpRequest(path, "DELETE");
+    public String delDefaultGW(Route defaultGW, String ip, Integer port) {
+        String path = "/iproutes/default?interface=" + defaultGW.getrNetworkInterface().getIp();
+        return executeHttpRequest(path, "DELETE", ip, port);
     }
+
+    public String delDefaultGw(String ip, Integer port) {
+        String path = "/iproutes/default";
+        return executeHttpRequest(path, "DELETE", ip, port);
+    }
+
+
 
     /**
      * Gets interfaces.
      *
      * @return the interfaces
      */
-    public List<NetworkInterface> getInterfaces() {
+    public List<NetworkInterface> getInterfaces(String ip, Integer port) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String input = executeHttpRequest("/iproutes/interfaces", "GET");
+            String input = executeHttpRequest("/interfaces", "GET", ip, port);
             List<NetworkInterface> networkInterfaces =
                     objectMapper.readValue(input, new TypeReference<List<NetworkInterface>>(){});
             return networkInterfaces;

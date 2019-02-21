@@ -18,7 +18,10 @@ package io.patriot_framework.hub;
 
 import com.redhat.patriot.generator.device.Unit;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**

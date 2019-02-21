@@ -16,34 +16,24 @@
 
 package io.patriot_framework.network.simulator.api.api.iptables;
 
-import io.patriot_framework.network.simulator.api.api.Controller;
+import io.patriot_framework.network.simulator.api.api.RestController;
 import io.patriot_framework.network.simulator.api.api.iptables.chain.Chain;
 import io.patriot_framework.network.simulator.api.api.iptables.rules.FilterRule;
 
 /**
  * The type Ip tables controller.
  */
-public class IPTablesController extends Controller {
-
-    /**
-     * Instantiates a new Ip tables controller.
-     *
-     * @param ip   the ip
-     * @param port the port
-     */
-    public IPTablesController(String ip, Integer port) {
-        super(ip, port);
-    }
+public class IPTablesRestController extends RestController {
 
     /**
      * Add filter rule string.
      *
      * @param filterRule the filter rule
      * @return the string
-     */
-    public String addFilterRule(FilterRule filterRule) {
+     **/
+    public String addFilterRule(FilterRule filterRule, String ip, Integer port) {
 
-        return executeHttpRequest(filterRule.toPath(), "PUT");
+        return executeHttpRequest(filterRule.toAPIFormat(), "PUT", ip, port);
     }
 
     /**
@@ -51,9 +41,9 @@ public class IPTablesController extends Controller {
      *
      * @param filterRule the filter rule
      * @return the string
-     */
-    public String deleteFilterRule(FilterRule filterRule) {
-        return executeHttpRequest(filterRule.toPath(), "DELETE");
+     **/
+    public String deleteFilterRule(FilterRule filterRule, String ip, Integer port) {
+        return executeHttpRequest(filterRule.toAPIFormat(), "DELETE", ip, port);
     }
 
 
@@ -62,9 +52,9 @@ public class IPTablesController extends Controller {
      *
      * @param chain the chain
      * @return the string
-     */
-    public String addChain(Chain chain) {
-        return executeHttpRequest(chain.getPath(), "PUT");
+     **/
+    public String addChain(Chain chain, String ip, Integer port) {
+        return executeHttpRequest(chain.toString(), "PUT", ip, port);
     }
 
     /**
@@ -72,9 +62,9 @@ public class IPTablesController extends Controller {
      *
      * @param chain the chain
      * @return the string
-     */
-    public String deleteChain(Chain chain) {
-        return executeHttpRequest(chain.getPath(), "DELETE");
+     **/
+    public String deleteChain(Chain chain, String ip, Integer port) {
+        return executeHttpRequest(chain.getPath(), "DELETE", ip, port);
     }
 
 
@@ -82,8 +72,8 @@ public class IPTablesController extends Controller {
      * Save ip tables string.
      *
      * @return the string
-     */
-    public String saveIpTables() {
-        return executeHttpRequest("/save/", "GET");
+     **/
+    public String saveIpTables(String ip, Integer port) {
+        return executeHttpRequest("/save/", "GET", ip, port);
     }
 }

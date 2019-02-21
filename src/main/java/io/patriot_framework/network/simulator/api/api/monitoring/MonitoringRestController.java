@@ -16,25 +16,21 @@
 
 package io.patriot_framework.network.simulator.api.api.monitoring;
 
-import io.patriot_framework.network.simulator.api.api.Controller;
+import io.patriot_framework.network.simulator.api.api.RestController;
 
 /**
  * Utility class to set monitor address
  */
-public class MonitoringController extends Controller {
-
-    public MonitoringController(String ip, Integer port) {
-        super(ip, port);
-    }
+public class MonitoringRestController extends RestController {
 
     /**
      * Sets monitoring address to associated router
      * @param elasticAddr address of elastic search to be used with PatrIoT
      * @return response from router
      */
-    public String setMonitoringAddress(String elasticAddr)
+    public String setMonitoringAddress(String elasticAddr, String host, String ip, Integer port)
     {
-        String path = "/setLogHook?" + elasticAddr;
-        return executeHttpRequest(path, "GET");
+        String path = "/setLogHook?elastic=" + elasticAddr + "&host=" + host;
+        return executeHttpRequest(path, "GET", ip, port);
     }
 }

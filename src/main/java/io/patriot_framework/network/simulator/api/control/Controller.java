@@ -105,4 +105,10 @@ public interface Controller {
      * @param tag   the tag
      */
     void buildImage(File image, String tag);
+
+    String findGWNetworkIPAddress(Device device);
+    String findGWIPAddress(Device device);
+    Integer findGWMask(Device device);
+
+    String getIdentifier();
 }
