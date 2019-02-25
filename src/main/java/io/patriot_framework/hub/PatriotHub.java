@@ -72,13 +72,13 @@ public class PatriotHub {
             }
         }
 
-        /*manager = new NetworkManager(properties.getProperty("io.patriot_framework.router"));
+        manager = new Manager(properties.getProperty("io.patriot_framework.router"));
         if (properties.containsKey("io.patriot_framework.monitoring.addr")) {
-            manager.setMonitoringAddr(properties.getProperty("io.patriot_framework.monitoring.addr"));
+            manager.setMonitoring(properties.getProperty("io.patriot_framework.monitoring.addr"),
+                    Integer.valueOf(properties.getProperty("io.patriot_framework.monitoring.port")));
         }
 
-        appManager = new AppManager();
-        registry = new DeviceRegistry();*/
+        registry = new DeviceRegistry();
     }
 
     /**

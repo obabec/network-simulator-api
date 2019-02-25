@@ -131,6 +131,7 @@ public class FloydWarshallDemo {
                 .withRoutersTag("patriot")
                 .build();
         Manager networkManager = new Manager(Arrays.asList(new DockerController()));
+        networkManager.setMonitoring("172.22.0.1", 9200);
         networkManager.deployTopology(topology);
 
     }

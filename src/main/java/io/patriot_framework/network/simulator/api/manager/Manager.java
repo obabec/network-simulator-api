@@ -19,6 +19,7 @@ package io.patriot_framework.network.simulator.api.manager;
 import com.github.jgonian.ipmath.Ipv4;
 import com.github.jgonian.ipmath.Ipv4Range;
 import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
+import io.patriot_framework.network.simulator.api.api.monitoring.MonitoringRestController;
 import io.patriot_framework.network.simulator.api.control.Controller;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.Topology;
@@ -45,6 +46,22 @@ import java.util.Map;
 public class Manager {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     List<Controller> controllers;
+    private String monitoringAddr;
+    private String routerTag;
+    private Integer monitoringPort;
+
+    public Manager(String routerTag) {
+        this.routerTag = routerTag;
+    }
+
+    public String getMonitoringAddr() {
+        return monitoringAddr;
+    }
+
+    public void setMonitoring(String monitoringAddr, Integer monitoringPort) {
+        this.monitoringAddr = monitoringAddr;
+        this.monitoringPort = monitoringPort;
+    }
 
     public Manager(List<Controller> controllers) {
         this.controllers = controllers;
@@ -107,7 +124,7 @@ public class Manager {
      * @param topology
      * @return HashMap with routers name as key and routes which has to be set to routers routing table.
      */
-    // This func has to be refactored!
+    //TODO: This func has to be refactored!
     private HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
         LOGGER.info("Processing routes to ipRoute2 format.");
         ArrayList<TopologyNetwork> calculatedTop = topology.getNetworks();
@@ -354,8 +371,13 @@ public class Manager {
      */
     private void createRouters(Topology topology) {
         for (Router router : topology.getRouters()) {
+
             LOGGER.debug("Creating router: " + router.getName());
             findController(router).deployDevice(router, topology.getRoutersTag());
+            if (monitoringAddr != null) {
+                MonitoringRestController monitoringRestController = new MonitoringRestController();
+                monitoringRestController.setMonitoringAddress(monitoringAddr, monitoringPort, router.getIPAddress(), router.getMngPort());
+            }
         }
     }
 

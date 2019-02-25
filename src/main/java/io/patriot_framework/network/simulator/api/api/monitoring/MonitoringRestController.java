@@ -28,9 +28,9 @@ public class MonitoringRestController extends RestController {
      * @param elasticAddr address of elastic search to be used with PatrIoT
      * @return response from router
      */
-    public String setMonitoringAddress(String elasticAddr, String host, String ip, Integer port)
+    public String setMonitoringAddress(String elasticAddr, Integer elasticPort, String ip, Integer port)
     {
-        String path = "/setLogHook?elastic=" + elasticAddr + "&host=" + host;
+        String path = "/setLogHook?elastic=" + elasticAddr + ":" + elasticPort;
         return executeHttpRequest(path, "GET", ip, port);
     }
 }
