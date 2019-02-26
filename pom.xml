@@ -162,7 +162,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>src/main/java/io/patriot_framework/topologyNetwork/simulator/api/Main.java</mainClass>
+                    <mainClass>io.patriot_framework.network.simulator.api.Main</mainClass>
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
@@ -171,7 +171,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>src/main/java/io/patriot_framework/topologyNetwork/simulator/api/Main.java</mainClass>
+                            <mainClass>io.patriot_framework.network.simulator.api.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
