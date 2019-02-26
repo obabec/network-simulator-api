@@ -20,7 +20,7 @@ import io.patriot_framework.network.simulator.api.builder.TopologyBuilder;
 import io.patriot_framework.network.simulator.api.manager.Manager;
 import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network_simulator.docker.control.DockerController;
-
+import io.patriot_framework.network.simulator.api.model.devices.application.Application;
 import java.util.Arrays;
 
 
@@ -134,5 +134,8 @@ public class FloydWarshallDemo {
         networkManager.setMonitoring("172.22.0.1", 9200);
         networkManager.deployTopology(topology);
 
+        Application application = new Application("App", "Docker");
+        networkManager.deployDevice(application, "patr");
+        //TODO: pripojeni siti k aplikaci, filebeat,
     }
 }

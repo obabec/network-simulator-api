@@ -17,7 +17,6 @@
 package io.patriot_framework.network.simulator.api;
 
 import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
-import io.patriot_framework.network.simulator.api.manager.NetworkManager;
 import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;

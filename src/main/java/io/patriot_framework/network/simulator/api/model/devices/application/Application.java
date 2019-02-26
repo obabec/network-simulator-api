@@ -23,7 +23,7 @@ import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import java.util.List;
 
 
-class Application implements Device {
+public class Application implements Device {
 
     private String name;
     private String ipAddress;
@@ -32,6 +32,15 @@ class Application implements Device {
 
     public String executeCommand(String[] commandWithArgs) {
         return null;
+    }
+
+    public Application(String name) {
+        this.name = name;
+    }
+
+    public Application(String name, String creator) {
+        this.name = name;
+        this.creator = creator;
     }
 
     @Override
