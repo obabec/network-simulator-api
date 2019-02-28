@@ -33,6 +33,7 @@ public class RouterImpl implements Router {
     private Integer mngPort;
     private Boolean defaultGW = false;
     private String creator;
+    private boolean corner = false;
 
 
     // Default http py-route rest api
@@ -62,6 +63,12 @@ public class RouterImpl implements Router {
     public RouterImpl(String name, List<NetworkInterface> networkInterfaces) {
         this.name = name;
         this.networkInterfaces = networkInterfaces;
+    }
+
+    public RouterImpl(String name, String creator, boolean corner) {
+        this.name = name;
+        this.creator = creator;
+        this.corner = corner;
     }
 
     /**
@@ -176,6 +183,15 @@ public class RouterImpl implements Router {
      */
     public void setMngPort(Integer mngPort) {
         this.mngPort = mngPort;
+    }
+
+    @Override
+    public Boolean isCorner() {
+        return corner;
+    }
+
+    public void setCorner(Boolean corner) {
+        this.corner = corner;
     }
 
     public Boolean getDefaultGW() {

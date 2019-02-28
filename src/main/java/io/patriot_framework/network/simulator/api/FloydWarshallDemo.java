@@ -42,6 +42,7 @@ public class FloydWarshallDemo {
                     .createRouter()
                         .withName("R5")
                         .withCreator("Docker")
+                        .withCorner(true)
                     .createRouter()
                     .addRouters()
                 .withNetwork("N1")
@@ -134,8 +135,6 @@ public class FloydWarshallDemo {
         networkManager.setMonitoring("172.22.0.1", 9200);
         networkManager.deployTopology(topology);
 
-        Application application = new Application("App", "Docker");
-        networkManager.deployDevice(application, "patr");
         //TODO: pripojeni siti k aplikaci, filebeat,
     }
 }

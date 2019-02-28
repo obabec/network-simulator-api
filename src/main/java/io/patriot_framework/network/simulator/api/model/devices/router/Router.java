@@ -26,5 +26,6 @@ public interface Router extends Device {
     void setNetworkInterfaces(List<NetworkInterface> networkInterfaces);
     Integer getMngPort();
     void setMngPort(Integer mngPort);
+    Boolean isCorner();
 
 }

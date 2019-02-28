@@ -26,6 +26,8 @@ import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.devices.router.RouterImpl;
+import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
@@ -79,6 +81,7 @@ public class Manager {
         updateRouters(topology);
         calcRoutes(topology);
         setRoutes(processRoutes(topology), topology);
+        setMasquerade(topology);
     }
 
     /**
@@ -421,6 +424,19 @@ public class Manager {
 
     public void deployDevice(Device device, String tag) {
         findController(device).deployDevice(device, tag);
+    }
+
+    public void setMasquerade(Topology topology) {
+        for (Router r : topology.getRouters()) {
+            if (r.isCorner()) {
+                for (TopologyNetwork n : topology.getNetworks()) {
+                    if (n.getInternet()) {
+                        NetworkInterface nI = findCorrectInterface(r, n);
+                        findController(r).executeCommand(r, "/nat " + nI.getName());
+                    }
+                }
+            }
+        }
     }
 
 }

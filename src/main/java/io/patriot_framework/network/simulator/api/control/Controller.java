@@ -42,6 +42,7 @@ public interface Controller {
      *
      * @param device   the device
      * @param networks the networks
+     * @param networks the networks
      */
     void connectDeviceToNetwork(Device device, List<Network> networks);
 
@@ -111,4 +112,6 @@ public interface Controller {
     Integer findGWMask(Device device);
 
     String getIdentifier();
+
+    void executeCommand(Device device, String command);
 }

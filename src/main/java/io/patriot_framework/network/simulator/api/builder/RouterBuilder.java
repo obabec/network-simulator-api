@@ -37,6 +37,8 @@ public class RouterBuilder {
      */
     String creator;
 
+    Boolean corner = false;
+
     /**
      * Instantiates a new RouterImpl builder.
      *
@@ -62,13 +64,18 @@ public class RouterBuilder {
         return this;
     }
 
+    public RouterBuilder withCorner(Boolean corner) {
+        this.corner = corner;
+        return this;
+    }
+
     /**
      * Create new router object and add it into topology routers.
      *
      * @return the router builder
      */
     public RouterBuilder createRouter() {
-        topologyBuilder.topology.getRouters().add(new RouterImpl(name, creator));
+        topologyBuilder.topology.getRouters().add(new RouterImpl(name, creator, corner));
         return this;
     }
 
