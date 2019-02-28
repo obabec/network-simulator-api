@@ -26,8 +26,6 @@ import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
-import io.patriot_framework.network.simulator.api.model.devices.router.RouterImpl;
-import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
@@ -127,7 +125,6 @@ public class Manager {
      * @param topology
      * @return HashMap with routers name as key and routes which has to be set to routers routing table.
      */
-    //TODO: This func has to be refactored!
     private HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
         LOGGER.info("Processing routes to ipRoute2 format.");
         ArrayList<TopologyNetwork> calculatedTop = topology.getNetworks();
@@ -135,28 +132,14 @@ public class Manager {
         HashMap<String, ArrayList<Route>> routes = new HashMap<>();
         for (int i = 0; i < size; i++){
             for (int j = 0; j < calculatedTop.get(i).getCalcRoutes().size(); j++) {
+
                 if (i == j) continue;
+
                 Router r = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
-                Router iRouter;
-                if (calculatedTop.get(i).getCalcRoutes().get(j).getCost() == 1 && calculatedTop.get(j).getInternet() ) {
-                    iRouter = null;
-                } else if ((calculatedTop.get(i).getCalcRoutes().get(j).getCost() - 1) != 0) {
-                    Integer nextHopNetwork = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
-                    iRouter = calculatedTop.get(nextHopNetwork).getCalcRoutes().get(j).getNextHop().getRouter();
-                } else {
-                    iRouter = r;
-                }
-
+                Router iRouter = selectNextHopRouter(calculatedTop, i, j);
                 Route route = completeRoute(calculatedTop, r, iRouter, i, j);
+                updateProcessedRoutes(route, routes, r);
 
-                if (!routes.containsKey(r.getName())) {
-                    routes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
-                } else {
-                    if (isProcessedRoute(routes.get(r.getName()), route)) {
-                        continue;
-                    }
-                    routes.get(r.getName()).add(route);
-                }
             }
         }
         return routes;
@@ -187,6 +170,42 @@ public class Manager {
         }
         route.setrNetworkInterface(target);
         return route;
+    }
+
+    /**
+     * Finds next hop router. If router last step to dest network func returns actual nexthop
+     * router if not func returns nexthop + 1 router.
+     * @param calculatedTop
+     * @param actualNet
+     * @param destNet
+     * @return
+     */
+    private Router selectNextHopRouter(ArrayList<TopologyNetwork> calculatedTop, int actualNet, int destNet) {
+        if (calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getCost() == 1 && calculatedTop.get(destNet).getInternet() ) {
+            return null;
+        } else if ((calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getCost() - 1) != 0) {
+            Integer nextHopNetwork = calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getNextHop().getNetwork();
+            return calculatedTop.get(nextHopNetwork).getCalcRoutes().get(destNet).getNextHop().getRouter();
+        } else {
+            return calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getNextHop().getRouter();
+        }
+    }
+
+    /**
+     * Checks if route not processed yet, if not puts it into routes map.
+     * @param route
+     * @param routes
+     * @param r
+     */
+    private void updateProcessedRoutes(Route route, HashMap<String, ArrayList<Route>> routes, Router r) {
+        if (!routes.containsKey(r.getName())) {
+            routes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
+        } else {
+            if (isProcessedRoute(routes.get(r.getName()), route)) {
+                return;
+            }
+            routes.get(r.getName()).add(route);
+        }
     }
 
 
@@ -426,6 +445,11 @@ public class Manager {
         findController(device).deployDevice(device, tag);
     }
 
+    /**
+     * Sets masquerade to iptables on corner router, which provides full
+     * connectivity to internet for all networks communicating with corner router.
+     * @param topology
+     */
     public void setMasquerade(Topology topology) {
         for (Router r : topology.getRouters()) {
             if (r.isCorner()) {
