@@ -29,6 +29,7 @@ public class Application implements Device {
     private String ipAddress;
     private List<Network> connectedNetworks;
     private String creator;
+    private Integer mngPort = 8081;
 
     public String executeCommand(String[] commandWithArgs) {
         return null;
@@ -61,6 +62,11 @@ public class Application implements Device {
     @Override
     public List<Network> getConnectedNetworks() {
         return connectedNetworks;
+    }
+
+    @Override
+    public Integer getMngPort() {
+        return mngPort;
     }
 
     @Override

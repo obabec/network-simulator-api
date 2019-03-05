@@ -114,4 +114,6 @@ public interface Controller {
     String getIdentifier();
 
     void executeCommand(Device device, String command);
+
+    void startDevice(Device device);
 }

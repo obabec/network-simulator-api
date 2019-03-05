@@ -49,6 +49,7 @@ public class Manager {
     private String monitoringAddr;
     private String routerTag;
     private Integer monitoringPort;
+    private HashMap<String, ArrayList<Route>> processedRoutes = new HashMap<>();
 
     public Manager(String routerTag) {
         this.routerTag = routerTag;
@@ -67,6 +68,15 @@ public class Manager {
         this.controllers = controllers;
     }
 
+    public Manager(List<Controller> controllers, String routerTag) {
+        this.controllers = controllers;
+        this.routerTag = routerTag;
+    }
+
+    public HashMap<String, ArrayList<Route>> getProcessedRoutes() {
+        return processedRoutes;
+    }
+
     /**
      * Deploy all topology. Creates all virtual devices (routers), networks. Connect them as topology describes.
      * Calculate routes and set them to routes.
@@ -78,7 +88,8 @@ public class Manager {
         connectNetworks(topology);
         updateRouters(topology);
         calcRoutes(topology);
-        setRoutes(processRoutes(topology), topology);
+        processRoutes(topology);
+        setRoutes(topology);
         setMasquerade(topology);
     }
 
@@ -86,7 +97,7 @@ public class Manager {
      * Calculates routers via Floyd-Warshall algo.
      * @param topology
      */
-    private void calcRoutes(Topology topology) {
+    public void calcRoutes(Topology topology) {
         ArrayList<TopologyNetwork> topologyNetworks = topology.getNetworks();
         LOGGER.info("Calculating network routes.");
         int size = topologyNetworks.size();
@@ -125,11 +136,10 @@ public class Manager {
      * @param topology
      * @return HashMap with routers name as key and routes which has to be set to routers routing table.
      */
-    private HashMap<String, ArrayList<Route>> processRoutes(Topology topology) {
+    public void processRoutes(Topology topology) {
         LOGGER.info("Processing routes to ipRoute2 format.");
         ArrayList<TopologyNetwork> calculatedTop = topology.getNetworks();
         int size = calculatedTop.size();
-        HashMap<String, ArrayList<Route>> routes = new HashMap<>();
         for (int i = 0; i < size; i++){
             for (int j = 0; j < calculatedTop.get(i).getCalcRoutes().size(); j++) {
 
@@ -138,11 +148,9 @@ public class Manager {
                 Router r = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
                 Router iRouter = selectNextHopRouter(calculatedTop, i, j);
                 Route route = completeRoute(calculatedTop, r, iRouter, i, j);
-                updateProcessedRoutes(route, routes, r);
-
+                updateProcessedRoutes(route, r);
             }
         }
-        return routes;
     }
 
     /**
@@ -194,17 +202,16 @@ public class Manager {
     /**
      * Checks if route not processed yet, if not puts it into routes map.
      * @param route
-     * @param routes
      * @param r
      */
-    private void updateProcessedRoutes(Route route, HashMap<String, ArrayList<Route>> routes, Router r) {
-        if (!routes.containsKey(r.getName())) {
-            routes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
+    private void updateProcessedRoutes(Route route, Router r) {
+        if (!processedRoutes.containsKey(r.getName())) {
+            processedRoutes.put(r.getName(), new ArrayList<>(Arrays.asList(route)));
         } else {
-            if (isProcessedRoute(routes.get(r.getName()), route)) {
+            if (isProcessedRoute(processedRoutes.get(r.getName()), route)) {
                 return;
             }
-            routes.get(r.getName()).add(route);
+            processedRoutes.get(r.getName()).add(route);
         }
     }
 
@@ -245,10 +252,9 @@ public class Manager {
 
     /**
      * Sets routes to routing table via REST API on targeted routers.
-     * @param processedRoutes
      * @param topology
      */
-    public void setRoutes(HashMap<String, ArrayList<Route>> processedRoutes, Topology topology) {
+    public void setRoutes(Topology topology) {
 
         RouteRestController routeController = new RouteRestController();
         for (Map.Entry<String, ArrayList<Route>> entry: processedRoutes.entrySet()) {
@@ -395,7 +401,11 @@ public class Manager {
         for (Router router : topology.getRouters()) {
 
             LOGGER.debug("Creating router: " + router.getName());
-            findController(router).deployDevice(router, topology.getRoutersTag());
+            if (topology.getRoutersTag() == null) {
+                findController(router).deployDevice(router, routerTag);
+            } else {
+                findController(router).deployDevice(router, topology.getRoutersTag());
+            }
             if (monitoringAddr != null) {
                 MonitoringRestController monitoringRestController = new MonitoringRestController();
                 monitoringRestController.setMonitoringAddress(monitoringAddr, monitoringPort, router.getIPAddress(), router.getMngPort());
@@ -461,6 +471,36 @@ public class Manager {
                 }
             }
         }
+    }
+
+    public void deployDeviceToNetwork(Device device, TopologyNetwork network, Topology calculatedTopology, String tag) {
+        Router nearRouter;
+        ArrayList<TopologyNetwork> networks = calculatedTopology.getNetworks();
+        int internet = 0;
+        int sourceNet = 0;
+        for (int i = 0; i < networks.size(); i++) {
+            if (networks.get(i).getInternet()) {
+                internet = i;
+            }
+            if (networks.get(i).getName().equals(network.getName())) {
+                sourceNet = i;
+            }
+        }
+        nearRouter = networks.get(sourceNet).getCalcRoutes().get(internet).getNextHop().getRouter();
+        NetworkInterface nI = findCorrectInterface(nearRouter, network);
+
+        RouteRestController routeRestController = new RouteRestController();
+        Route route = new Route();
+        route.setrNetworkInterface(nI);
+        routeRestController.addDefaultGW(route, device.getIPAddress(), device.getMngPort());
+    }
+
+    private void deployToNetwork(Device device, String tag, TopologyNetwork network) {
+        Controller deviceController = findController(device);
+        deviceController.deployDevice(device, tag);
+        deviceController.stopDevice(device);
+        deviceController.connectDeviceToNetwork(device, network);
+        deviceController.startDevice(device);
     }
 
 }
