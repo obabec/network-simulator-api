@@ -17,6 +17,7 @@
 package io.patriot_framework.network.simulator.api.model.routes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
@@ -38,7 +39,10 @@ public class Route {
     @JsonIgnore
     private Integer hopLimit = 16;
 
+    @JsonProperty("Destination")
     private TopologyNetwork dest;
+
+    @JsonProperty("InterfaceIP")
     private NetworkInterface rNetworkInterface;
 
     public Route() {

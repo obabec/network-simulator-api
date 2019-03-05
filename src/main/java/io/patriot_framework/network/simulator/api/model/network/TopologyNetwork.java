@@ -30,7 +30,9 @@ public class TopologyNetwork extends Network {
     private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
     @JsonIgnore
     private Boolean internet = false;
+    @JsonIgnore
     private String creator;
+    @JsonIgnore
     private String internetInterfaceIP = null;
 
     /**

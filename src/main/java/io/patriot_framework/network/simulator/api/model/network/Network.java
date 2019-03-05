@@ -16,13 +16,21 @@
 
 package io.patriot_framework.network.simulator.api.model.network;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 
 public abstract class Network implements EnvironmentPart {
-
+    @JsonIgnore
     private String name;
+
+    @JsonIgnore
     private String id;
+
+    @JsonProperty("IP")
     private String ipAddress;
+
+    @JsonProperty("Mask")
     private int mask;
 
     public Network(String name, String id) {
