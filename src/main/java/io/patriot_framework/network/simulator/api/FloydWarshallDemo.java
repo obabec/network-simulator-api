@@ -134,7 +134,6 @@ public class FloydWarshallDemo {
         Manager networkManager = new Manager(Arrays.asList(new DockerController()));
         networkManager.setMonitoring("172.22.0.1", 9200);
         networkManager.deployTopology(topology);
-
-        //TODO: pripojeni siti k aplikaci, filebeat,
+        
     }
 }

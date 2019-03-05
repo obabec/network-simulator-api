@@ -26,11 +26,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CleanUtils {
-    public void cleanUp(ArrayList<TopologyNetwork> topology, HashMap<String, Router> routers) {
+    public void cleanUp(ArrayList<TopologyNetwork> topology, ArrayList<Router> routers) {
         Cleaner cleaner = new Cleaner();
         List<String> networks = new ArrayList<>();
-        List<String> rts = new ArrayList<>(routers.keySet());
+        List<String> rts = new ArrayList<>();
         topology.forEach(network -> networks.add(network.getName()));
+        routers.forEach(router-> rts.add(router.getName()));
         cleaner.cleanUp(networks, rts);
     }
 
