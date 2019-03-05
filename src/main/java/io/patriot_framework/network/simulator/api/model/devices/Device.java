@@ -27,4 +27,5 @@ public interface Device extends EnvironmentPart {
     String getIPAddress();
     void setIPAddress(String ipAddress);
     List<Network> getConnectedNetworks();
+    Integer getMngPort();
 }
