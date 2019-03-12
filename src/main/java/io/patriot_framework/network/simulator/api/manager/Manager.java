@@ -413,11 +413,7 @@ public class Manager {
     private void createRouters(Topology topology) {
         for (Router router : topology.getRouters()) {
             LOGGER.debug("Creating router: " + router.getName());
-            if (topology.getRoutersTag() == null) {
-                findController(router).deployDevice(router, routerTag);
-            } else {
-                findController(router).deployDevice(router, topology.getRoutersTag());
-            }
+            findController(router).deployDevice(router, routerTag);
         }
     }
 

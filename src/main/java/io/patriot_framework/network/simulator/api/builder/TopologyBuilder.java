@@ -31,7 +31,6 @@ public class TopologyBuilder {
     public String getCurrentCreator() {
         return currentCreator;
     }
-
     public TopologyBuilder withCreator(String creator) {
         currentCreator = creator;
         return this;
@@ -81,18 +80,6 @@ public class TopologyBuilder {
      */
     public RouterBuilder withRouters() {
         return new RouterBuilder(this);
-    }
-
-
-    /**
-     * With routers tag topology builder.
-     *
-     * @param tag the tag
-     * @return the topology builder
-     */
-    public TopologyBuilder withRoutersTag(String tag) {
-        topology.setRoutersTag(tag);
-        return this;
     }
 
     public Topology getTopology() {

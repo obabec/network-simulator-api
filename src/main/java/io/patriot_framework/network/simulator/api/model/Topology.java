@@ -38,11 +38,6 @@ public class Topology {
     private ArrayList<TopologyNetwork> networks;
 
     /**
-     * Tag from which are routers created.
-     */
-    private String routersTag;
-
-    /**
      * Instantiates a new Topology.
      *
      * @param routers    the routers
@@ -105,14 +100,6 @@ public class Topology {
      */
     public void setNetworks(ArrayList<TopologyNetwork> networks) {
         this.networks = this.networks;
-    }
-
-    public String getRoutersTag() {
-        return routersTag;
-    }
-
-    public void setRoutersTag(String routersTag) {
-        this.routersTag = routersTag;
     }
 
     /**
