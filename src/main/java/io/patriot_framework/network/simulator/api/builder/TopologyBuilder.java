@@ -26,6 +26,16 @@ public class TopologyBuilder {
      * The Topology.
      */
     private Topology topology;
+    private String currentCreator;
+
+    public String getCurrentCreator() {
+        return currentCreator;
+    }
+
+    public TopologyBuilder withCreator(String creator) {
+        currentCreator = creator;
+        return this;
+    }
 
     /**
      * Instantiates new NetworkBuilder.

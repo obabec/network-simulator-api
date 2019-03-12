@@ -75,6 +75,9 @@ public class RouterBuilder {
      * @return the router builder
      */
     public RouterBuilder createRouter() {
+        if (creator == null) {
+            creator = topologyBuilder.getCurrentCreator();
+        }
         topologyBuilder.getTopology().getRouters().add(new RouterImpl(name, creator, corner));
         return this;
     }

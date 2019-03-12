@@ -142,7 +142,6 @@ public class NetworkBuilder {
      * @return the network
      */
     public TopologyNetwork build() {
-
         TopologyNetwork n = new TopologyNetwork();
         n.setCalcRoutes(calcRoutes);
         n.setInternet(internet);
@@ -159,6 +158,9 @@ public class NetworkBuilder {
      * @return the topology builder
      */
     public TopologyBuilder create() {
+        if (creator == null) {
+            creator = topologyBuilder.getCurrentCreator();
+        }
         topologyBuilder.getTopology().getNetworks().add(build());
         return topologyBuilder;
     }
