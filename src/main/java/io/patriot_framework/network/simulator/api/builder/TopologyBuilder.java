@@ -25,7 +25,7 @@ public class TopologyBuilder {
     /**
      * The Topology.
      */
-    Topology topology;
+    private Topology topology;
 
     /**
      * Instantiates new NetworkBuilder.
@@ -85,4 +85,7 @@ public class TopologyBuilder {
         return this;
     }
 
+    public Topology getTopology() {
+        return topology;
+    }
 }

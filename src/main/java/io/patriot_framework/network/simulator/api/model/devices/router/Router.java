@@ -21,10 +21,18 @@ import io.patriot_framework.network.simulator.api.model.devices.Device;
 import java.util.List;
 
 public interface Router extends Device {
-
+    /**
+     * Returns physical network interfaces of router.
+     * @return
+     */
     List<NetworkInterface> getInterfaces();
     void setNetworkInterfaces(List<NetworkInterface> networkInterfaces);
-    void setMngPort(Integer mngPort);
+    void setManagementPort(Integer managementPort);
+
+    /**
+     * Returns if this router is last step to internet in current LAN.
+     * @return
+     */
     Boolean isCorner();
 
 }

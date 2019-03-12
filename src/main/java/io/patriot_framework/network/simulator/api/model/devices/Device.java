@@ -18,7 +18,6 @@ package io.patriot_framework.network.simulator.api.model.devices;
 
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.network.Network;
-import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.List;
 
@@ -27,5 +26,5 @@ public interface Device extends EnvironmentPart {
     String getIPAddress();
     void setIPAddress(String ipAddress);
     List<Network> getConnectedNetworks();
-    Integer getMngPort();
+    Integer getManagementPort();
 }

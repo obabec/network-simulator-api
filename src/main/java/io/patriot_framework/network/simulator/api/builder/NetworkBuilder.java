@@ -19,7 +19,6 @@ package io.patriot_framework.network.simulator.api.builder;
 import io.patriot_framework.network.simulator.api.CalculatedRouteList;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
-import sun.nio.ch.Net;
 
 /**
  * TopologyNetwork Builder provides functions for building network and adding it into topology.
@@ -33,7 +32,7 @@ public class NetworkBuilder {
     private String creator;
     private String ipAddress;
     private String name;
-    private Integer mask = 0;
+    private int mask = 0;
     private Boolean internet = false;
 
     /**
@@ -44,16 +43,16 @@ public class NetworkBuilder {
     /**
      * Topology builder.
      */
-    TopologyBuilder t;
+    private TopologyBuilder topologyBuilder;
 
     /**
      * Instantiates a new TopologyNetwork builder.
      *
-     * @param t    the topologyBuilder
+     * @param topologyBuilder    the topologyBuilder
      * @param name the network name.
      */
-    public NetworkBuilder(TopologyBuilder t, String name) {
-        this.t = t;
+    public NetworkBuilder(TopologyBuilder topologyBuilder, String name) {
+        this.topologyBuilder = topologyBuilder;
         this.name = name;
     }
 
@@ -160,8 +159,8 @@ public class NetworkBuilder {
      * @return the topology builder
      */
     public TopologyBuilder create() {
-        t.topology.getNetworks().add(build());
-        return t;
+        topologyBuilder.getTopology().getNetworks().add(build());
+        return topologyBuilder;
     }
 
 }

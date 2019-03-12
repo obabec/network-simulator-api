@@ -17,7 +17,6 @@
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
 import io.patriot_framework.network.simulator.api.model.network.Network;
-import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +28,15 @@ public class RouterImpl implements Router {
     private String name;
     private List<NetworkInterface> networkInterfaces;
     private List<Network> connectedTopologyNetworks;
-    private String mngIp;
-    private Integer mngPort;
+    private String managementIP;
+    private Integer managementPort;
     private Boolean defaultGW = false;
     private String creator;
     private boolean corner = false;
 
 
     // Default http py-route rest api
-    public static final int DEFAULT_PORT = 8081;
+    public static final int DEFAULT_PORT = 8090;
 
     /**
      * Instantiates a new RouterImpl.
@@ -88,12 +87,12 @@ public class RouterImpl implements Router {
 
     @Override
     public String getIPAddress() {
-        return mngIp;
+        return managementIP;
     }
 
     @Override
     public void setIPAddress(String ipAddress) {
-        this.mngIp = ipAddress;
+        this.managementIP = ipAddress;
     }
 
     @Override
@@ -151,17 +150,17 @@ public class RouterImpl implements Router {
      *
      * @return the mng ip
      */
-    public String getMngIp() {
-        return mngIp;
+    public String getManagementIP() {
+        return managementIP;
     }
 
     /**
      * Sets mng ip.
      *
-     * @param mngIp the mng ip
+     * @param managementIP the mng ip
      */
-    public void setMngIp(String mngIp) {
-        this.mngIp = mngIp;
+    public void setManagementIP(String managementIP) {
+        this.managementIP = managementIP;
     }
 
     /**
@@ -169,20 +168,20 @@ public class RouterImpl implements Router {
      *
      * @return the mng port
      */
-    public Integer getMngPort() {
-        if (mngPort == null) {
+    public Integer getManagementPort() {
+        if (managementPort == null) {
             return DEFAULT_PORT;
         }
-        return mngPort;
+        return managementPort;
     }
 
     /**
      * Sets mng port.
      *
-     * @param mngPort the mng port
+     * @param managementPort the mng port
      */
-    public void setMngPort(Integer mngPort) {
-        this.mngPort = mngPort;
+    public void setManagementPort(Integer managementPort) {
+        this.managementPort = managementPort;
     }
 
     @Override

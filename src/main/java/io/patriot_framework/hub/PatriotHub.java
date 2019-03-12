@@ -60,7 +60,7 @@ public class PatriotHub {
         IOException exception = null;
         try {
             reader = new FileInputStream("patriot.properties");
-            properties.load(reader);;
+            properties.load(reader);
         } catch (IOException e) {
             exception = e;
         }

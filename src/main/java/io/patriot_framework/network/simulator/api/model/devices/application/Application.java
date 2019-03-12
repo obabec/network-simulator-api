@@ -18,18 +18,20 @@ package io.patriot_framework.network.simulator.api.model.devices.application;
 
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.network.Network;
-import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.List;
 
-
+/**
+ * Application can represent data generator or every container connected to topology.
+ */
 public class Application implements Device {
 
+    //
     private String name;
     private String ipAddress;
     private List<Network> connectedNetworks;
     private String creator;
-    private Integer mngPort = 8081;
+    private int managementPort = 8081;
 
     public String executeCommand(String[] commandWithArgs) {
         return null;
@@ -65,8 +67,8 @@ public class Application implements Device {
     }
 
     @Override
-    public Integer getMngPort() {
-        return mngPort;
+    public Integer getManagementPort() {
+        return managementPort;
     }
 
     @Override

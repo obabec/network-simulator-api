@@ -21,11 +21,11 @@ import java.util.ArrayList;
 /**
  * The type Calculated route list with extended add method to avoid inserting Route to non-existing index.
  *
- * @param <CalcRoute> the type parameter
+ * @param <t> the type parameter
  */
-public class CalculatedRouteList<CalcRoute> extends ArrayList<CalcRoute> {
+public class CalculatedRouteList<t> extends ArrayList<t> {
     @Override
-    public void add(int i, CalcRoute o) {
+    public void add(int i, t o) {
         Integer size = super.size();
         if (size > i && super.get(i) == null) {
             super.set(i, o);
@@ -40,7 +40,7 @@ public class CalculatedRouteList<CalcRoute> extends ArrayList<CalcRoute> {
     }
 
     @Override
-    public boolean add(CalcRoute calcRoute) {
-        return super.add(calcRoute);
+    public boolean add(t t) {
+        return super.add(t);
     }
 }

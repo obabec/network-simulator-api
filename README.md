@@ -32,7 +32,7 @@ mvn install:install-file -Dfile=target/topologyNetwork-sample-2.0-SNAPSHOT-jar-w
 Before creating topologyNetwork topology, router image has to be build.
 ```
 git clone https://github.com/obabec/PatrIoT_router
-docker build -t YOURTAG PatrIoT_router
+docker build -topologyBuilder YOURTAG PatrIoT_router
 ```
 You will use tag of your image when you will create topology and
 especially routers. 

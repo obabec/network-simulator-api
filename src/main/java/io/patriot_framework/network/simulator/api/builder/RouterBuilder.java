@@ -26,18 +26,18 @@ public class RouterBuilder {
     /**
      * The Topology builder.
      */
-    TopologyBuilder topologyBuilder;
+    private TopologyBuilder topologyBuilder;
     /**
      * Name of router.
      */
-    String name;
+    private String name;
 
     /**
      * Creator of object (docker, VM, ...)
      */
-    String creator;
+    private String creator;
 
-    Boolean corner = false;
+    private Boolean corner = false;
 
     /**
      * Instantiates a new RouterImpl builder.
@@ -75,7 +75,7 @@ public class RouterBuilder {
      * @return the router builder
      */
     public RouterBuilder createRouter() {
-        topologyBuilder.topology.getRouters().add(new RouterImpl(name, creator, corner));
+        topologyBuilder.getTopology().getRouters().add(new RouterImpl(name, creator, corner));
         return this;
     }
 

@@ -107,13 +107,43 @@ public interface Controller {
      */
     void buildImage(File image, String tag);
 
+    /**
+     * Returns network ip address of default gw.
+     * @param device
+     * @return
+     */
     String findGWNetworkIPAddress(Device device);
+
+    /**
+     * Returns ip address of default gw interface.
+     * @param device
+     * @return
+     */
     String findGWIPAddress(Device device);
+
+    /**
+     * Returns network mask of default gw interface.
+     * @param device
+     * @return
+     */
     Integer findGWMask(Device device);
 
+    /**
+     * Returns String identifier of controller, Docker/Rocket/VM, ...
+     * @return
+     */
     String getIdentifier();
 
+    /**
+     * Executes command in device.
+     * @param device
+     * @param command
+     */
     void executeCommand(Device device, String command);
 
+    /**
+     * Starts device.
+     * @param device
+     */
     void startDevice(Device device);
 }

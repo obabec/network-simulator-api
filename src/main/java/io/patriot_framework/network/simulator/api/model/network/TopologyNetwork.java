@@ -27,7 +27,7 @@ import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 public class TopologyNetwork extends Network {
 
     @JsonIgnore
-    private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList();
+    private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList<>();
     @JsonIgnore
     private Boolean internet = false;
     @JsonIgnore
@@ -38,8 +38,6 @@ public class TopologyNetwork extends Network {
     /**
      * Instantiates a new TopologyNetwork.
      */
-
-
     public TopologyNetwork() {
     }
 

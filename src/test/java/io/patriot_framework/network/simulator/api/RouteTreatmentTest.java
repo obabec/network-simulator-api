@@ -16,7 +16,6 @@
 
 package io.patriot_framework.network.simulator.api;
 
-import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
 import io.patriot_framework.network.simulator.api.manager.Manager;
 import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
@@ -26,7 +25,6 @@ import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
-import io.patriot_framework.network_simulator.docker.control.DockerController;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RouteTreatmentTest {
 
-    private Manager manager = new Manager(Arrays.asList(new DockerController()),"patriot");
+    private Manager manager = new Manager("patriot");
 
     @Test
     public void testRouteTreatmentTest() {
@@ -89,39 +87,6 @@ public class RouteTreatmentTest {
         calculatedRouteList.add(destNetwork, calcRoute);
         calculatedRouteList.add(sourceNetwork, new CalcRoute(new NextHop(null, sourceNetwork), null));
         return calculatedRouteList;
-    }
-
-    @Test
-    public void setRoutesTest() {
-
-        ArrayList<Router> routers = new ArrayList<>();
-        routers.add(new RouterImpl("R1", "Docker"));
-        routers.add(new RouterImpl("R2", "Docker"));
-
-        ArrayList<TopologyNetwork> topologyNetworks = prepareComplicatedTopology(routers);
-        Topology topology = new Topology(routers, topologyNetworks);
-        manager.deployTopology(topology);
-
-
-        for (Router router : routers) {
-            RouteRestController routeController = new RouteRestController();
-            List<Route> routes = routeController.getRoutes(router.getIPAddress(), router.getMngPort());
-            for (Route r : manager.getProcessedRoutes().get(router.getName())) {
-                assertTrue(containsRoute(routes, r));
-            }
-        }
-        CleanUtils cleanUtils = new CleanUtils();
-        cleanUtils.cleanUp(topology.getNetworks(), routers);
-    }
-
-    private Boolean containsRoute(List<Route> routes, Route route) {
-        for (Route r : routes) {
-            if (r.getDest().getIPAddress().equals(route.getDest().getIPAddress()) &&
-                    r.getrNetworkInterface().getIp().equals(route.getrNetworkInterface().getIp())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private ArrayList<TopologyNetwork> prepareComplicatedTopology(ArrayList<Router> routers) {

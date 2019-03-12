@@ -45,10 +45,10 @@ import java.util.Map;
  */
 public class Manager {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    List<Controller> controllers;
+    private List<Controller> controllers;
     private String monitoringAddr;
     private String routerTag;
-    private Integer monitoringPort;
+    private int monitoringPort;
     private HashMap<String, ArrayList<Route>> processedRoutes = new HashMap<>();
 
     public Manager(String routerTag) {
@@ -59,7 +59,7 @@ public class Manager {
         return monitoringAddr;
     }
 
-    public void setMonitoring(String monitoringAddr, Integer monitoringPort) {
+    public void setMonitoring(String monitoringAddr, int monitoringPort) {
         this.monitoringAddr = monitoringAddr;
         this.monitoringPort = monitoringPort;
     }
@@ -142,8 +142,9 @@ public class Manager {
         int size = calculatedTop.size();
         for (int i = 0; i < size; i++){
             for (int j = 0; j < calculatedTop.get(i).getCalcRoutes().size(); j++) {
-
-                if (i == j) continue;
+                if (i == j) {
+                    continue;
+                }
 
                 Router r = calculatedTop.get(i).getCalcRoutes().get(j).getNextHop().getRouter();
                 Router iRouter = selectNextHopRouter(calculatedTop, i, j);
@@ -169,7 +170,7 @@ public class Manager {
         route.setSource(topologyNetworks.get(i));
         route.setDest(topologyNetworks.get(j));
 
-        Integer nextNetwork = topologyNetworks.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
+        int nextNetwork = topologyNetworks.get(i).getCalcRoutes().get(j).getNextHop().getNetwork();
         NetworkInterface target;
         if (nextHopRouter == null) {
             target = new NetworkInterface(topologyNetworks.get(j).getInternetInterfaceIP());
@@ -192,7 +193,7 @@ public class Manager {
         if (calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getCost() == 1 && calculatedTop.get(destNet).getInternet() ) {
             return null;
         } else if ((calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getCost() - 1) != 0) {
-            Integer nextHopNetwork = calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getNextHop().getNetwork();
+            int nextHopNetwork = calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getNextHop().getNetwork();
             return calculatedTop.get(nextHopNetwork).getCalcRoutes().get(destNet).getNextHop().getRouter();
         } else {
             return calculatedTop.get(actualNet).getCalcRoutes().get(destNet).getNextHop().getRouter();
@@ -251,23 +252,26 @@ public class Manager {
     }
 
     /**
-     * Sets routes to routing table via REST API on targeted routers.
+     S Sets routes to routing table via REST API on targeted routers.
      * @param topology
      */
     public void setRoutes(Topology topology) {
-
         RouteRestController routeController = new RouteRestController();
         for (Map.Entry<String, ArrayList<Route>> entry: processedRoutes.entrySet()) {
             Router r = topology.findRouterByName(entry.getKey());
+            if (monitoringAddr != null) {
+                MonitoringRestController monitoringRestController = new MonitoringRestController();
+                monitoringRestController.setMonitoringAddress(monitoringAddr, monitoringPort, r.getIPAddress(), r.getManagementPort());
+            }
             LOGGER.info("Setting routes to routing table on " + r.getName());
 
             for (Route route : entry.getValue()) {
                 if (route.getDest().getInternet()){
                     LOGGER.info("Setting default route");
-                    routeController.delDefaultGw(r.getIPAddress(), r.getMngPort());
-                    routeController.addDefaultGW(route, r.getIPAddress(), r.getMngPort());
+                    routeController.delDefaultGw(r.getIPAddress(), r.getManagementPort());
+                    routeController.addDefaultGW(route, r.getIPAddress(), r.getManagementPort());
                 } else {
-                    routeController.addRoute(route, r.getIPAddress(), r.getMngPort());
+                    routeController.addRoute(route, r.getIPAddress(), r.getManagementPort());
                 }
             }
         }
@@ -284,7 +288,7 @@ public class Manager {
         RouteRestController restController = new RouteRestController();
         LOGGER.info("Requesting information about routers interfaces.");
         for (Router r : topology.getRouters()) {
-            r.setNetworkInterfaces(restController.getInterfaces(r.getIPAddress(), r.getMngPort()));
+            r.setNetworkInterfaces(restController.getInterfaces(r.getIPAddress(), r.getManagementPort()));
         }
     }
 
@@ -309,6 +313,10 @@ public class Manager {
         }
     }
 
+    /**
+     * Initializes ip address last hop in current LAN.
+     * @param topology
+     */
     private void initializeCornerNetworkIP(Topology topology) {
         for (TopologyNetwork n : topology.getNetworks()) {
             if (n.getInternet()) {
@@ -321,6 +329,12 @@ public class Manager {
         }
     }
 
+    /**
+     * Returns device with created by target creator.
+     * @param topology
+     * @param creator
+     * @return
+     */
     private Device findDeviceWithCreator(Topology topology, String creator) {
         for (Device device : topology.getRouters()) {
             if (device.getCreator().equals(creator)) {
@@ -384,8 +398,7 @@ public class Manager {
      * @param networkList
      */
     private void createNetworks(ArrayList<TopologyNetwork> networkList) {
-        for (int i = 0; i < networkList.size(); i++) {
-            TopologyNetwork network = networkList.get(i);
+        for (TopologyNetwork network : networkList) {
             if (!network.getInternet()) {
                 LOGGER.debug("Creating network: " + network.getName());
                findController(network).createNetwork(network);
@@ -399,16 +412,11 @@ public class Manager {
      */
     private void createRouters(Topology topology) {
         for (Router router : topology.getRouters()) {
-
             LOGGER.debug("Creating router: " + router.getName());
             if (topology.getRoutersTag() == null) {
                 findController(router).deployDevice(router, routerTag);
             } else {
                 findController(router).deployDevice(router, topology.getRoutersTag());
-            }
-            if (monitoringAddr != null) {
-                MonitoringRestController monitoringRestController = new MonitoringRestController();
-                monitoringRestController.setMonitoringAddress(monitoringAddr, monitoringPort, router.getIPAddress(), router.getMngPort());
             }
         }
     }
@@ -435,7 +443,6 @@ public class Manager {
      * @param topology
      */
     public void cleanUp(Topology topology) {
-
         Controller controller;
         for (Router r : topology.getRouters()) {
             controller = findController(r);
@@ -473,11 +480,16 @@ public class Manager {
         }
     }
 
+    /**
+     * Stops device, connects device to target network and again start device.
+     * @param device
+     * @param network
+     * @param calculatedTopology
+     * @param tag
+     */
     public void deployDeviceToNetwork(Device device, TopologyNetwork network, Topology calculatedTopology, String tag) {
-        Router nearRouter;
         ArrayList<TopologyNetwork> networks = calculatedTopology.getNetworks();
-        int internet = 0;
-        int sourceNet = 0;
+        int internet = 0, sourceNet = 0;
         for (int i = 0; i < networks.size(); i++) {
             if (networks.get(i).getInternet()) {
                 internet = i;
@@ -486,15 +498,21 @@ public class Manager {
                 sourceNet = i;
             }
         }
-        nearRouter = networks.get(sourceNet).getCalcRoutes().get(internet).getNextHop().getRouter();
+        Router nearRouter = networks.get(sourceNet).getCalcRoutes().get(internet).getNextHop().getRouter();
         NetworkInterface nI = findCorrectInterface(nearRouter, network);
 
         RouteRestController routeRestController = new RouteRestController();
         Route route = new Route();
         route.setrNetworkInterface(nI);
-        routeRestController.addDefaultGW(route, device.getIPAddress(), device.getMngPort());
+        routeRestController.addDefaultGW(route, device.getIPAddress(), device.getManagementPort());
     }
 
+    /**
+     * Deploys device to network means create device, connect it to target network and start it.
+     * @param device
+     * @param tag
+     * @param network
+     */
     private void deployToNetwork(Device device, String tag, TopologyNetwork network) {
         Controller deviceController = findController(device);
         deviceController.deployDevice(device, tag);
