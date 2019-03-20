@@ -35,7 +35,7 @@ public class RouterImpl implements Router {
     private boolean corner = false;
 
 
-    // Default http py-route rest api
+    // Default go iproute2 rest api http port
     public static final int DEFAULT_PORT = 8090;
 
     /**

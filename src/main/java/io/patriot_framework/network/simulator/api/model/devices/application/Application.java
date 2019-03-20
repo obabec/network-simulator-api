@@ -26,21 +26,39 @@ import java.util.List;
  */
 public class Application implements Device {
 
-    //
+
     private String name;
     private String ipAddress;
     private List<Network> connectedNetworks;
     private String creator;
-    private int managementPort = 8081;
+    private int managementPort = 8090;
 
+    /**
+     * Execute command string.
+     *
+     * @param commandWithArgs the command with args
+     * @return the string
+     */
     public String executeCommand(String[] commandWithArgs) {
         return null;
     }
 
+    /**
+     * Instantiates a new Application.
+     *
+     * @param name the name
+     */
     public Application(String name) {
         this.name = name;
     }
 
+
+    /**
+     * Instantiates a new Application.
+     *
+     * @param name    the name
+     * @param creator the creator
+     */
     public Application(String name, String creator) {
         this.name = name;
         this.creator = creator;

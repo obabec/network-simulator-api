@@ -454,6 +454,13 @@ public class Manager {
         }
     }
 
+
+    /**
+     * Deploys device to selected environment.
+     *
+     * @param device the device
+     * @param tag    the tag
+     */
     public void deployDevice(Device device, String tag) {
         findController(device).deployDevice(device, tag);
     }
@@ -485,6 +492,7 @@ public class Manager {
      */
     public void deployDeviceToNetwork(Device device, TopologyNetwork network, Topology calculatedTopology, String tag) {
         ArrayList<TopologyNetwork> networks = calculatedTopology.getNetworks();
+        deployToNetwork(device, tag, network);
         int internet = 0, sourceNet = 0;
         for (int i = 0; i < networks.size(); i++) {
             if (networks.get(i).getInternet()) {
@@ -512,9 +520,8 @@ public class Manager {
     private void deployToNetwork(Device device, String tag, TopologyNetwork network) {
         Controller deviceController = findController(device);
         deviceController.deployDevice(device, tag);
-        deviceController.stopDevice(device);
         deviceController.connectDeviceToNetwork(device, network);
-        deviceController.startDevice(device);
     }
+
 
 }
