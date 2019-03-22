@@ -21,6 +21,7 @@ import io.patriot_framework.network.simulator.api.api.RestController;
 /**
  * Utility class to set monitor address
  */
+@Deprecated
 public class MonitoringRestController extends RestController {
 
     /**

@@ -259,10 +259,6 @@ public class Manager {
         RouteRestController routeController = new RouteRestController();
         for (Map.Entry<String, ArrayList<Route>> entry: processedRoutes.entrySet()) {
             Router r = topology.findRouterByName(entry.getKey());
-            if (monitoringAddr != null) {
-                MonitoringRestController monitoringRestController = new MonitoringRestController();
-                monitoringRestController.setMonitoringAddress(monitoringAddr, monitoringPort, r.getIPAddress(), r.getManagementPort());
-            }
             LOGGER.info("Setting routes to routing table on " + r.getName());
 
             for (Route route : entry.getValue()) {
@@ -413,7 +409,7 @@ public class Manager {
     private void createRouters(Topology topology) {
         for (Router router : topology.getRouters()) {
             LOGGER.debug("Creating router: " + router.getName());
-            findController(router).deployDevice(router, routerTag);
+            findController(router).deployDevice(router, routerTag, monitoringAddr, monitoringPort);
         }
     }
 
@@ -453,7 +449,6 @@ public class Manager {
             }
         }
     }
-
 
     /**
      * Deploys device to selected environment.
@@ -519,7 +514,7 @@ public class Manager {
      */
     private void deployToNetwork(Device device, String tag, TopologyNetwork network) {
         Controller deviceController = findController(device);
-        deviceController.deployDevice(device, tag);
+        deviceController.deployDevice(device, tag, monitoringAddr, monitoringPort);
         deviceController.connectDeviceToNetwork(device, network);
     }
 

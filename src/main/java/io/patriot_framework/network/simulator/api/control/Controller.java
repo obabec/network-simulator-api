@@ -91,6 +91,7 @@ public interface Controller {
      */
     void deployDevice(Device device, String tag);
 
+    void deployDevice(Device device, String tag, String monitoringIP, int monitoringPort);
     /**
      * Builds image from file and then create container from built image.
      *
