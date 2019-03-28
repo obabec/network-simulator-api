@@ -27,7 +27,7 @@ public interface Router extends Device {
      */
     List<NetworkInterface> getInterfaces();
     void setNetworkInterfaces(List<NetworkInterface> networkInterfaces);
-    void setManagementPort(Integer managementPort);
+
 
     /**
      * Returns if this router is last step to internet in current LAN.

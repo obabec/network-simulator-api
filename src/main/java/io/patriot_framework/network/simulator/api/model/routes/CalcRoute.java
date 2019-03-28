@@ -16,6 +16,8 @@
 
 package io.patriot_framework.network.simulator.api.model.routes;
 
+import java.util.Objects;
+
 /**
  * Calculated route. Including all necessary info to describe routes.
  */
@@ -68,5 +70,19 @@ public class CalcRoute {
      */
     public void setCost(Integer cost) {
         this.cost = cost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CalcRoute calcRoute = (CalcRoute) o;
+        return getNextHop().equals(calcRoute.getNextHop()) &&
+                Objects.equals(getCost(), calcRoute.getCost());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getNextHop(), getCost());
     }
 }

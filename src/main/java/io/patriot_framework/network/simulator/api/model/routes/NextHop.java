@@ -18,6 +18,8 @@ package io.patriot_framework.network.simulator.api.model.routes;
 
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 
+import java.util.Objects;
+
 /**
  * Wrapper class for RouterImpl and network. Representing next hop in the network topology.
  */
@@ -72,4 +74,12 @@ public class NextHop {
         this.network = network;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NextHop nextHop = (NextHop) o;
+        return Objects.equals(getRouter(), nextHop.getRouter()) &&
+                getNetwork().equals(nextHop.getNetwork());
+    }
 }

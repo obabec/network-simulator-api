@@ -19,7 +19,6 @@ package io.patriot_framework.network.simulator.api.manager;
 import com.github.jgonian.ipmath.Ipv4;
 import com.github.jgonian.ipmath.Ipv4Range;
 import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
-import io.patriot_framework.network.simulator.api.api.monitoring.MonitoringRestController;
 import io.patriot_framework.network.simulator.api.control.Controller;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.Topology;
@@ -304,6 +303,7 @@ public class Manager {
                 LOGGER.info("Connecting router " + r.getName() + "with " + network.getName());
                 if (!network.getInternet()) {
                     controller.connectDeviceToNetwork(r, network);
+                    r.getConnectedNetworks().add(network);
                 }
             }
         }
@@ -516,6 +516,7 @@ public class Manager {
         Controller deviceController = findController(device);
         deviceController.deployDevice(device, tag, monitoringAddr, monitoringPort);
         deviceController.connectDeviceToNetwork(device, network);
+        device.getConnectedNetworks().add(network);
     }
 
 

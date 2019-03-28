@@ -43,6 +43,7 @@ public class CalcRouteBuilder {
      * The destination network.
      */
     int destNetwork;
+
     /**
      * The TopologyNetwork builder.
      */
@@ -51,6 +52,10 @@ public class CalcRouteBuilder {
      * The Topology builder.
      */
     TopologyBuilder topologyBuilder;
+
+    public CalcRouteBuilder(int destNetwork) {
+        this.destNetwork = destNetwork;
+    }
 
     /**
      * Instantiates a new Calc route builder.
@@ -77,13 +82,24 @@ public class CalcRouteBuilder {
     }
 
     /**
-     * Adds router attribute.
+     * Finds router based on it`s name and sets it as router attribute.
      *
      * @param routerName the router name
      * @return the calc route builder
      */
     public CalcRouteBuilder viaRouter(String routerName) {
         this.router = topologyBuilder.getTopology().findRouterByName(routerName);
+        return this;
+    }
+
+    /**
+     * Adds router attribute.
+     *
+     * @param router Router
+     * @return the calc route builder
+     */
+    public CalcRouteBuilder viaRouter(Router router) {
+        this.router = router;
         return this;
     }
 
@@ -194,5 +210,14 @@ public class CalcRouteBuilder {
         }
 
         return topologyBuilder;
+    }
+
+    /**
+     * Creates route.
+     * @return calcRoute
+     */
+    public CalcRoute createCalcRoute() {
+        CalcRoute sR = new CalcRoute(new NextHop(router, destNetwork), cost);
+        return sR;
     }
 }

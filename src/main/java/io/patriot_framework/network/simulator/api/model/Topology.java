@@ -21,6 +21,7 @@ import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -99,7 +100,7 @@ public class Topology {
      * @param networks the network top
      */
     public void setNetworks(ArrayList<TopologyNetwork> networks) {
-        this.networks = this.networks;
+        this.networks = networks;
     }
 
     /**
@@ -114,5 +115,14 @@ public class Topology {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Topology topology = (Topology) o;
+        return getRouters().equals(topology.getRouters()) &&
+                getNetworks().equals(topology.getNetworks());
     }
 }

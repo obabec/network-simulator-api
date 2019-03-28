@@ -20,6 +20,7 @@ import io.patriot_framework.network.simulator.api.model.network.Network;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * RouterImpl class represents docker container built as router with network-control apis.
@@ -27,10 +28,9 @@ import java.util.List;
 public class RouterImpl implements Router {
     private String name;
     private List<NetworkInterface> networkInterfaces;
-    private List<Network> connectedTopologyNetworks;
+    private List<Network> connectedTopologyNetworks = new ArrayList<>();
     private String managementIP;
     private Integer managementPort;
-    private Boolean defaultGW = false;
     private String creator;
     private boolean corner = false;
 
@@ -193,14 +193,6 @@ public class RouterImpl implements Router {
         this.corner = corner;
     }
 
-    public Boolean getDefaultGW() {
-        return defaultGW;
-    }
-
-    public void setDefaultGW(Boolean defaultGW) {
-        this.defaultGW = defaultGW;
-    }
-
     @Override
     public String getCreator() {
         return creator;
@@ -209,4 +201,20 @@ public class RouterImpl implements Router {
     public void setCreator(String creator) {
         this.creator = creator;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RouterImpl router = (RouterImpl) o;
+        return corner == router.corner &&
+                getName().equals(router.getName()) &&
+                Objects.equals(getNetworkInterfaces(), router.getNetworkInterfaces()) &&
+                getConnectedTopologyNetworks().equals(router.getConnectedTopologyNetworks()) &&
+                Objects.equals(getManagementIP(), router.getManagementIP()) &&
+                Objects.equals(getManagementPort(), router.getManagementPort()) &&
+                getCreator().equals(router.getCreator());
+    }
+
+
 }

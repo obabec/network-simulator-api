@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.patriot_framework.network.simulator.api.CalculatedRouteList;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
+import java.util.Objects;
+
 /**
  * TopologyNetwork class representing docker network with additional informations
  * like calculated routes to other networks.
@@ -103,5 +105,18 @@ public class TopologyNetwork extends Network {
 
     public void setInternetInterfaceIP(String internetInterfaceIP) {
         this.internetInterfaceIP = internetInterfaceIP;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TopologyNetwork that = (TopologyNetwork) o;
+        return calcRoutes.equals(that.calcRoutes) &&
+                internet.equals(that.internet) &&
+                creator.equals(that.creator) &&
+                this.getName().equals(((TopologyNetwork) o).getName()) &&
+                this.getIPAddress().equals(((TopologyNetwork) o).getIPAddress()) &&
+                this.getMask().equals(((TopologyNetwork) o).getMask());
     }
 }

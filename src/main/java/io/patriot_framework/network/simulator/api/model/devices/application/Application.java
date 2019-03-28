@@ -19,6 +19,7 @@ package io.patriot_framework.network.simulator.api.model.devices.application;
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.network.Network;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class Application implements Device {
 
     private String name;
     private String ipAddress;
-    private List<Network> connectedNetworks;
+    private List<Network> connectedNetworks = new ArrayList<>();
     private String creator;
     private int managementPort = 8090;
 
@@ -87,6 +88,11 @@ public class Application implements Device {
     @Override
     public Integer getManagementPort() {
         return managementPort;
+    }
+
+    @Override
+    public void setManagementPort(Integer managementPort) {
+        this.managementPort = managementPort;
     }
 
     @Override
