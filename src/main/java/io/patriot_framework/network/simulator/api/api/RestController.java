@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -39,47 +40,25 @@ public abstract class RestController {
             URL chainUrl = new URL("http", ip, port, path);
             HttpURLConnection connection = (HttpURLConnection) chainUrl.openConnection();
             try {
-                if (isAccessible(ip, port)) {
-                    connection.setRequestMethod(method);
-                    connection.connect();
-                    StringBuilder sb = new StringBuilder();
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        String output;
-                        while ((output = br.readLine()) != null) {
-                            sb.append(output);
-                        }
+                connection.setRequestMethod(method);
+                connection.setConnectTimeout(8000);
+                connection.connect();
+                StringBuilder sb = new StringBuilder();
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String output;
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output);
                     }
-                    return sb.toString();
-                } else {
-                    return null;
                 }
+                return sb.toString();
+
             } finally {
                 connection.disconnect();
             }
         } catch (IOException e) {
             e.printStackTrace();
             return String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
-    }
-    private boolean isAccessible(String ip, Integer port) {
-
-        while (true) try {
-            URL url = new URL("http", ip, port, "/");
-            HttpURLConnection connection = null;
-            try {
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    return true;
-                } else {
-                    Thread.sleep(200);
-                }
-            } finally {
-                connection.disconnect();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
