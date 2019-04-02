@@ -119,4 +119,9 @@ public class TopologyNetwork extends Network {
                 this.getIPAddress().equals(((TopologyNetwork) o).getIPAddress()) &&
                 this.getMask().equals(((TopologyNetwork) o).getMask());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCalcRoutes(), getInternet(), getCreator(), getInternetInterfaceIP());
+    }
 }

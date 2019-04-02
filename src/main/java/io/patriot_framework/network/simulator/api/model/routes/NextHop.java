@@ -82,4 +82,9 @@ public class NextHop {
         return Objects.equals(getRouter(), nextHop.getRouter()) &&
                 getNetwork().equals(nextHop.getNetwork());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRouter(), getNetwork());
+    }
 }

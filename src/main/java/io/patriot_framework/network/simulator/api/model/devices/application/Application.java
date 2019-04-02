@@ -32,7 +32,8 @@ public class Application implements Device {
     private String ipAddress;
     private List<Network> connectedNetworks = new ArrayList<>();
     private String creator;
-    private int managementPort = 8090;
+    private int managementPort = 0;
+    public static final int DEFAULT_PORT = 8090;
 
     /**
      * Execute command string.
@@ -87,7 +88,9 @@ public class Application implements Device {
 
     @Override
     public Integer getManagementPort() {
-        return managementPort;
+        if (managementPort == 0) {
+            return DEFAULT_PORT;
+        } return managementPort;
     }
 
     @Override

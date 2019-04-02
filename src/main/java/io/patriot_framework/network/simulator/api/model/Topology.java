@@ -125,4 +125,9 @@ public class Topology {
         return getRouters().equals(topology.getRouters()) &&
                 getNetworks().equals(topology.getNetworks());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRouters(), getNetworks());
+    }
 }

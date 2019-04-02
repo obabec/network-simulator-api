@@ -21,11 +21,50 @@ import io.patriot_framework.network.simulator.api.model.network.Network;
 
 import java.util.List;
 
+/**
+ * Interface extends EnvironmentPart. Could be used for implementation of
+ * application, router or any other device that should have some management access.
+ */
 public interface Device extends EnvironmentPart {
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     String getName();
+
+    /**
+     * Gets ip address.
+     *
+     * @return the ip address
+     */
     String getIPAddress();
+
+    /**
+     * Sets ip address.
+     *
+     * @param ipAddress the ip address
+     */
     void setIPAddress(String ipAddress);
+
+    /**
+     * Gets connected networks.
+     *
+     * @return the connected networks
+     */
     List<Network> getConnectedNetworks();
+
+    /**
+     * Gets management port.
+     *
+     * @return the management port
+     */
     Integer getManagementPort();
+
+    /**
+     * Sets management port.
+     *
+     * @param managementPort the management port
+     */
     void setManagementPort(Integer managementPort);
 }

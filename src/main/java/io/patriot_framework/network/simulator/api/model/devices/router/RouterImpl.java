@@ -30,7 +30,7 @@ public class RouterImpl implements Router {
     private List<NetworkInterface> networkInterfaces;
     private List<Network> connectedTopologyNetworks = new ArrayList<>();
     private String managementIP;
-    private Integer managementPort;
+    private Integer managementPort = 0;
     private String creator;
     private boolean corner = false;
 
@@ -169,7 +169,7 @@ public class RouterImpl implements Router {
      * @return the mng port
      */
     public Integer getManagementPort() {
-        if (managementPort == null) {
+        if (managementPort == 0) {
             return DEFAULT_PORT;
         }
         return managementPort;
@@ -216,5 +216,8 @@ public class RouterImpl implements Router {
                 getCreator().equals(router.getCreator());
     }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getNetworkInterfaces(), getConnectedTopologyNetworks(), getManagementIP(), getManagementPort(), getCreator(), corner);
+    }
 }
