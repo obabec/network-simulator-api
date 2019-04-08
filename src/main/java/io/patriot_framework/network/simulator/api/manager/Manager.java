@@ -72,6 +72,10 @@ public class Manager {
         this.routerTag = routerTag;
     }
 
+    public void setControllers(List<Controller> controllers) {
+        this.controllers = controllers;
+    }
+
     public HashMap<String, ArrayList<Route>> getProcessedRoutes() {
         return processedRoutes;
     }
@@ -251,7 +255,7 @@ public class Manager {
     }
 
     /**
-     S Sets routes to routing table via REST API on targeted routers.
+     Sets routes to routing table via REST API on targeted routers.
      * @param topology
      */
     public void setRoutes(Topology topology) {
