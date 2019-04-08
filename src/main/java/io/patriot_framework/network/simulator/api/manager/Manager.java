@@ -76,6 +76,13 @@ public class Manager {
         this.controllers = controllers;
     }
 
+    public Manager(List<Controller> controllers, String routerTag, String monitoringAddr, int monitoringPort) {
+        this.controllers = controllers;
+        this.monitoringAddr = monitoringAddr;
+        this.routerTag = routerTag;
+        this.monitoringPort = monitoringPort;
+    }
+
     public HashMap<String, ArrayList<Route>> getProcessedRoutes() {
         return processedRoutes;
     }

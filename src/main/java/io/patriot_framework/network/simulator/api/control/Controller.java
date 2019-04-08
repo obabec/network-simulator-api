@@ -91,7 +91,15 @@ public interface Controller {
      */
     void deployDevice(Device device, String tag);
 
+    /**
+     * Deploys device to network and set monitoring attributes to container.
+     * @param device
+     * @param tag
+     * @param monitoringIP
+     * @param monitoringPort
+     */
     void deployDevice(Device device, String tag, String monitoringIP, int monitoringPort);
+
     /**
      * Builds image from file and then create container from built image.
      *
