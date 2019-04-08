@@ -41,6 +41,7 @@ public class PatriotHub {
     private Manager manager;
     private DeviceRegistry registry;
     private Properties properties;
+    private static final String PATRIOT_ROUTER_TAG = "patriotframework/patriot-router:latest";
 
     public DeviceRegistry getRegistry() {
         return registry;
@@ -65,14 +66,8 @@ public class PatriotHub {
             exception = e;
         }
 
-        if (exception != null) {
-            properties = System.getProperties();
-            if (!properties.containsKey("io.patriot_framework.router")) {
-                throw new PropertiesNotLoadedException("properties not loaded", exception);
-            }
-        }
-
-        manager = new Manager(properties.getProperty("io.patriot_framework.router"));
+        manager = new Manager((properties.containsKey("io.patriot_framework.router") ?
+                properties.getProperty("io.patriot_framework.router") : PATRIOT_ROUTER_TAG));
         if (properties.containsKey("io.patriot_framework.monitoring.addr")) {
             manager.setMonitoring(properties.getProperty("io.patriot_framework.monitoring.addr"),
                     Integer.valueOf(properties.getProperty("io.patriot_framework.monitoring.port")));

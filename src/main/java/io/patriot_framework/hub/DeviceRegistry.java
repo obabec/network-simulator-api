@@ -16,7 +16,7 @@
 
 package io.patriot_framework.hub;
 
-import com.redhat.patriot.generator.device.Unit;
+import io.patriot_framework.generator.device.Unit;
 
 import java.util.Collection;
 import java.util.HashMap;
