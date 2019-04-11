@@ -47,7 +47,7 @@ public class Manager {
     private List<Controller> controllers;
     private String monitoringAddr;
     private String routerTag;
-    private int monitoringPort;
+    private int monitoringPort = 0;
     private HashMap<String, ArrayList<Route>> processedRoutes = new HashMap<>();
 
     public Manager(String routerTag) {
@@ -420,7 +420,12 @@ public class Manager {
     private void createRouters(Topology topology) {
         for (Router router : topology.getRouters()) {
             LOGGER.debug("Creating router: " + router.getName());
-            findController(router).deployDevice(router, routerTag, monitoringAddr, monitoringPort);
+            if (monitoringAddr != null && monitoringPort != 0) {
+                findController(router).deployDevice(router, routerTag, monitoringAddr, monitoringPort);
+            } else {
+                findController(router).deployDevice(router, routerTag);
+            }
+
         }
     }
 
