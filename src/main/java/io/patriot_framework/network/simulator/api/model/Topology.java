@@ -16,6 +16,7 @@
 
 package io.patriot_framework.network.simulator.api.model;
 
+import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
@@ -37,6 +38,16 @@ public class Topology {
      * Networks in topology.
      */
     private ArrayList<TopologyNetwork> networks;
+
+    private List<Device> devices = new ArrayList<>();
+
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
+    }
 
     /**
      * Instantiates a new Topology.

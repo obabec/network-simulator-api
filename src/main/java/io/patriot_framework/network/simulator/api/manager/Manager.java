@@ -457,6 +457,11 @@ public class Manager {
             LOGGER.info("Destroying router " + r.getName());
             controller.destroyDevice(r);
         }
+        for (Device device : topology.getDevices()) {
+            controller = findController(device);
+            LOGGER.info("Destroying device " + device.getName());
+            controller.destroyDevice(device);
+        }
         for (TopologyNetwork n : topology.getNetworks()) {
             if (!n.getInternet()) {
                 controller = findController(n);
