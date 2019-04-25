@@ -30,6 +30,14 @@ public class DockerDataGenerator implements Device {
     Integer managementPort;
     List<Network> connectedNetworks;
 
+    public DeviceImage getGeneratorImage() {
+        return generatorImage;
+    }
+
+    public void setGeneratorImage(DeviceImage generatorImage) {
+        this.generatorImage = generatorImage;
+    }
+
     public DockerDataGenerator(DeviceImage generatorImage, String tag, String name) {
         this.generatorImage = generatorImage;
         this.tag = tag;
