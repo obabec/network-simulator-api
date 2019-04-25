@@ -519,6 +519,7 @@ public class Manager {
         RouteRestController routeRestController = new RouteRestController();
         Route route = new Route();
         route.setrNetworkInterface(nI);
+        routeRestController.delDefaultGw(device.getIPAddress(), device.getManagementPort());
         routeRestController.addDefaultGW(route, device.getIPAddress(), device.getManagementPort());
     }
 
