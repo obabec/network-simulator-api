@@ -29,8 +29,9 @@ import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +44,7 @@ import java.util.Map;
  * Manager is used for managing topology (deploying, destroying).
  */
 public class Manager {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOGGER = LogManager.getLogger(this.getClass());
     private List<Controller> controllers;
     private String monitoringAddr;
     private String routerTag;
