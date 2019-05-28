@@ -16,15 +16,16 @@
 
 package io.patriot_framework.network.simulator.api.model.network;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Network implements EnvironmentPart {
-    @JsonIgnore
+    @JsonProperty("Name")
     private String name;
 
-    @JsonIgnore
     private String id;
 
     @JsonProperty("IP")
@@ -33,8 +34,14 @@ public abstract class Network implements EnvironmentPart {
     @JsonProperty("Mask")
     private int mask;
 
+
+
     public Network(String name, String id) {
         this.name = name;
+        this.id = id;
+    }
+
+    public Network(String id) {
         this.id = id;
     }
 

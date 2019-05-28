@@ -41,7 +41,7 @@ public class RouteTreatmentTest {
     public void testRouteTreatmentTest() {
         ArrayList<TopologyNetwork> topologyNetworks = new ArrayList<>();
         Topology topology = new Topology(topologyNetworks);
-        Router r = new RouterImpl("TestRouter", "Docker");
+        RouterImpl r = new RouterImpl("TestRouter", "Docker");
         Route route = createSimpleTopology(topologyNetworks, false, r);
         manager.processRoutes(topology);
         assertTrue(manager.getProcessedRoutes().get(r.getName()).get(0).toAPIFormat().equals(route.toAPIFormat()));
@@ -57,7 +57,7 @@ public class RouteTreatmentTest {
         return route;
     }
 
-    private Route createSimpleTopology(ArrayList<TopologyNetwork> topology, Boolean duplicate, Router r) {
+    private Route createSimpleTopology(ArrayList<TopologyNetwork> topology, Boolean duplicate, RouterImpl r) {
         List<NetworkInterface> routerInterfaces = new ArrayList<>();
         routerInterfaces.add(new NetworkInterface("eth0", "192.168.0.2", 24));
         r.setNetworkInterfaces(routerInterfaces);
@@ -81,7 +81,7 @@ public class RouteTreatmentTest {
         return parseRoute(n1, n2, r, routerInterfaces.get(0));
     }
 
-    private CalculatedRouteList createCalculatedRouteList(Router r, Integer sourceNetwork, Integer destNetwork) {
+    private CalculatedRouteList createCalculatedRouteList(RouterImpl r, Integer sourceNetwork, Integer destNetwork) {
         CalcRoute calcRoute = new CalcRoute(new NextHop(r, destNetwork), 1);
         CalculatedRouteList calculatedRouteList = new CalculatedRouteList();
         calculatedRouteList.add(destNetwork, calcRoute);
@@ -89,7 +89,7 @@ public class RouteTreatmentTest {
         return calculatedRouteList;
     }
 
-    private ArrayList<TopologyNetwork> prepareComplicatedTopology(ArrayList<Router> routers) {
+    private ArrayList<TopologyNetwork> prepareComplicatedTopology(ArrayList<RouterImpl> routers) {
         ArrayList<TopologyNetwork> topology = new ArrayList<>();
 
         TopologyNetwork n1 = new TopologyNetwork();
@@ -115,7 +115,7 @@ public class RouteTreatmentTest {
         return topology;
     }
 
-    private void prepareOnStartTopology(ArrayList<TopologyNetwork> topology, ArrayList<Router> routers) {
+    private void prepareOnStartTopology(ArrayList<TopologyNetwork> topology, ArrayList<RouterImpl> routers) {
         Integer routNeedCalc = topology.size() + 1;
         TopologyNetwork n1 = topology.get(0);
         TopologyNetwork n2 = topology.get(1);

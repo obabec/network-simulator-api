@@ -17,6 +17,8 @@
 package io.patriot_framework.network.simulator.api.model.network;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.CalculatedRouteList;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 
@@ -26,13 +28,14 @@ import java.util.Objects;
  * TopologyNetwork class representing docker network with additional informations
  * like calculated routes to other networks.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TopologyNetwork extends Network {
 
-    @JsonIgnore
+    @JsonProperty("Routes")
     private CalculatedRouteList<CalcRoute> calcRoutes = new CalculatedRouteList<>();
-    @JsonIgnore
+    @JsonProperty("Internet")
     private Boolean internet = false;
-    @JsonIgnore
+    @JsonProperty("Creator")
     private String creator;
     @JsonIgnore
     private String internetInterfaceIP = null;

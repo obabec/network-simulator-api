@@ -17,6 +17,7 @@
 package io.patriot_framework.network.simulator.api.builder;
 
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.devices.router.RouterImpl;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
@@ -30,7 +31,7 @@ public class CalcRouteBuilder {
     /**
      * The RouterImpl.
      */
-    Router router;
+    RouterImpl router;
     /**
      * The source network.
      */
@@ -98,7 +99,7 @@ public class CalcRouteBuilder {
      * @param router Router
      * @return the calc route builder
      */
-    public CalcRouteBuilder viaRouter(Router router) {
+    public CalcRouteBuilder viaRouter(RouterImpl router) {
         this.router = router;
         return this;
     }
@@ -123,7 +124,7 @@ public class CalcRouteBuilder {
      * @return the calc route builder
      */
     public CalcRouteBuilder withDestNetwork(String targetNetworkName) {
-        this.destNetwork = findNetworkByName(targetNetworkName);
+        this.destNetwork = findPosNetworkByName(targetNetworkName);
         return this;
     }
 
@@ -148,7 +149,7 @@ public class CalcRouteBuilder {
      * @return the calc route builder
      */
     public CalcRouteBuilder withSourceNetwork(String sourceNetworkName) {
-        this.sourceNetwork = findNetworkByName(sourceNetworkName);
+        this.sourceNetwork = findPosNetworkByName(sourceNetworkName);
         return this;
     }
 
@@ -158,7 +159,7 @@ public class CalcRouteBuilder {
      * @param name target network name.
      * @return index of target network in topology list of networks.
      */
-    private Integer findNetworkByName(String name) {
+    private Integer findPosNetworkByName(String name) {
         ArrayList<TopologyNetwork> topologyNetworks = topologyBuilder.getTopology().getNetworks();
         for (int i = 0; i < topologyNetworks.size(); i++) {
             if (topologyNetworks.get(i).getName() == name) {

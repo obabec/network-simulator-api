@@ -16,8 +16,14 @@
 
 package io.patriot_framework.network.simulator.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.model.devices.Device;
+import io.patriot_framework.network.simulator.api.model.devices.application.generator.DockerDataGenerator;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.devices.router.RouterImpl;
+import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
@@ -28,34 +34,40 @@ import java.util.Objects;
 /**
  * Wrapper representing full network topology.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Topology {
     /**
      * Routers located in topology.
      */
-    private List<Router> routers = new ArrayList<>();
+    @JsonProperty("Routers")
+    private List<RouterImpl> routers = new ArrayList<>();
 
     /**
      * Networks in topology.
      */
+    @JsonProperty("Networks")
     private ArrayList<TopologyNetwork> networks;
 
-    private List<Device> devices = new ArrayList<>();
+    @JsonProperty("Devices")
+    private List<DockerDataGenerator> devices = new ArrayList<>();
 
-    public List<Device> getDevices() {
+    public List<DockerDataGenerator> getDockerGeneratorDevices() {
         return devices;
     }
 
-    public void setDevices(List<Device> devices) {
+    public void setDockerGeneratorDevices(List<DockerDataGenerator> devices) {
         this.devices = devices;
     }
 
+    public Topology() {
+    }
     /**
      * Instantiates a new Topology.
      *
      * @param routers    the routers
      * @param networks the network top
      */
-    public Topology(List<Router> routers, ArrayList<TopologyNetwork> networks) {
+    public Topology(List<RouterImpl> routers, ArrayList<TopologyNetwork> networks) {
         this.routers = routers;
         this.networks = networks;
     }
@@ -83,7 +95,7 @@ public class Topology {
      *
      * @return the routers
      */
-    public List<Router> getRouters() {
+    public List<RouterImpl> getRouters() {
         return routers;
     }
 
@@ -92,7 +104,7 @@ public class Topology {
      *
      * @param routers the routers
      */
-    public void setRouters(List<Router> routers) {
+    public void setRouters(List<RouterImpl> routers) {
         this.routers = routers;
     }
 
@@ -119,10 +131,19 @@ public class Topology {
      * @param name
      * @return
      */
-    public Router findRouterByName(String name) {
-        for (Router r : routers) {
+    public RouterImpl findRouterByName(String name) {
+        for (RouterImpl r : routers) {
             if (r.getName().equals(name)) {
                 return r;
+            }
+        }
+        return null;
+    }
+
+    public TopologyNetwork findNetworkByName(String name) {
+        for (TopologyNetwork n : networks) {
+            if (n.getName().equals(name)) {
+                return n;
             }
         }
         return null;

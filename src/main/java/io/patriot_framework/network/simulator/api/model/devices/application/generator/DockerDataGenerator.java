@@ -18,7 +18,9 @@ package io.patriot_framework.network.simulator.api.model.devices.application.gen
 
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.network.Network;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DockerDataGenerator implements Device {
@@ -27,8 +29,20 @@ public class DockerDataGenerator implements Device {
     private String tag;
     private String name;
     private String ipAddress;
-    Integer managementPort;
-    List<Network> connectedNetworks;
+    private Integer managementPort = 0;
+    public static final int DEFAULT_PORT = 8090;
+
+    List<TopologyNetwork> connectedNetworks = new ArrayList<>();
+
+    public DockerDataGenerator() {
+    }
+
+    public DockerDataGenerator(DeviceImage generatorImage, String tag, String name, List<TopologyNetwork> connectedNetworks) {
+        this.generatorImage = generatorImage;
+        this.tag = tag;
+        this.name = name;
+        this.connectedNetworks = connectedNetworks;
+    }
 
     public DeviceImage getGeneratorImage() {
         return generatorImage;
@@ -73,13 +87,15 @@ public class DockerDataGenerator implements Device {
     }
 
     @Override
-    public List<Network> getConnectedNetworks() {
+    public List<TopologyNetwork> getConnectedNetworks() {
         return connectedNetworks;
     }
 
     @Override
     public Integer getManagementPort() {
-        return managementPort;
+        if (managementPort == 0) {
+            return DEFAULT_PORT;
+        } return managementPort;
     }
 
     @Override

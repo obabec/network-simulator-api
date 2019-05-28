@@ -18,6 +18,7 @@ package io.patriot_framework.network.simulator.api.model.devices.application;
 
 import io.patriot_framework.network.simulator.api.model.devices.Device;
 import io.patriot_framework.network.simulator.api.model.network.Network;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Application implements Device {
 
     private String name;
     private String ipAddress;
-    private List<Network> connectedNetworks = new ArrayList<>();
+    private List<TopologyNetwork> connectedNetworks = new ArrayList<>();
     private String creator;
     private int managementPort = 0;
     public static final int DEFAULT_PORT = 8090;
@@ -82,7 +83,7 @@ public class Application implements Device {
     }
 
     @Override
-    public List<Network> getConnectedNetworks() {
+    public List<TopologyNetwork> getConnectedNetworks() {
         return connectedNetworks;
     }
 

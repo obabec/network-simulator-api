@@ -17,6 +17,7 @@
 package io.patriot_framework.network.simulator.api.builder;
 
 import io.patriot_framework.network.simulator.api.model.Topology;
+import io.patriot_framework.network.simulator.api.model.network.Network;
 
 /**
  * The type Topology builder.
@@ -85,4 +86,5 @@ public class TopologyBuilder {
     public Topology getTopology() {
         return topology;
     }
+
 }

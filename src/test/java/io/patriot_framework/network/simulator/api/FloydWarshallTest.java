@@ -93,7 +93,7 @@ public class FloydWarshallTest {
     public void FloydWarshallTest() {
 
         ArrayList<TopologyNetwork> topologyNetworks = new ArrayList<>(4);
-        ArrayList<Router> routers = new ArrayList<>();
+        ArrayList<RouterImpl> routers = new ArrayList<>();
 
 
         routers.add(new RouterImpl("R1"));
@@ -147,7 +147,7 @@ public class FloydWarshallTest {
     }
 
 
-    private void initNetworks(ArrayList<TopologyNetwork> topology, ArrayList<Router> routers) {
+    private void initNetworks(ArrayList<TopologyNetwork> topology, ArrayList<RouterImpl> routers) {
 
         Integer routNeedCalc = topology.size() + 1;
         TopologyNetwork tN1 = topology.get(0);

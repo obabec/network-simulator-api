@@ -16,7 +16,9 @@
 
 package io.patriot_framework.network.simulator.api.model.routes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.devices.router.RouterImpl;
 
 import java.util.Objects;
 
@@ -24,8 +26,13 @@ import java.util.Objects;
  * Wrapper class for RouterImpl and network. Representing next hop in the network topology.
  */
 public class NextHop {
-    private Router router;
+    @JsonProperty("Router")
+    private RouterImpl router;
+    @JsonProperty("DestNetwork")
     private Integer network;
+
+    public NextHop() {
+    }
 
     /**
      * Instantiates a new Next hop.
@@ -33,7 +40,7 @@ public class NextHop {
      * @param router  the router
      * @param network the network
      */
-    public NextHop(Router router, Integer network) {
+    public NextHop(RouterImpl router, Integer network) {
         this.router = router;
         this.network = network;
     }
@@ -43,7 +50,7 @@ public class NextHop {
      *
      * @return the router
      */
-    public Router getRouter() {
+    public RouterImpl getRouter() {
         return router;
     }
 
@@ -52,7 +59,7 @@ public class NextHop {
      *
      * @param router the router
      */
-    public void setRouter(Router router) {
+    public void setRouter(RouterImpl router) {
         this.router = router;
     }
 

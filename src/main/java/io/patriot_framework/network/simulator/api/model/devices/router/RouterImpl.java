@@ -16,7 +16,10 @@
 
 package io.patriot_framework.network.simulator.api.model.devices.router;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.network.simulator.api.model.network.Network;
+import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,24 +28,32 @@ import java.util.Objects;
 /**
  * RouterImpl class represents docker container built as router with network-control apis.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RouterImpl implements Router {
+    @JsonProperty("Name")
     private String name;
     private List<NetworkInterface> networkInterfaces;
-    private List<Network> connectedTopologyNetworks = new ArrayList<>();
+    private List<TopologyNetwork> connectedTopologyNetworks = new ArrayList<>();
     private String managementIP;
     private Integer managementPort = 0;
+    @JsonProperty("Creator")
     private String creator;
+    @JsonProperty("Corner")
     private boolean corner = false;
 
 
     // Default go iproute2 rest api http port
     public static final int DEFAULT_PORT = 8090;
 
+    public RouterImpl() {
+    }
+
     /**
      * Instantiates a new RouterImpl.
      *
      * @param name the name
      */
+
     public RouterImpl(String name) {
         this.name = name;
         connectedTopologyNetworks = new ArrayList<>();
@@ -96,7 +107,7 @@ public class RouterImpl implements Router {
     }
 
     @Override
-    public List<Network> getConnectedNetworks() {
+    public List<TopologyNetwork> getConnectedNetworks() {
         return connectedTopologyNetworks;
     }
 
@@ -132,7 +143,7 @@ public class RouterImpl implements Router {
      *
      * @return the connected networks
      */
-    public List<Network> getConnectedTopologyNetworks() {
+    public List<TopologyNetwork> getConnectedTopologyNetworks() {
         return connectedTopologyNetworks;
     }
 
@@ -141,7 +152,7 @@ public class RouterImpl implements Router {
      *
      * @param connectedTopologyNetworks the connected networks
      */
-    public void setConnectedTopologyNetworks(List<Network> connectedTopologyNetworks) {
+    public void setConnectedTopologyNetworks(List<TopologyNetwork> connectedTopologyNetworks) {
         this.connectedTopologyNetworks = connectedTopologyNetworks;
     }
 

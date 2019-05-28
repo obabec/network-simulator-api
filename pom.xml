@@ -248,5 +248,10 @@
           <version>2.8.2</version>
           <type>pom</type>
        </dependency>
+       <dependency>
+          <groupId>io.patriot_framework</groupId>
+          <artifactId>patriot-generator-builder</artifactId>
+          <version>1.0-SNAPSHOT</version>
+       </dependency>
     </dependencies>
 </project>

@@ -16,14 +16,21 @@
 
 package io.patriot_framework.network.simulator.api.model.routes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 /**
  * Calculated route. Including all necessary info to describe routes.
  */
 public class CalcRoute {
+    @JsonProperty("NextHop")
     private NextHop nextHop;
+    @JsonProperty("Cost")
     private Integer cost;
+
+    public CalcRoute() {
+    }
 
     /**
      * Instantiates a new Calc route.

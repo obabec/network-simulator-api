@@ -18,6 +18,7 @@ package io.patriot_framework.network.simulator.api.api.iproute;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import io.patriot_framework.network.simulator.api.api.RestController;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.routes.Route;

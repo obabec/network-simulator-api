@@ -27,6 +27,10 @@ public class DeviceImage {
     public DeviceImage() {
     }
 
+    public DeviceImage(File yamlConfig) {
+        this.yamlConfig = yamlConfig;
+    }
+
     public DeviceImage(File dockerFile, File javaEx, String tag) {
         this.dockerFile = dockerFile;
         this.javaEx = javaEx;

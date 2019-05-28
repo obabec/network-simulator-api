@@ -18,20 +18,22 @@ package io.patriot_framework.network.simulator.api.manager;
 
 import com.github.jgonian.ipmath.Ipv4;
 import com.github.jgonian.ipmath.Ipv4Range;
+import io.patriot_framework.manager.BuildManager;
 import io.patriot_framework.network.simulator.api.api.iproute.RouteRestController;
 import io.patriot_framework.network.simulator.api.control.Controller;
 import io.patriot_framework.network.simulator.api.model.EnvironmentPart;
 import io.patriot_framework.network.simulator.api.model.Topology;
 import io.patriot_framework.network.simulator.api.model.devices.Device;
+import io.patriot_framework.network.simulator.api.model.devices.application.generator.DockerDataGenerator;
 import io.patriot_framework.network.simulator.api.model.devices.router.NetworkInterface;
 import io.patriot_framework.network.simulator.api.model.devices.router.Router;
+import io.patriot_framework.network.simulator.api.model.network.Network;
 import io.patriot_framework.network.simulator.api.model.network.TopologyNetwork;
 import io.patriot_framework.network.simulator.api.model.routes.CalcRoute;
 import io.patriot_framework.network.simulator.api.model.routes.NextHop;
 import io.patriot_framework.network.simulator.api.model.routes.Route;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,6 +104,7 @@ public class Manager {
         processRoutes(topology);
         setRoutes(topology);
         setMasquerade(topology);
+        deployGeneratorDevices(topology);
     }
 
     /**
@@ -458,9 +461,9 @@ public class Manager {
             LOGGER.info("Destroying router " + r.getName());
             controller.destroyDevice(r);
         }
-        for (Device device : topology.getDevices()) {
+        for (Device device : topology.getDockerGeneratorDevices()) {
             controller = findController(device);
-            LOGGER.info("Destroying device " + device.getName());
+            LOGGER.info("Destroying generator device " + device.getName());
             controller.destroyDevice(device);
         }
         for (TopologyNetwork n : topology.getNetworks()) {
@@ -537,9 +540,29 @@ public class Manager {
      */
     private void deployToNetwork(Device device, String tag, TopologyNetwork network) {
         Controller deviceController = findController(device);
+
         deviceController.deployDevice(device, tag, monitoringAddr, monitoringPort);
         deviceController.connectDeviceToNetwork(device, network);
-        device.getConnectedNetworks().add(network);
+    }
+
+    private void deployGeneratorDevices(Topology topology) {
+        for (int i = 0; i < topology.getDockerGeneratorDevices().size(); i++) {
+            DockerDataGenerator generator = topology.getDockerGeneratorDevices().get(0);
+            for (int y = 0; y < generator.getConnectedNetworks().size(); y++) {
+                TopologyNetwork topologyNetwork = topology.findNetworkByName(generator.getConnectedNetworks().get(y).getName());
+                generator.getConnectedNetworks().set(y, topologyNetwork);
+            }
+
+        }
+        if (topology.getDockerGeneratorDevices().size() != 0) {
+            BuildManager buildManager = new BuildManager();
+            buildManager.deployDevices(topology.getDockerGeneratorDevices());
+            for (DockerDataGenerator device : topology.getDockerGeneratorDevices()) {
+                for (Network network : device.getConnectedNetworks()) {
+                    deployDeviceToNetwork(device, topology.findNetworkByName(network.getName()), topology, device.getTag());
+                }
+            }
+        }
     }
 
 

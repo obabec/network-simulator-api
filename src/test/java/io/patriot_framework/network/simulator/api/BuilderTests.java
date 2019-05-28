@@ -121,7 +121,7 @@ public class BuilderTests {
         Assertions.assertTrue(builderTopology.equals(topology));
     }
 
-    private ArrayList<TopologyNetwork> prepareNetwork(Router router) {
+    private ArrayList<TopologyNetwork> prepareNetwork(RouterImpl router) {
         ArrayList<TopologyNetwork> topologyNetworks = new ArrayList<>();
         NextHop nextHop = new NextHop(router, 1);
         CalcRoute calcRoute = new CalcRoute(nextHop, 1);
